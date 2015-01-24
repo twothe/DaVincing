@@ -1,0 +1,13 @@
+itemGroup.minepainter=Minepainter
+item.chisel.name=Stone Chisel
+item.barcutter.name=Iron Chisel
+item.saw.name=Diamond Chisel
+item.canvas.name=Canvas
+item.palette.name=Palette
+item.mini_brush.name=Small Brush
+item.mixer_brush.name=Brush
+item.eraser.name=Eraser
+item.wrench.name=Wrench
+item.paint_bucket.name=Paint Bucket
+item.sculpture_piece.name=Sculpture Piece
+item.dropped_sculpture.name=Sculpture

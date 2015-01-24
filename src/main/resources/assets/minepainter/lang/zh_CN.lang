@@ -1,0 +1,13 @@
+itemGroup.minepainter=雕塑与像素画
+item.chisel.name=石雕刻刀
+item.barcutter.name=铁雕刻刀
+item.saw.name=钻石雕刻刀
+item.canvas.name=画布
+item.palette.name=调色板
+item.mini_brush.name=小画笔
+item.mixer_brush.name=画笔
+item.eraser.name=橡皮擦
+item.wrench.name=管鉗
+item.paint_bucket.name=颜料桶
+item.sculpture_piece.name=雕塑碎片
+item.dropped_sculpture.name=雕塑
