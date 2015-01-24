@@ -1,87 +1,66 @@
-/*  1:   */ package hx.minepainter.painting;
-/*  2:   */ 
-/*  3:   */ import java.util.HashMap;
-/*  4:   */ import java.util.Iterator;
-/*  5:   */ import java.util.Set;
-/*  6:   */ 
-/*  7:   */ public abstract class ExpirablePool<T, V>
-/*  8:   */ {
-/*  9:   */   final int expire;
-/* 10:   */   
-/* 11:   */   public ExpirablePool(int expire)
-/* 12:   */   {
-/* 13:10 */     this.expire = expire;
-/* 14:   */   }
-/* 15:   */   
-/* 16:13 */   HashMap<T, Integer> timeouts = new HashMap();
-/* 17:14 */   HashMap<T, V> items = new HashMap();
-/* 18:16 */   boolean running = false;
-/* 19:   */   
-/* 20:   */   public void start()
-/* 21:   */   {
-/* 22:19 */     this.running = true;
-/* 23:20 */     new Thread(new Runnable()
-/* 24:   */     {
-/* 25:   */       public void run()
-/* 26:   */       {
-/* 27:22 */         while (ExpirablePool.this.running)
-/* 28:   */         {
-/* 29:23 */           for (Iterator<T> iter = ExpirablePool.this.timeouts.keySet().iterator(); iter.hasNext();)
-/* 30:   */           {
-/* 31:24 */             T t = iter.next();
-/* 32:25 */             int count = ((Integer)ExpirablePool.this.timeouts.get(t)).intValue();
-/* 33:26 */             if (count <= 0)
-/* 34:   */             {
-/* 35:27 */               iter.remove();
-/* 36:28 */               ExpirablePool.this.release(ExpirablePool.this.items.remove(t));
-/* 37:   */             }
-/* 38:   */             else
-/* 39:   */             {
-/* 40:29 */               ExpirablePool.this.timeouts.put(t, Integer.valueOf(count - 1));
-/* 41:   */             }
-/* 42:   */           }
-/* 43:   */           try
-/* 44:   */           {
-/* 45:33 */             Thread.sleep(80L);
-/* 46:   */           }
-/* 47:   */           catch (InterruptedException e)
-/* 48:   */           {
-/* 49:35 */             e.printStackTrace();
-/* 50:   */           }
-/* 51:37 */           if (ExpirablePool.this.items.isEmpty()) {
-/* 52:37 */             ExpirablePool.this.running = false;
-/* 53:   */           }
-/* 54:   */         }
-/* 55:   */       }
-/* 56:   */     }).start();
-/* 57:   */   }
-/* 58:   */   
-/* 59:   */   public abstract void release(V paramV);
-/* 60:   */   
-/* 61:   */   public abstract V get();
-/* 62:   */   
-/* 63:   */   public void stop()
-/* 64:   */   {
-/* 65:49 */     this.running = false;
-/* 66:   */   }
-/* 67:   */   
-/* 68:   */   public boolean contains(T t)
-/* 69:   */   {
-/* 70:53 */     return this.items.containsKey(t);
-/* 71:   */   }
-/* 72:   */   
-/* 73:   */   public V get(T t)
-/* 74:   */   {
-/* 75:57 */     if (!this.items.containsKey(t)) {
-/* 76:58 */       this.items.put(t, get());
-/* 77:   */     }
-/* 78:59 */     this.timeouts.put(t, Integer.valueOf(this.expire));
-/* 79:60 */     return this.items.get(t);
-/* 80:   */   }
-/* 81:   */ }
+package hx.minepainter.painting;
 
-
-/* Location:           C:\Work\Java\Projekte\mc-forge-1710-minepainter\minepainter-0.2.6.jar
- * Qualified Name:     hx.minepainter.painting.ExpirablePool
- * JD-Core Version:    0.7.0.1
- */
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+
+public abstract class ExpirablePool<T, V> {
+
+  final int expire;
+
+  public ExpirablePool(int expire) {
+    this.expire = expire;
+  }
+
+  HashMap<T, Integer> timeouts = new HashMap();
+  HashMap<T, V> items = new HashMap();
+  boolean running = false;
+
+  public void start() {
+    this.running = true;
+    new Thread(new Runnable() {
+      public void run() {
+        while (ExpirablePool.this.running) {
+          for (Iterator<T> iter = ExpirablePool.this.timeouts.keySet().iterator(); iter.hasNext();) {
+            T t = iter.next();
+            int count = ((Integer) ExpirablePool.this.timeouts.get(t)).intValue();
+            if (count <= 0) {
+              iter.remove();
+              ExpirablePool.this.release(ExpirablePool.this.items.remove(t));
+            } else {
+              ExpirablePool.this.timeouts.put(t, Integer.valueOf(count - 1));
+            }
+          }
+          try {
+            Thread.sleep(80L);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+          if (ExpirablePool.this.items.isEmpty()) {
+            ExpirablePool.this.running = false;
+          }
+        }
+      }
+    }).start();
+  }
+
+  public abstract void release(V paramV);
+
+  public abstract V get();
+
+  public void stop() {
+    this.running = false;
+  }
+
+  public boolean contains(T t) {
+    return this.items.containsKey(t);
+  }
+
+  public V get(T t) {
+    if (!this.items.containsKey(t)) {
+      this.items.put(t, get());
+    }
+    this.timeouts.put(t, Integer.valueOf(this.expire));
+    return this.items.get(t);
+  }
+}
