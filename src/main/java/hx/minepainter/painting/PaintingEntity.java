@@ -49,9 +49,9 @@ public class PaintingEntity
     return this.icon;
   }
 
-  public void func_145843_s() {
-    super.func_145843_s();
-    if (this.field_145850_b.isRemote) {
+  public void invalidate() {
+    super.invalidate();
+    if (this.worldObj.isRemote) {
       getIcon().release();
       this.icon = null;
     }
@@ -59,14 +59,14 @@ public class PaintingEntity
 
   public void onChunkUnload() {
     super.onChunkUnload();
-    if (this.field_145850_b.isRemote) {
+    if (this.worldObj.isRemote) {
       getIcon().release();
       this.icon = null;
     }
   }
 
-  public void func_145841_b(NBTTagCompound nbt) {
-    super.func_145841_b(nbt);
+  public void writeToNBT(NBTTagCompound nbt) {
+    super.writeToNBT(nbt);
     writeImageToNBT(nbt);
   }
 
@@ -80,9 +80,9 @@ public class PaintingEntity
     nbt.func_74773_a("image_data", baos.toByteArray());
   }
 
-  public void func_145839_a(NBTTagCompound nbt) {
+  public void readFromNBT(NBTTagCompound nbt) {
     readFromNBTToImage(nbt);
-    super.func_145839_a(nbt);
+    super.readFromNBT(nbt);
   }
 
   public void readFromNBTToImage(NBTTagCompound nbt) {
@@ -94,7 +94,7 @@ public class PaintingEntity
     try {
       BufferedImage img = ImageIO.read(bais);
       this.image = img;
-      if ((this.field_145850_b != null) && (this.field_145850_b.isRemote)) {
+      if ((this.worldObj != null) && (this.worldObj.isRemote)) {
         getIcon().fill(img);
       }
     } catch (IOException e) {
@@ -102,13 +102,13 @@ public class PaintingEntity
     }
   }
 
-  public Packet func_145844_m() {
+  public Packet getDescriptionPacket() {
     NBTTagCompound nbttagcompound = new NBTTagCompound();
-    func_145841_b(nbttagcompound);
-    return new S35PacketUpdateTileEntity(this.field_145851_c, this.field_145848_d, this.field_145849_e, 17, nbttagcompound);
+    writeToNBT(nbttagcompound);
+    return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 17, nbttagcompound);
   }
 
   public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-    func_145839_a(pkt.func_148857_g());
+    readFromNBT(pkt.func_148857_g());
   }
 }

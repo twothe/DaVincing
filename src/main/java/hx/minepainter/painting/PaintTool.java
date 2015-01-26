@@ -90,7 +90,7 @@ public class PaintTool
             if (w.isRemote) {
               pe.getIcon().fill(pe.image);
             } else {
-              w.func_147471_g(_x, _y, _z);
+              w.markBlockForUpdate(_x, _y, _z);
             }
             changed = true;
           }

@@ -41,12 +41,12 @@ public class PaintingIcon implements IIcon {
   }
 
   @SideOnly(Side.CLIENT)
-  public float func_94209_e() {
+  public float getMinU() {
     return this.umin;
   }
 
   @SideOnly(Side.CLIENT)
-  public float func_94212_f() {
+  public float getMaxU() {
     return this.umax;
   }
 
@@ -56,12 +56,12 @@ public class PaintingIcon implements IIcon {
   }
 
   @SideOnly(Side.CLIENT)
-  public float func_94206_g() {
+  public float getMinV() {
     return this.vmin;
   }
 
   @SideOnly(Side.CLIENT)
-  public float func_94210_h() {
+  public float getMaxV() {
     return this.vmax;
   }
 

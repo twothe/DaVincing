@@ -89,18 +89,18 @@ public class SculptureRenderCompiler {
       int z = i >> 0 & 0x7;
 
       Block b = slice.getBlock(x, y, z);
-      if (b != Blocks.field_150350_a) {
+      if (b != Blocks.air) {
         int meta = slice.getBlockMetadata(x, y, z);
         sculpture.setCurrentBlock(b, meta);
 
         tes.func_78373_b(-x, -y, -z);
 
-        sculpture.func_149676_a(x / 8.0F, y / 8.0F, z / 8.0F, (x + 1) / 8.0F, (y + 1) / 8.0F, (z + 1) / 8.0F);
+        sculpture.setBlockBounds(x / 8.0F, y / 8.0F, z / 8.0F, (x + 1) / 8.0F, (y + 1) / 8.0F, (z + 1) / 8.0F);
         rb.func_147805_b(sculpture, x, y, z);
       }
     }
     ((SculptureBlock) ModMinePainter.sculpture.block).setCurrentBlock(null, 0);
-    sculpture.func_149676_a(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+    sculpture.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
     rb.field_147845_a = null;
     tes.draw();
     tes.func_78373_b(offs[0], offs[1], offs[2]);

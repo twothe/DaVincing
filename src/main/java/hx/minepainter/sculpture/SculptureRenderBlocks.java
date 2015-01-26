@@ -34,7 +34,7 @@ public class SculptureRenderBlocks
         Block theirs = sculpture.getBlockAt(_x, _y, _z, null);
         if (theirs == ours) {
           this.drawFace[i] = false;
-        } else if ((theirs == Blocks.field_150350_a) || (!theirs.func_149662_c())) {
+        } else if ((theirs == Blocks.air) || (!theirs.func_149662_c())) {
           this.drawFace[i] = true;
         } else {
           this.drawFace[i] = false;

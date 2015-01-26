@@ -36,7 +36,7 @@ public class PaintingRenderer
 
   private void addPoint(PaintingPlacement pp, int x, int y, IIcon icon) {
     float[] pos = pp.painting2blockWithShift(x, y, 0.003F);
-    Tessellator.instance.func_78374_a(pos[0], pos[1], pos[2], x == 0 ? icon.func_94209_e() : icon.func_94212_f(), y == 0 ? icon.func_94206_g() : icon.func_94210_h());
+    Tessellator.instance.addVertexWithUV(pos[0], pos[1], pos[2], x == 0 ? icon.getMinU() : icon.getMaxU(), y == 0 ? icon.getMinV() : icon.getMaxV());
   }
 
   private void drawSides(Tessellator tes, PaintingPlacement placement) {

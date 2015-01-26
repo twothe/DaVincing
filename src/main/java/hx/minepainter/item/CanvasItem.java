@@ -36,18 +36,18 @@ public class CanvasItem
     int _x = x + dir.offsetX;
     int _y = y + dir.offsetY;
     int _z = z + dir.offsetZ;
-    if (!w.func_147437_c(_x, _y, _z)) {
+    if (!w.isAirBlock(_x, _y, _z)) {
       return false;
     }
     if (!ep.func_82247_a(x, y, z, face, is)) {
       return false;
     }
-    PaintingPlacement pp = PaintingPlacement.of(ep.func_70040_Z(), face);
+    PaintingPlacement pp = PaintingPlacement.of(ep.getLook(), face);
     w.func_147465_d(_x, _y, _z, ModMinePainter.painting.block, pp.ordinal(), 3);
     PaintingEntity pe = (PaintingEntity) Utils.getTE(w, _x, _y, _z);
     pe.readFromNBTToImage(is.getTagCompound());
     if (!ep.field_71075_bZ.field_75098_d) {
-      is.field_77994_a -= 1;
+      is.stackSize -= 1;
     }
     return true;
   }

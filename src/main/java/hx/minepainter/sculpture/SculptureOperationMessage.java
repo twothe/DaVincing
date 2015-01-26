@@ -77,8 +77,8 @@ public class SculptureOperationMessage
         is.func_77972_a(1, ep);
       } else if (((0x20 & message.flags) > 0)
               && (!ep.field_71075_bZ.field_75098_d)) {
-        is.field_77994_a -= 1;
-        if (is.field_77994_a <= 0) {
+        is.stackSize -= 1;
+        if (is.stackSize <= 0) {
           ForgeEventFactory.onPlayerDestroyItem(ep, is);
           ep.inventory.field_70462_a[ep.inventory.field_70461_c] = null;
         }

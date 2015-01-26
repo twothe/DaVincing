@@ -18,12 +18,8 @@ public enum PaintingPlacement {
 
   public static PaintingPlacement of(Vec3 vec, int face) {
     ForgeDirection dir = ForgeDirection.getOrientation(face);
-    switch (1. 
-       
-       
-      $SwitchMap$net$minecraftforge$common$util$ForgeDirection[dir.ordinal()])
-    {
-    case 1:
+    switch (ForgeDirection.OPPOSITES[dir.ordinal()]) {
+      case 1:
         return ZPOS;
       case 2:
         return ZNEG;
@@ -32,15 +28,15 @@ public enum PaintingPlacement {
       case 4:
         return XPOS;
       case 5:
-        if (Math.abs(vec.field_72450_a) > Math.abs(vec.field_72449_c)) {
-          return vec.field_72450_a > 0.0D ? DOWNXNEG : DOWNXPOS;
+        if (Math.abs(vec.xCoord) > Math.abs(vec.zCoord)) {
+          return vec.xCoord > 0.0D ? DOWNXNEG : DOWNXPOS;
         }
-        return vec.field_72449_c > 0.0D ? DOWNZNEG : DOWNZPOS;
+        return vec.zCoord > 0.0D ? DOWNZNEG : DOWNZPOS;
       case 6:
-        if (Math.abs(vec.field_72450_a) > Math.abs(vec.field_72449_c)) {
-          return vec.field_72450_a > 0.0D ? UPXNEG : UPXPOS;
+        if (Math.abs(vec.xCoord) > Math.abs(vec.zCoord)) {
+          return vec.xCoord > 0.0D ? UPXNEG : UPXPOS;
         }
-        return vec.field_72449_c > 0.0D ? UPZNEG : UPZPOS;
+        return vec.zCoord > 0.0D ? UPZNEG : UPZPOS;
     }
     return null;
   }
@@ -76,6 +72,6 @@ public enum PaintingPlacement {
   }
 
   public void setBlockBounds(Block b) {
-    b.func_149676_a(0 + (1 - this.normal.offsetX) / 2, 0 + (1 - this.normal.offsetY) / 2, 0 + (1 - this.normal.offsetZ) / 2, 1 - (1 + this.normal.offsetX) / 2, 1 - (1 + this.normal.offsetY) / 2, 1 - (1 + this.normal.offsetZ) / 2);
+    b.setBlockBounds(0 + (1 - this.normal.offsetX) / 2, 0 + (1 - this.normal.offsetY) / 2, 0 + (1 - this.normal.offsetZ) / 2, 1 - (1 + this.normal.offsetX) / 2, 1 - (1 + this.normal.offsetY) / 2, 1 - (1 + this.normal.offsetZ) / 2);
   }
 }

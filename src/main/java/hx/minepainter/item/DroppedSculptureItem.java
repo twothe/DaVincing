@@ -46,17 +46,17 @@ public class DroppedSculptureItem
     int _x = x + dir.offsetX;
     int _y = y + dir.offsetY;
     int _z = z + dir.offsetZ;
-    if (!w.func_147437_c(_x, _y, _z)) {
+    if (!w.isAirBlock(_x, _y, _z)) {
       return false;
     }
     if (!ep.func_82247_a(x, y, z, face, is)) {
       return false;
     }
-    w.func_147449_b(_x, _y, _z, ModMinePainter.sculpture.block);
+    w.setBlock(_x, _y, _z, ModMinePainter.sculpture.block);
     SculptureEntity se = (SculptureEntity) Utils.getTE(w, _x, _y, _z);
     se.sculpture().read(is.getTagCompound());
     if (!ep.field_71075_bZ.field_75098_d) {
-      is.field_77994_a -= 1;
+      is.stackSize -= 1;
     }
     return true;
   }

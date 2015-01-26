@@ -7,10 +7,8 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 
-public class SculptureEntity
-        extends TileEntity {
+public class SculptureEntity extends TileEntity {
 
   Sculpture sculpture = new Sculpture();
   @SideOnly(Side.CLIENT)
@@ -30,49 +28,55 @@ public class SculptureEntity
 
   @SideOnly(Side.CLIENT)
   public void updateRender() {
-    if (this.field_145850_b.isRemote) {
-      BlockSlice slice = BlockSlice.at(this.field_145850_b, this.field_145851_c, this.field_145848_d, this.field_145849_e);
+    if (this.worldObj.isRemote) {
+      BlockSlice slice = BlockSlice.at(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
       getRender().update(slice);
       BlockSlice.clear();
     }
   }
 
   @SideOnly(Side.CLIENT)
-  public void func_145843_s() {
-    super.func_145843_s();
-    if (this.field_145850_b.isRemote) {
+  @Override
+  public void invalidate() {
+    super.invalidate();
+    if (this.worldObj.isRemote) {
       getRender().clear();
     }
   }
 
   @SideOnly(Side.CLIENT)
+  @Override
   public void onChunkUnload() {
     super.onChunkUnload();
-    if (this.field_145850_b.isRemote) {
+    if (this.worldObj.isRemote) {
       getRender().clear();
     }
   }
 
-  public void func_145841_b(NBTTagCompound nbt) {
-    super.func_145841_b(nbt);
+  @Override
+  public void writeToNBT(NBTTagCompound nbt) {
+    super.writeToNBT(nbt);
     this.sculpture.write(nbt);
   }
 
-  public void func_145839_a(NBTTagCompound nbt) {
-    if ((this.field_145850_b != null) && (this.field_145850_b.isRemote)) {
+  @Override
+  public void readFromNBT(NBTTagCompound nbt) {
+    if ((this.worldObj != null) && (this.worldObj.isRemote)) {
       getRender().changed = true;
     }
-    super.func_145839_a(nbt);
+    super.readFromNBT(nbt);
     this.sculpture.read(nbt);
   }
 
-  public Packet func_145844_m() {
+  @Override
+  public Packet getDescriptionPacket() {
     NBTTagCompound nbttagcompound = new NBTTagCompound();
-    func_145841_b(nbttagcompound);
-    return new S35PacketUpdateTileEntity(this.field_145851_c, this.field_145848_d, this.field_145849_e, 17, nbttagcompound);
+    writeToNBT(nbttagcompound);
+    return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 17, nbttagcompound);
   }
 
+  @Override
   public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-    func_145839_a(pkt.func_148857_g());
+    readFromNBT(pkt.func_148857_g());
   }
 }

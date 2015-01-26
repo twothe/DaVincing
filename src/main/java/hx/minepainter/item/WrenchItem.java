@@ -1,10 +1,7 @@
 package hx.minepainter.item;
 
 import hx.minepainter.ModMinePainter;
-import hx.minepainter.sculpture.Rotation;
-import hx.minepainter.sculpture.Sculpture;
 import hx.minepainter.sculpture.SculptureEntity;
-import hx.utils.BlockLoader;
 import hx.utils.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -34,7 +31,7 @@ public class WrenchItem
     if (w.isRemote) {
       se.getRender().changed = true;
     } else {
-      w.func_147471_g(x, y, z);
+      w.markBlockForUpdate(x, y, z);
     }
     w.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "tile.piston.out", 0.5F, 0.5F);
 

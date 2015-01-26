@@ -15,7 +15,7 @@ public class PieceItem
     setTextureName("");
     func_77627_a(true);
     setMaxStackSize(64);
-    func_77656_e(0);
+    setMaxDamage(0);
   }
 
   public void func_94581_a(IIconRegister r) {

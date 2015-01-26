@@ -65,18 +65,18 @@ public class PieceRenderer
       Minecraft.getMinecraft().field_71460_t.field_78516_c.renderItem((EntityLivingBase) data[1], this.is, 0, type);
     }
     sculpture.setCurrentBlock(null, 0);
-    sculpture.func_149676_a(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+    sculpture.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
   }
 
   protected void setBounds(SculptureBlock sculpture) {
-    sculpture.func_149676_a(0.3F, 0.3F, 0.3F, 0.7F, 0.7F, 0.7F);
+    sculpture.setBlockBounds(0.3F, 0.3F, 0.3F, 0.7F, 0.7F, 0.7F);
   }
 
   public static class Bar
           extends PieceRenderer {
 
     protected void setBounds(SculptureBlock sculpture) {
-      sculpture.func_149676_a(0.3F, 0.0F, 0.3F, 0.7F, 1.0F, 0.7F);
+      sculpture.setBlockBounds(0.3F, 0.0F, 0.3F, 0.7F, 1.0F, 0.7F);
     }
   }
 
@@ -84,7 +84,7 @@ public class PieceRenderer
           extends PieceRenderer {
 
     protected void setBounds(SculptureBlock sculpture) {
-      sculpture.func_149676_a(0.3F, 0.0F, 0.0F, 0.7F, 1.0F, 1.0F);
+      sculpture.setBlockBounds(0.3F, 0.0F, 0.0F, 0.7F, 1.0F, 1.0F);
     }
   }
 }

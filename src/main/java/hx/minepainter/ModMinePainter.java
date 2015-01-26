@@ -1,9 +1,7 @@
 package hx.minepainter;
 
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.eventhandler.EventBus;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
@@ -11,33 +9,21 @@ import cpw.mods.fml.relauncher.SideOnly;
 import hx.minepainter.item.CanvasItem;
 import hx.minepainter.item.CanvasRenderer;
 import hx.minepainter.item.ChiselItem;
-import hx.minepainter.item.ChiselItem.Barcutter;
-import hx.minepainter.item.ChiselItem.Saw;
 import hx.minepainter.item.DroppedSculptureItem;
 import hx.minepainter.item.DroppedSculptureRenderer;
 import hx.minepainter.item.Palette;
 import hx.minepainter.item.PieceItem;
-import hx.minepainter.item.PieceItem.Bar;
-import hx.minepainter.item.PieceItem.Cover;
 import hx.minepainter.item.PieceRenderer;
-import hx.minepainter.item.PieceRenderer.Bar;
-import hx.minepainter.item.PieceRenderer.Cover;
 import hx.minepainter.item.WrenchItem;
 import hx.minepainter.painting.PaintTool;
-import hx.minepainter.painting.PaintTool.Bucket;
-import hx.minepainter.painting.PaintTool.Eraser;
-import hx.minepainter.painting.PaintTool.Mini;
-import hx.minepainter.painting.PaintTool.Mixer;
 import hx.minepainter.painting.PaintingBlock;
 import hx.minepainter.painting.PaintingEntity;
 import hx.minepainter.painting.PaintingOperationMessage;
-import hx.minepainter.painting.PaintingOperationMessage.PaintingOperationHandler;
 import hx.minepainter.painting.PaintingRenderer;
 import hx.minepainter.sculpture.SculptureBlock;
 import hx.minepainter.sculpture.SculptureEntity;
 import hx.minepainter.sculpture.SculptureEntityRenderer;
 import hx.minepainter.sculpture.SculptureOperationMessage;
-import hx.minepainter.sculpture.SculptureOperationMessage.SculptureOperationHandler;
 import hx.minepainter.sculpture.SculptureRender;
 import hx.utils.BlockLoader;
 import hx.utils.ItemLoader;
@@ -49,6 +35,7 @@ import net.minecraftforge.common.MinecraftForge;
 public class ModMinePainter {
 
   public static CreativeTabs tabMinePainter = new CreativeTabs("minepainter") {
+    @Override
     public Item getTabIconItem() {
       return ModMinePainter.mixerbrush.item;
     }

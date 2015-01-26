@@ -63,26 +63,26 @@ public class SculptureBlock
     setHardness(1.0F);
   }
 
-  public MovingObjectPosition func_149731_a(World w, int x, int y, int z, Vec3 st, Vec3 ed) {
+  public MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 st, Vec3 ed) {
     SculptureEntity tile = (SculptureEntity) Utils.getTE(w, x, y, z);
     Sculpture sculpture = tile.sculpture();
 
-    int[] pos = Operations.raytrace(sculpture, st.func_72441_c(-x, -y, -z), ed.func_72441_c(-x, -y, -z));
+    int[] pos = Operations.raytrace(sculpture, st.addVector(-x, -y, -z), ed.addVector(-x, -y, -z));
     if (pos[0] == -1) {
       return null;
     }
     ForgeDirection dir = ForgeDirection.getOrientation(pos[3]);
     Vec3 hit = null;
     if (dir.offsetX != 0) {
-      hit = st.func_72429_b(ed, x + pos[0] / 8.0F + (dir.offsetX + 1) / 16.0F);
+      hit = st.getIntermediateWithXValue(ed, x + pos[0] / 8.0F + (dir.offsetX + 1) / 16.0F);
     } else if (dir.offsetY != 0) {
-      hit = st.func_72435_c(ed, y + pos[1] / 8.0F + (dir.offsetY + 1) / 16.0F);
+      hit = st.getIntermediateWithYValue(ed, y + pos[1] / 8.0F + (dir.offsetY + 1) / 16.0F);
     } else if (dir.offsetZ != 0) {
-      hit = st.func_72434_d(ed, z + pos[2] / 8.0F + (dir.offsetZ + 1) / 16.0F);
+      hit = st.getIntermediateWithZValue(ed, z + pos[2] / 8.0F + (dir.offsetZ + 1) / 16.0F);
     }
     if (hit == null) {
       if (sculpture.isEmpty()) {
-        return super.func_149731_a(w, x, y, z, st, ed);
+        return super.collisionRayTrace(w, x, y, z, st, ed);
       }
       return null;
     }
@@ -95,21 +95,21 @@ public class SculptureBlock
     for (int x = 0; x < 8; x++) {
       for (int y = 0; y < 8; y++) {
         for (int z = 0; z < 8; z++) {
-          if (sculpture.getBlockAt(x, y, z, null) != Blocks.field_150350_a) {
-            func_149676_a(x / 8.0F, y / 8.0F, z / 8.0F, (x + 1) / 8.0F, (y + 1) / 8.0F, (z + 1) / 8.0F);
+          if (sculpture.getBlockAt(x, y, z, null) != Blocks.air) {
+            setBlockBounds(x / 8.0F, y / 8.0F, z / 8.0F, (x + 1) / 8.0F, (y + 1) / 8.0F, (z + 1) / 8.0F);
             super.func_149743_a(par1World, par2, par3, par4, par5AxisAlignedBB, par6List, par7Entity);
           }
         }
       }
     }
-    func_149676_a(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+    setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
   }
 
   public boolean func_149646_a(IBlockAccess iba, int x, int y, int z, int side) {
     if (iba.getBlock(x, y, z) == this.current) {
       return false;
     }
-    return (iba.func_147437_c(x, y, z)) || (!iba.getBlock(x, y, z).func_149662_c());
+    return (iba.isAirBlock(x, y, z)) || (!iba.getBlock(x, y, z).func_149662_c());
   }
 
   public TileEntity func_149915_a(World var1, int var2) {
@@ -152,7 +152,7 @@ public class SculptureBlock
   }
 
   public int getLightValue(IBlockAccess world, int x, int y, int z) {
-    TileEntity te = world.func_147438_o(x, y, z);
+    TileEntity te = world.getTileEntity(x, y, z);
     if ((te == null) || (!(te instanceof SculptureEntity))) {
       return super.getLightValue(world, x, y, z);
     }

@@ -57,7 +57,7 @@ public class PaintingBlock extends BlockContainer {
   }
 
   public void func_149683_g() {
-    func_149676_a(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+    setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
   }
 
   public int func_149645_b() {

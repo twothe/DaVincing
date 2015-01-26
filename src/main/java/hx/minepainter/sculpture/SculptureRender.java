@@ -30,7 +30,7 @@ public class SculptureRender
     if (world.getBlock(x, y, z) != ModMinePainter.sculpture.block) {
       return false;
     }
-    SculptureEntity se = (SculptureEntity) world.func_147438_o(x, y, z);
+    SculptureEntity se = (SculptureEntity) world.getTileEntity(x, y, z);
 
     se.getRender().updateLight(block.func_149677_c(world, x, y, z));
     se.getRender().updateAO(world, x, y, z);

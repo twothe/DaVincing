@@ -106,9 +106,9 @@ public class DroppedSculptureRenderer
         int x = i >> 6 & 0x7;
         int y = i >> 3 & 0x7;
         int z = i >> 0 & 0x7;
-        if (this.sculpture.getBlockAt(x, y, z, null) != Blocks.field_150350_a) {
+        if (this.sculpture.getBlockAt(x, y, z, null) != Blocks.air) {
           sb.setCurrentBlock(this.sculpture.getBlockAt(x, y, z, null), this.sculpture.getMetaAt(x, y, z, null));
-          sb.func_149676_a(x / 8.0F, y / 8.0F, z / 8.0F, (x + 1) / 8.0F, (y + 1) / 8.0F, (z + 1) / 8.0F);
+          sb.setBlockBounds(x / 8.0F, y / 8.0F, z / 8.0F, (x + 1) / 8.0F, (y + 1) / 8.0F, (z + 1) / 8.0F);
           if (type == IItemRenderer.ItemRenderType.INVENTORY) {
             GL11.glPushMatrix();
             GL11.glEnable(3042);
@@ -135,7 +135,7 @@ public class DroppedSculptureRenderer
       GL11.glEndList();
 
       sb.setCurrentBlock(null, 0);
-      sb.func_149676_a(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+      sb.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
     }
   }
 }
