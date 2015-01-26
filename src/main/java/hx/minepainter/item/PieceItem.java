@@ -23,7 +23,7 @@ public class PieceItem
 
   @Override
   public Block getEditBlock(ItemStack is) {
-    return Block.getBlockById(is.getItemDamage()>> 4 & 0xFFF);
+    return Block.getBlockById(is.getItemDamage() >> 4 & 0xFFF);
   }
 
   @Override

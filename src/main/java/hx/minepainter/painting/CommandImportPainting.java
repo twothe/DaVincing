@@ -1,27 +1,25 @@
 package hx.minepainter.painting;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.concurrent.LinkedBlockingQueue;
-import javax.imageio.ImageIO;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 
 public class CommandImportPainting extends CommandBase {
 
-  private static LinkedBlockingQueue<Runnable> tasks = new LinkedBlockingQueue();
+  private static final LinkedBlockingQueue<Runnable> tasks = new LinkedBlockingQueue();
   private static Thread worker;
 
+  @Override
   public String getCommandName() {
     return "mpimport";
   }
 
+  @Override
   public String getCommandUsage(ICommandSender var1) {
     return "mpimport <image url> [--size <w> <h>]\nto import image as w * h pieces of 16x16 paintings";
   }
 
+  @Override
   public void processCommand(ICommandSender var1, String[] var2) {
     startWorking();
     int w = 1;
@@ -47,6 +45,7 @@ public class CommandImportPainting extends CommandBase {
   private void startWorking() {
     if ((worker == null) || (!worker.isAlive())) {
       worker = new Thread() {
+        @Override
         public void run() {
           try {
             for (;;) {

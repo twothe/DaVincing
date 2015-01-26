@@ -14,7 +14,6 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 
 public class PaintingEntity
         extends TileEntity {
@@ -49,6 +48,7 @@ public class PaintingEntity
     return this.icon;
   }
 
+  @Override
   public void invalidate() {
     super.invalidate();
     if (this.worldObj.isRemote) {
@@ -57,6 +57,7 @@ public class PaintingEntity
     }
   }
 
+  @Override
   public void onChunkUnload() {
     super.onChunkUnload();
     if (this.worldObj.isRemote) {
@@ -65,6 +66,7 @@ public class PaintingEntity
     }
   }
 
+  @Override
   public void writeToNBT(NBTTagCompound nbt) {
     super.writeToNBT(nbt);
     writeImageToNBT(nbt);
@@ -80,6 +82,7 @@ public class PaintingEntity
     nbt.setByteArray("image_data", baos.toByteArray());
   }
 
+  @Override
   public void readFromNBT(NBTTagCompound nbt) {
     readFromNBTToImage(nbt);
     super.readFromNBT(nbt);
@@ -102,12 +105,14 @@ public class PaintingEntity
     }
   }
 
+  @Override
   public Packet getDescriptionPacket() {
     NBTTagCompound nbttagcompound = new NBTTagCompound();
     writeToNBT(nbttagcompound);
     return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 17, nbttagcompound);
   }
 
+  @Override
   public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
     readFromNBT(pkt.func_148857_g());
   }

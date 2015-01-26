@@ -59,7 +59,7 @@ public class SculptureRenderCompiler {
       return false;
     }
     if (this.glDisplayList < 0) {
-      this.glDisplayList = GLAllocation.func_74526_a(1);
+      this.glDisplayList = GLAllocation.generateDisplayLists(1);
     }
     GL11.glPushMatrix();
     GL11.glNewList(this.glDisplayList, 4864);

@@ -3,7 +3,6 @@ package hx.minepainter.painting;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.awt.image.BufferedImage;
-import java.util.HashSet;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.IIcon;
 
@@ -31,52 +30,61 @@ public class PaintingIcon implements IIcon {
   }
 
   @SideOnly(Side.CLIENT)
-  public int func_94211_a() {
+  @Override
+  public int getIconWidth() {
     return 16;
   }
 
   @SideOnly(Side.CLIENT)
-  public int func_94216_b() {
+  @Override
+  public int getIconHeight() {
     return 16;
   }
 
   @SideOnly(Side.CLIENT)
+  @Override
   public float getMinU() {
     return this.umin;
   }
 
   @SideOnly(Side.CLIENT)
+  @Override
   public float getMaxU() {
     return this.umax;
   }
 
   @SideOnly(Side.CLIENT)
-  public float func_94214_a(double var1) {
+  @Override
+  public float getInterpolatedU(double var1) {
     return (float) (this.umin + (this.umax - this.umin) * var1 / 16.0D);
   }
 
   @SideOnly(Side.CLIENT)
+  @Override
   public float getMinV() {
     return this.vmin;
   }
 
   @SideOnly(Side.CLIENT)
+  @Override
   public float getMaxV() {
     return this.vmax;
   }
 
   @SideOnly(Side.CLIENT)
-  public float func_94207_b(double var1) {
+  @Override
+  public float getInterpolatedV(double var1) {
     return (float) (this.vmin + (this.vmax - this.vmin) * var1 / 16.0D);
   }
 
   @SideOnly(Side.CLIENT)
+  @Override
   public String getIconName() {
     return "painting";
   }
 
   public void fill(BufferedImage img) {
-    TextureUtil.func_110995_a(this.sheet.glTexId, img, (int) (this.umin * this.sheet.resolution), (int) (this.vmin * this.sheet.resolution), false, false);
+    TextureUtil.uploadTextureImageSub(this.sheet.glTexId, img, (int) (this.umin * this.sheet.resolution), (int) (this.vmin * this.sheet.resolution), false, false);
   }
 
   public void release() {
@@ -86,4 +94,5 @@ public class PaintingIcon implements IIcon {
   public int glTexId() {
     return this.sheet.glTexId;
   }
+
 }

@@ -34,8 +34,9 @@ public class PaintingOperationMessage
     this.color = color;
   }
 
+  @Override
   public void fromBytes(ByteBuf buf) {
-    this.tool = ((PaintTool) Item.func_150899_d(buf.readInt()));
+    this.tool = ((PaintTool) Item.getItemById(buf.readInt()));
     this.x = buf.readInt();
     this.y = buf.readInt();
     this.z = buf.readInt();
@@ -45,8 +46,9 @@ public class PaintingOperationMessage
     this.color = buf.readInt();
   }
 
+  @Override
   public void toBytes(ByteBuf buf) {
-    buf.writeInt(Item.func_150891_b(this.tool));
+    buf.writeInt(Item.getIdFromItem(this.tool));
     buf.writeInt(this.x);
     buf.writeInt(this.y);
     buf.writeInt(this.z);
@@ -59,8 +61,9 @@ public class PaintingOperationMessage
   public static class PaintingOperationHandler
           implements IMessageHandler<PaintingOperationMessage, IMessage> {
 
+    @Override
     public IMessage onMessage(PaintingOperationMessage message, MessageContext ctx) {
-      message.tool.paintAt(ctx.getServerHandler().field_147369_b.worldObj, message.x, message.y, message.z, message.xs, message.ys, message.zs, message.color);
+      message.tool.paintAt(ctx.getServerHandler().playerEntity.worldObj, message.x, message.y, message.z, message.xs, message.ys, message.zs, message.color);
 
       return null;
     }

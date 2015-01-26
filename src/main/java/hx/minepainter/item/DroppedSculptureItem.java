@@ -25,7 +25,7 @@ public class DroppedSculptureItem
   }
 
   public void readTo(ItemStack is, Sculpture sculpture) {
-    if (is.func_77942_o()) {
+    if (is.isOnItemFrame()) {
       sculpture.read(is.getTagCompound());
     }
   }
@@ -39,7 +39,7 @@ public class DroppedSculptureItem
   }
 
   public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
-    if (!w.getBlock(x, y, z).getMaterial().func_76220_a()) {
+    if (!w.getBlock(x, y, z).getMaterial().isSolid()) {
       return false;
     }
     ForgeDirection dir = ForgeDirection.getOrientation(face);
@@ -49,13 +49,13 @@ public class DroppedSculptureItem
     if (!w.isAirBlock(_x, _y, _z)) {
       return false;
     }
-    if (!ep.func_82247_a(x, y, z, face, is)) {
+    if (!ep.canPlayerEdit(x, y, z, face, is)) {
       return false;
     }
     w.setBlock(_x, _y, _z, ModMinePainter.sculpture.block);
     SculptureEntity se = (SculptureEntity) Utils.getTE(w, _x, _y, _z);
     se.sculpture().read(is.getTagCompound());
-    if (!ep.field_71075_bZ.field_75098_d) {
+    if (!ep.capabilities.isCreativeMode) {
       is.stackSize -= 1;
     }
     return true;

@@ -34,7 +34,7 @@ public class ChiselItem
     if (!Operations.validOperation(w, x, y, z, pos, flags)) {
       return false;
     }
-    if (MinecraftServer.getServer()== null) {
+    if (MinecraftServer.getServer() == null) {
       boolean done = Operations.applyOperation(w, x, y, z, pos, flags, editBlock, editMeta);
       if (!done) {
         return false;

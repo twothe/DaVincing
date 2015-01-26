@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 public class Palette
         extends Item {
 
-  private IIcon[] colors = new IIcon[6];
+  private final IIcon[] colors = new IIcon[6];
 
   public Palette() {
     setCreativeTab(ModMinePainter.tabMinePainter);
@@ -29,7 +29,8 @@ public class Palette
     setUnlocalizedName("palette");
   }
 
-  public boolean func_77623_v() {
+  @Override
+  public boolean getHasSubtypes() {
     return true;
   }
 
@@ -51,7 +52,7 @@ public class Palette
   public void registerIcons(IIconRegister par1IconRegister) {
     super.registerIcons(par1IconRegister);
     for (int i = 0; i < 6; i++) {
-      this.colors[i] = par1IconRegister.registerIcon(func_111208_A() + i);
+      this.colors[i] = par1IconRegister.registerIcon(getIconString() + i);
     }
   }
 
@@ -96,6 +97,7 @@ public class Palette
     return false;
   }
 
+  @Override
   public ItemStack onItemRightClick(ItemStack is, World w, EntityPlayer ep) {
     setColors(is, shift(getColors(is)));
     return is;
@@ -121,7 +123,8 @@ public class Palette
     nbt.setTag("palette", palette);
   }
 
-  public void func_77624_a(ItemStack is, EntityPlayer ep, List list, boolean help) {
+  @Override
+  public void addInformation(ItemStack is, EntityPlayer ep, List list, boolean help) {
     int color = getColors(is)[0];
     list.add("Alpha : " + (color >> 24 & 0xFF));
     list.add("§cRed : " + (color >> 16 & 0xFF));

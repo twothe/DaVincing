@@ -33,17 +33,17 @@ public class Crafting {
     GameRegistry.addRecipe(new ItemStack(ModMinePainter.canvas.item),
             new Object[]{"XXX", "XXX", 'X', new ItemStack(Blocks.wool)});
 
-    GameRegistry.addRecipe(new ItemStack(ModMinePainter.chiselStone.item), 
+    GameRegistry.addRecipe(new ItemStack(ModMinePainter.chiselStone.item),
             new Object[]{"X ", " Y",
               'X', new ItemStack(Blocks.cobblestone),
               'Y', new ItemStack(Items.stick)});
 
-    GameRegistry.addRecipe(new ItemStack(ModMinePainter.chiselIron.item), 
+    GameRegistry.addRecipe(new ItemStack(ModMinePainter.chiselIron.item),
             new Object[]{"X ", " Y",
               'X', new ItemStack(Items.iron_ingot),
               'Y', new ItemStack(ModMinePainter.chiselStone.item)});
 
-    GameRegistry.addRecipe(new ItemStack(ModMinePainter.chiselDiamond.item), 
+    GameRegistry.addRecipe(new ItemStack(ModMinePainter.chiselDiamond.item),
             new Object[]{"X ", " Y",
               'X', new ItemStack(Items.diamond),
               'Y', new ItemStack(ModMinePainter.chiselIron.item)});

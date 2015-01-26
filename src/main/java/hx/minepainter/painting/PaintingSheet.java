@@ -18,7 +18,7 @@ public class PaintingSheet {
     for (int i = 0; i < total; i++) {
       this.icons.add(new PaintingIcon(this, i));
     }
-    TextureUtil.func_110991_a(this.glTexId, this.resolution, this.resolution);
+    TextureUtil.allocateTexture(this.glTexId, this.resolution, this.resolution);
   }
 
   public boolean isEmpty() {

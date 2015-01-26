@@ -12,13 +12,14 @@ import org.lwjgl.opengl.GL11;
 public class SculptureEntityRenderer
         extends TileEntitySpecialRenderer {
 
-  public void func_147500_a(TileEntity var1, double xd, double yd, double zd, float partial) {
+  @Override
+  public void renderTileEntityAt(TileEntity var1, double xd, double yd, double zd, float partial) {
     SculptureEntity se = (SculptureEntity) var1;
 
-    RenderHelper.func_74518_a();
-    GL11.glShadeModel(7425);
-    GL11.glEnable(3042);
-    OpenGlHelper.func_148821_a(770, 771, 1, 0);
+    RenderHelper.disableStandardItemLighting();
+    GL11.glShadeModel(GL11.GL_SMOOTH);
+    GL11.glEnable(GL11.GL_BLEND);
+    OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
     if ((!se.getRender().ready()) && (!se.getRender().hasContext())) {
       int lightX = (int) OpenGlHelper.lastBrightnessX;
       int lightY = (int) OpenGlHelper.lastBrightnessY;
@@ -33,8 +34,8 @@ public class SculptureEntityRenderer
     GL11.glCallList(se.getRender().glDisplayList);
     GL11.glPopMatrix();
 
-    GL11.glDisable(3042);
-    GL11.glShadeModel(7424);
-    RenderHelper.func_74519_b();
+    GL11.glDisable(GL11.GL_BLEND);
+    GL11.glShadeModel(GL11.GL_FLAT);
+    RenderHelper.enableStandardItemLighting();
   }
 }

@@ -32,7 +32,8 @@ public class PaintingBlock extends BlockContainer {
   public void func_149651_a(IIconRegister register) {
   }
 
-  public TileEntity func_149915_a(World var1, int var2) {
+  @Override
+  public TileEntity createNewTileEntity(World var1, int var2) {
     return new PaintingEntity();
   }
 
@@ -44,7 +45,8 @@ public class PaintingBlock extends BlockContainer {
     return false;
   }
 
-  public AxisAlignedBB func_149668_a(World par1World, int par2, int par3, int par4) {
+  @Override
+  public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4) {
     return null;
   }
 
@@ -64,6 +66,7 @@ public class PaintingBlock extends BlockContainer {
     return -1;
   }
 
+  @Override
   public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
     ItemStack is = new ItemStack(ModMinePainter.canvas.item);
     NBTTagCompound nbt = new NBTTagCompound();
@@ -79,13 +82,14 @@ public class PaintingBlock extends BlockContainer {
     int tx = x - pp.normal.offsetX;
     int ty = y - pp.normal.offsetY;
     int tz = z - pp.normal.offsetZ;
-    if (w.getBlock(tx, ty, tz).getMaterial().func_76220_a()) {
+    if (w.getBlock(tx, ty, tz).getMaterial().isSolid()) {
       return;
     }
     w.func_147468_f(x, y, z);
   }
 
-  protected ItemStack func_149644_j(int p_149644_1_) {
+  @Override
+  protected ItemStack createStackedBlock(int p_149644_1_) {
     return null;
   }
 

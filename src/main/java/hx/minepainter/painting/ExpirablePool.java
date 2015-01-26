@@ -2,7 +2,6 @@ package hx.minepainter.painting;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
 
 public abstract class ExpirablePool<T, V> {
 
@@ -19,16 +18,17 @@ public abstract class ExpirablePool<T, V> {
   public void start() {
     this.running = true;
     new Thread(new Runnable() {
+      @Override
       public void run() {
         while (ExpirablePool.this.running) {
           for (Iterator<T> iter = ExpirablePool.this.timeouts.keySet().iterator(); iter.hasNext();) {
             T t = iter.next();
-            int count = ((Integer) ExpirablePool.this.timeouts.get(t)).intValue();
+            int count = ExpirablePool.this.timeouts.get(t);
             if (count <= 0) {
               iter.remove();
               ExpirablePool.this.release(ExpirablePool.this.items.remove(t));
             } else {
-              ExpirablePool.this.timeouts.put(t, Integer.valueOf(count - 1));
+              ExpirablePool.this.timeouts.put(t, count - 1);
             }
           }
           try {
@@ -60,7 +60,7 @@ public abstract class ExpirablePool<T, V> {
     if (!this.items.containsKey(t)) {
       this.items.put(t, get());
     }
-    this.timeouts.put(t, Integer.valueOf(this.expire));
+    this.timeouts.put(t, this.expire);
     return this.items.get(t);
   }
 }

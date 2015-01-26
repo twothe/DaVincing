@@ -33,14 +33,14 @@ public class SculptureBlock
   private int y;
   private int z;
   private int meta = 0;
-  private Block current = Blocks.field_150348_b;
+  private Block current = Blocks.stone;
   private int renderID = -1;
 
   public void setCurrentBlock(Block that, int meta) {
     if (that == null) {
       meta = 0;
       this.renderID = -1;
-      this.current = Blocks.field_150348_b;
+      this.current = Blocks.stone;
       return;
     }
     this.current = that;
@@ -112,7 +112,7 @@ public class SculptureBlock
     return (iba.isAirBlock(x, y, z)) || (!iba.getBlock(x, y, z).func_149662_c());
   }
 
-  public TileEntity func_149915_a(World var1, int var2) {
+  public TileEntity createNewTileEntity(World var1, int var2) {
     return new SculptureEntity();
   }
 
@@ -160,7 +160,7 @@ public class SculptureBlock
     return se.sculpture.getLight();
   }
 
-  protected ItemStack func_149644_j(int p_149644_1_) {
+  protected ItemStack createStackedBlock(int p_149644_1_) {
     return null;
   }
 

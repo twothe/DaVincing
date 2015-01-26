@@ -139,7 +139,8 @@ public class PaintTool
       return is;
     }
 
-    public boolean func_77623_v() {
+    @Override
+    public boolean getHasSubtypes() {
       return true;
     }
 

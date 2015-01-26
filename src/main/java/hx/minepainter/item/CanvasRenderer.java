@@ -29,9 +29,9 @@ public class CanvasRenderer
   @Override
   public void renderItem(IItemRenderer.ItemRenderType type, ItemStack item, Object... data) {
     IIcon icon = ((CanvasItem) ModMinePainter.canvas.item).getIconFromDamage(0);
-    if (item.func_77942_o()) {
+    if (item.isOnItemFrame()) {
       PaintingIcon pi = PaintingCache.get(item);
-      GL11.glBindTexture(3553, pi.glTexId());
+      GL11.glBindTexture(GL11.GL_TEXTURE_2D, pi.glTexId());
       icon = pi;
     }
     if (type == IItemRenderer.ItemRenderType.INVENTORY) {

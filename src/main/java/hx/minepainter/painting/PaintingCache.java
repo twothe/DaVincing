@@ -6,17 +6,18 @@ import java.io.IOException;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class PaintingCache {
 
   public static final int res = 256;
   private static LinkedList<PaintingSheet> sheets = new LinkedList();
-  private static ExpirablePool<ItemStack, PaintingIcon> item_pool = new ExpirablePool(12) {
+  private static final ExpirablePool<ItemStack, PaintingIcon> item_pool = new ExpirablePool<ItemStack, PaintingIcon>(12) {
+    @Override
     public void release(PaintingIcon v) {
       v.release();
     }
 
+    @Override
     public PaintingIcon get() {
       return PaintingCache.get();
     }

@@ -67,16 +67,16 @@ public class SculptureOperationMessage
           implements IMessageHandler<SculptureOperationMessage, IMessage> {
 
     public IMessage onMessage(SculptureOperationMessage message, MessageContext ctx) {
-      World w = ctx.getServerHandler().field_147369_b.worldObj;
+      World w = ctx.getServerHandler().playerEntity.worldObj;
       if (Operations.validOperation(w, message.x, message.y, message.z, message.pos, message.flags)) {
         Operations.applyOperation(w, message.x, message.y, message.z, message.pos, message.flags, message.block, message.meta);
       }
-      EntityPlayer ep = ctx.getServerHandler().field_147369_b;
+      EntityPlayer ep = ctx.getServerHandler().playerEntity;
       ItemStack is = ep.getHeldItem();
       if ((message.flags & 0x10) > 0) {
         is.func_77972_a(1, ep);
       } else if (((0x20 & message.flags) > 0)
-              && (!ep.field_71075_bZ.field_75098_d)) {
+              && (!ep.capabilities.isCreativeMode)) {
         is.stackSize -= 1;
         if (is.stackSize <= 0) {
           ForgeEventFactory.onPlayerDestroyItem(ep, is);
