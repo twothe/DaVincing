@@ -13,12 +13,12 @@ public class PieceItem
     setCreativeTab(null);
     setUnlocalizedName("sculpture_piece");
     setTextureName("");
-    func_77627_a(true);
+    setHasSubtypes(true);
     setMaxStackSize(64);
     setMaxDamage(0);
   }
 
-  public void func_94581_a(IIconRegister r) {
+  public void registerIcons(IIconRegister r) {
   }
 
   @Override

@@ -48,7 +48,7 @@ public class Operations {
           int tgt_meta = w.getBlockMetadata(tx, ty, tz);
           if ((tgt_block == Blocks.air) && (block != Blocks.air)) {
             w.setBlock(tx, ty, tz, ModMinePainter.sculpture.block);
-          } else if (sculptable(tgt_block, tgt_meta)) {
+          } else if (canBlockBeSculptured(tgt_block, tgt_meta)) {
             convertToFullSculpture(w, tx, ty, tz);
           }
           if (w.getBlock(tx, ty, tz) == ModMinePainter.sculpture.block) {
@@ -117,53 +117,11 @@ public class Operations {
     }
   }
 
-  public static boolean sculptable(Block b, int blockMeta) {
-    if (b == null) {
-      return false;
-    }
-    if (b == Blocks.field_150349_c) {
-      return false;
-    }
-    if (b == Blocks.field_150357_h) {
-      return false;
-    }
-    if (b == Blocks.field_150434_aF) {
-      return false;
-    }
-    if (b == Blocks.field_150359_w) {
-      return true;
-    }
-    if (b == Blocks.field_150399_cn) {
-      return true;
-    }
-    if (b == Blocks.field_150362_t) {
-      return false;
-    }
-    if (b.hasTileEntity(blockMeta)) {
-      return false;
-    }
-    if (!b.func_149686_d()) {
-      return false;
-    }
-    if (b.func_149753_y() != 1.0D) {
-      return false;
-    }
-    if (b.func_149669_A() != 1.0D) {
-      return false;
-    }
-    if (b.func_149693_C() != 1.0D) {
-      return false;
-    }
-    if (b.func_149704_x() != 0.0D) {
-      return false;
-    }
-    if (b.func_149665_z() != 0.0D) {
-      return false;
-    }
-    if (b.func_149706_B() != 0.0D) {
-      return false;
-    }
-    return true;
+  public static boolean canBlockBeSculptured(final Block b, final int blockMeta) {
+    return (b != null)
+            && (b.hasTileEntity(blockMeta) == false)// blocks with tile entities should never be sculptured, this only results in strange errors or crashes
+            && (b.isCollidable())// if it is not collidable we hardly can use a chisel on it
+            && (b.isOpaqueCube());// maybe a bit too limiting?
   }
 
   public static void convertToFullSculpture(World w, int x, int y, int z) {
@@ -332,13 +290,7 @@ public class Operations {
     }
     Block b = worldObj.getBlock(x, y, z);
     if (hasFlag(chiselFlags, 1)) {
-      if (b == Blocks.air) {
-        return true;
-      }
-      if (b == ModMinePainter.sculpture.block) {
-        return true;
-      }
-      return false;
+      return (b == Blocks.air) || (b == ModMinePainter.sculpture.block);
     }
     int meta = worldObj.getBlockMetadata(x, y, z);
     if (b == Blocks.air) {
@@ -347,7 +299,7 @@ public class Operations {
     if (b == ModMinePainter.sculpture.block) {
       return true;
     }
-    if (sculptable(b, meta)) {
+    if (canBlockBeSculptured(b, meta)) {
       return true;
     }
     return false;

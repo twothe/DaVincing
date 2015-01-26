@@ -22,7 +22,7 @@ public class ChiselItem
     setMaxDamage(240);
   }
 
-  public boolean func_77648_a(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
+  public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
     if (!w.isRemote) {
       return false;
     }
@@ -59,10 +59,10 @@ public class ChiselItem
     return 16;
   }
 
-  public static class Saw
+  public static class ChiselDiamond
           extends ChiselItem {
 
-    public Saw() {
+    public ChiselDiamond() {
       setUnlocalizedName("saw");
       setTextureName("minepainter:diamond_chisel");
     }
@@ -82,10 +82,10 @@ public class ChiselItem
     }
   }
 
-  public static class Barcutter
+  public static class ChiselIron
           extends ChiselItem {
 
-    public Barcutter() {
+    public ChiselIron() {
       setUnlocalizedName("barcutter");
       setTextureName("minepainter:iron_chisel");
     }

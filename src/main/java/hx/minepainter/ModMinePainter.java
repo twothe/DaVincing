@@ -42,9 +42,9 @@ public class ModMinePainter {
   };
   public static BlockLoader<SculptureBlock> sculpture = new BlockLoader(new SculptureBlock(), SculptureEntity.class);
   public static BlockLoader<PaintingBlock> painting = new BlockLoader(new PaintingBlock(), PaintingEntity.class);
-  public static ItemLoader<ChiselItem> chisel = new ItemLoader(new ChiselItem());
-  public static ItemLoader<ChiselItem> barcutter = new ItemLoader(new ChiselItem.Barcutter());
-  public static ItemLoader<ChiselItem> saw = new ItemLoader(new ChiselItem.Saw());
+  public static ItemLoader<ChiselItem> chiselStone = new ItemLoader(new ChiselItem());
+  public static ItemLoader<ChiselItem> chiselIron = new ItemLoader(new ChiselItem.ChiselIron());
+  public static ItemLoader<ChiselItem> chiselDiamond = new ItemLoader(new ChiselItem.ChiselDiamond());
   public static ItemLoader<PieceItem> piece = new ItemLoader(new PieceItem());
   public static ItemLoader<PieceItem> bar = new ItemLoader(new PieceItem.Bar());
   public static ItemLoader<PieceItem> cover = new ItemLoader(new PieceItem.Cover());
@@ -63,9 +63,9 @@ public class ModMinePainter {
     sculpture.load();
     painting.load();
 
-    chisel.load();
-    barcutter.load();
-    saw.load();
+    chiselStone.load();
+    chiselIron.load();
+    chiselDiamond.load();
     piece.load();
     bar.load();
     cover.load();

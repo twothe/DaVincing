@@ -18,23 +18,51 @@ import net.minecraft.world.World;
 public class Crafting {
 
   public void registerRecipes() {
-    GameRegistry.addRecipe(new ItemStack(ModMinePainter.minibrush.item), new Object[]{"X  ", " Y ", "  Z", 'X', new ItemStack(Blocks.field_150325_L), 'Y', new ItemStack(Items.field_151055_y), 'Z', new ItemStack(Items.field_151100_aR, 1, 1)});
+    GameRegistry.addRecipe(new ItemStack(ModMinePainter.minibrush.item),
+            new Object[]{"X  ", " Y ", "  Z",
+              'X', new ItemStack(Blocks.wool),
+              'Y', new ItemStack(Items.stick),
+              'Z', new ItemStack(Items.dye, 1, 1)});
 
-    GameRegistry.addRecipe(new ItemStack(ModMinePainter.mixerbrush.item), new Object[]{"XX ", "XY ", "  Z", 'X', new ItemStack(Blocks.field_150325_L), 'Y', new ItemStack(Items.field_151055_y), 'Z', new ItemStack(Items.field_151100_aR, 1, 1)});
+    GameRegistry.addRecipe(new ItemStack(ModMinePainter.mixerbrush.item),
+            new Object[]{"XX ", "XY ", "  Z",
+              'X', new ItemStack(Blocks.wool),
+              'Y', new ItemStack(Items.stick),
+              'Z', new ItemStack(Items.dye, 1, 1)});
 
-    GameRegistry.addRecipe(new ItemStack(ModMinePainter.canvas.item), new Object[]{"XXX", "XXX", 'X', new ItemStack(Blocks.field_150325_L)});
+    GameRegistry.addRecipe(new ItemStack(ModMinePainter.canvas.item),
+            new Object[]{"XXX", "XXX", 'X', new ItemStack(Blocks.wool)});
 
-    GameRegistry.addRecipe(new ItemStack(ModMinePainter.chisel.item), new Object[]{"X ", " Y", 'X', new ItemStack(Blocks.field_150347_e), 'Y', new ItemStack(Items.field_151055_y)});
+    GameRegistry.addRecipe(new ItemStack(ModMinePainter.chiselStone.item), 
+            new Object[]{"X ", " Y",
+              'X', new ItemStack(Blocks.cobblestone),
+              'Y', new ItemStack(Items.stick)});
 
-    GameRegistry.addRecipe(new ItemStack(ModMinePainter.barcutter.item), new Object[]{"X ", " Y", 'X', new ItemStack(Items.field_151042_j), 'Y', new ItemStack(ModMinePainter.chisel.item)});
+    GameRegistry.addRecipe(new ItemStack(ModMinePainter.chiselIron.item), 
+            new Object[]{"X ", " Y",
+              'X', new ItemStack(Items.iron_ingot),
+              'Y', new ItemStack(ModMinePainter.chiselStone.item)});
 
-    GameRegistry.addRecipe(new ItemStack(ModMinePainter.saw.item), new Object[]{"X ", " Y", 'X', new ItemStack(Items.field_151045_i), 'Y', new ItemStack(ModMinePainter.barcutter.item)});
+    GameRegistry.addRecipe(new ItemStack(ModMinePainter.chiselDiamond.item), 
+            new Object[]{"X ", " Y",
+              'X', new ItemStack(Items.diamond),
+              'Y', new ItemStack(ModMinePainter.chiselIron.item)});
 
-    GameRegistry.addRecipe(new ItemStack(ModMinePainter.palette.item), new Object[]{"X", "Y", 'X', new ItemStack(Blocks.field_150344_f), 'Y', new ItemStack(ModMinePainter.chisel.item)});
+    GameRegistry.addRecipe(new ItemStack(ModMinePainter.palette.item),
+            new Object[]{"X", "Y",
+              'X', new ItemStack(Blocks.planks),
+              'Y', new ItemStack(ModMinePainter.chiselStone.item)});
 
-    GameRegistry.addRecipe(new ItemStack(ModMinePainter.eraser.item), new Object[]{"XX ", "YY ", "ZZ ", 'X', new ItemStack(Items.field_151123_aH), 'Y', new ItemStack(Items.field_151121_aF), 'Z', new ItemStack(Items.field_151100_aR, 1, 4)});
+    GameRegistry.addRecipe(new ItemStack(ModMinePainter.eraser.item),
+            new Object[]{"XX ", "YY ", "ZZ ",
+              'X', new ItemStack(Items.slime_ball),
+              'Y', new ItemStack(Items.paper),
+              'Z', new ItemStack(Items.dye, 1, 4)});
 
-    GameRegistry.addRecipe(new ItemStack(ModMinePainter.wrench.item), new Object[]{"XX ", "YX ", " X ", 'X', new ItemStack(Items.field_151042_j), 'Y', new ItemStack(Items.field_151100_aR, 1, 1)});
+    GameRegistry.addRecipe(new ItemStack(ModMinePainter.wrench.item),
+            new Object[]{"XX ", "YX ", " X ",
+              'X', new ItemStack(Items.iron_ingot),
+              'Y', new ItemStack(Items.dye, 1, 1)});
 
     GameRegistry.addRecipe(this.scrap);
 
@@ -147,12 +175,12 @@ public class Crafting {
       for (int i = 0; i < size; i++) {
         ItemStack is = ic.getStackInSlot(i);
         if (is != null) {
-          if (((is.getItem() instanceof PaintTool.Bucket)) || (is.getItem() == Items.field_151131_as)) {
+          if (((is.getItem() instanceof PaintTool.Bucket)) || (is.getItem() == Items.water_bucket)) {
             if (bucket != null) {
               return false;
             }
             bucket = is;
-          } else if (((is.getItem() instanceof ItemDye)) || (is.getItem() == Items.field_151123_aH)) {
+          } else if (((is.getItem() instanceof ItemDye)) || (is.getItem() == Items.slime_ball)) { // slime makes entire canvas transparent
             if (dye != null) {
               return false;
             }
@@ -174,12 +202,12 @@ public class Crafting {
       for (int i = 0; i < size; i++) {
         ItemStack is = ic.getStackInSlot(i);
         if (is != null) {
-          if (((is.getItem() instanceof PaintTool.Bucket)) || (is.getItem() == Items.field_151131_as)) {
+          if (((is.getItem() instanceof PaintTool.Bucket)) || (is.getItem() == Items.water_bucket)) {
             if (bucket != null) {
               return null;
             }
             bucket = is;
-          } else if (((is.getItem() instanceof ItemDye)) || (is.getItem() == Items.field_151123_aH)) {
+          } else if (((is.getItem() instanceof ItemDye)) || (is.getItem() == Items.slime_ball)) {
             if (dye != null) {
               return null;
             }
@@ -188,7 +216,7 @@ public class Crafting {
         }
       }
       ItemStack newbucket = new ItemStack(ModMinePainter.bucket.item);
-      newbucket.setItemDamage(dye.getItem() == Items.field_151123_aH ? 16 : dye.getItemDamage());
+      newbucket.setItemDamage(dye.getItem() == Items.slime_ball ? 16 : dye.getItemDamage());
       return newbucket;
     }
   };

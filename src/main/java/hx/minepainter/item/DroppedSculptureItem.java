@@ -31,14 +31,14 @@ public class DroppedSculptureItem
   }
 
   @SideOnly(Side.CLIENT)
-  public void func_94581_a(IIconRegister r) {
+  public void registerIcons(IIconRegister r) {
   }
 
   public boolean func_77651_p() {
     return true;
   }
 
-  public boolean func_77648_a(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
+  public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
     if (!w.getBlock(x, y, z).getMaterial().func_76220_a()) {
       return false;
     }

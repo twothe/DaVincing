@@ -77,7 +77,7 @@ public class PaintingEntity
     } catch (IOException e) {
       e.printStackTrace();
     }
-    nbt.func_74773_a("image_data", baos.toByteArray());
+    nbt.setByteArray("image_data", baos.toByteArray());
   }
 
   public void readFromNBT(NBTTagCompound nbt) {
@@ -89,7 +89,7 @@ public class PaintingEntity
     if (nbt == null) {
       return;
     }
-    byte[] data = nbt.func_74770_j("image_data");
+    byte[] data = nbt.getByteArray("image_data");
     ByteArrayInputStream bais = new ByteArrayInputStream(data);
     try {
       BufferedImage img = ImageIO.read(bais);

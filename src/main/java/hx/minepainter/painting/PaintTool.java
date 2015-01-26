@@ -1,25 +1,20 @@
 package hx.minepainter.painting;
 
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import hx.minepainter.ModMinePainter;
 import hx.minepainter.item.Palette;
-import hx.utils.BlockLoader;
 import hx.utils.Utils;
 import java.awt.image.BufferedImage;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 
 public class PaintTool
         extends Item {
@@ -29,7 +24,8 @@ public class PaintTool
     setMaxStackSize(1);
   }
 
-  public boolean func_77648_a(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
+  @Override
+  public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
     if (!w.isRemote) {
       return false;
     }
@@ -108,6 +104,7 @@ public class PaintTool
       setTextureName("minepainter:brush_small");
     }
 
+    @Override
     public boolean apply(BufferedImage img, float[] point, int color) {
       int x = (int) (point[0] * 16.0F + 16.0F) - 16;
       int y = (int) (point[1] * 16.0F + 16.0F) - 16;
@@ -119,25 +116,25 @@ public class PaintTool
     }
   }
 
-  public static class Bucket
-          extends PaintTool {
+  public static class Bucket extends PaintTool {
 
     IIcon fill;
 
     public Bucket() {
       setUnlocalizedName("paint_bucket");
       setTextureName("minepainter:bucket");
-      func_77627_a(true);
+      setHasSubtypes(true);
     }
 
-    public ItemStack func_77659_a(ItemStack is, World w, EntityPlayer ep) {
-      MovingObjectPosition mop = getMovingObjectPositionFromPlayer(w, ep, true);
+    @Override
+    public ItemStack onItemRightClick(ItemStack is, World world, EntityPlayer ep) {
+      MovingObjectPosition mop = getMovingObjectPositionFromPlayer(world, ep, true);
       if (mop == null) {
         return is;
       }
-      Material m = w.getBlock(mop.blockX, mop.blockY, mop.blockZ).getMaterial();
-      if (m.func_76224_d()) {
-        return new ItemStack(Items.field_151133_ar);
+      Material m = world.getBlock(mop.blockX, mop.blockY, mop.blockZ).getMaterial();
+      if (m.isLiquid()) {
+        return FluidContainerRegistry.EMPTY_BUCKET.copy(); // filled container can be emtied into any fluid. Let's just not tell Greenpeace...
       }
       return is;
     }
@@ -146,30 +143,35 @@ public class PaintTool
       return true;
     }
 
+    @Override
     public int getRenderPasses(int metadata) {
       return 2;
     }
 
+    @Override
     public IIcon getIcon(ItemStack is, int renderPass) {
       if (renderPass == 0) {
-        return this.field_77791_bV;
+        return this.itemIcon;
       }
       return this.fill;
     }
 
     @SideOnly(Side.CLIENT)
-    public void func_94581_a(IIconRegister par1IconRegister) {
-      super.func_94581_a(par1IconRegister);
-      this.fill = par1IconRegister.func_94245_a("minepainter:bucket_fill");
+    @Override
+    public void registerIcons(IIconRegister par1IconRegister) {
+      super.registerIcons(par1IconRegister);
+      this.fill = par1IconRegister.registerIcon("minepainter:bucket_fill");
     }
 
-    public int func_82790_a(ItemStack par1ItemStack, int par2) {
+    @Override
+    public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
       if (par2 == 1) {
         return getColor(par1ItemStack.getItemDamage(), 0);
       }
-      return super.func_82790_a(par1ItemStack, par2);
+      return super.getColorFromItemStack(par1ItemStack, par2);
     }
 
+    @Override
     public int getColor(EntityPlayer ep, ItemStack is) {
       return getColor(is.getItemDamage(), -16777216);
     }
@@ -181,6 +183,7 @@ public class PaintTool
       return 16777215;
     }
 
+    @Override
     public boolean apply(BufferedImage img, float[] point, int color) {
       int x = (int) (point[0] * 16.0F + 16.0F) - 16;
       int y = (int) (point[1] * 16.0F + 16.0F) - 16;
@@ -197,13 +200,13 @@ public class PaintTool
     }
   }
 
-  public static class Mixer
-          extends PaintTool {
+  public static class Mixer extends PaintTool {
 
     public Mixer() {
       setUnlocalizedName("mixer_brush").setTextureName("minepainter:brush");
     }
 
+    @Override
     public boolean apply(BufferedImage img, float[] point, int color) {
       int x = (int) (point[0] * 16.0F + 16.0F) - 16;
       int y = (int) (point[1] * 16.0F + 16.0F) - 16;
@@ -251,13 +254,13 @@ public class PaintTool
     }
   }
 
-  public static class Eraser
-          extends PaintTool.Mixer {
+  public static class Eraser extends PaintTool.Mixer {
 
     public Eraser() {
       setUnlocalizedName("eraser").setTextureName("minepainter:eraser");
     }
 
+    @Override
     public boolean apply(BufferedImage img, float[] point, int color) {
       int x = (int) (point[0] * 16.0F + 16.0F) - 16;
       int y = (int) (point[1] * 16.0F + 16.0F) - 16;

@@ -33,31 +33,35 @@ public class Palette
     return true;
   }
 
+  @Override
   public int getRenderPasses(int metadata) {
     return 7;
   }
 
+  @Override
   public IIcon getIcon(ItemStack is, int renderPass) {
     if (renderPass == 0) {
-      return this.field_77791_bV;
+      return this.itemIcon;
     }
     return this.colors[(renderPass - 1)];
   }
 
   @SideOnly(Side.CLIENT)
-  public void func_94581_a(IIconRegister par1IconRegister) {
-    super.func_94581_a(par1IconRegister);
+  @Override
+  public void registerIcons(IIconRegister par1IconRegister) {
+    super.registerIcons(par1IconRegister);
     for (int i = 0; i < 6; i++) {
-      this.colors[i] = par1IconRegister.func_94245_a(func_111208_A() + i);
+      this.colors[i] = par1IconRegister.registerIcon(func_111208_A() + i);
     }
   }
 
-  public int func_82790_a(ItemStack par1ItemStack, int par2) {
-    int[] colors = getColors(par1ItemStack);
+  @Override
+  public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
+    int[] itemColors = getColors(par1ItemStack);
     if (par2 == 0) {
-      return super.func_82790_a(par1ItemStack, par2);
+      return super.getColorFromItemStack(par1ItemStack, par2);
     }
-    return colors[(par2 - 1)];
+    return itemColors[(par2 - 1)];
   }
 
   public static int[] getColors(ItemStack is) {
@@ -65,33 +69,34 @@ public class Palette
     if (nbt == null) {
       is.writeToNBT(nbt = new NBTTagCompound());
     }
-    NBTTagCompound palette = nbt.func_74775_l("palette");
-    int[] colors = palette.func_74759_k("colors");
+    NBTTagCompound palette = nbt.getCompoundTag("palette");
+    int[] colors = palette.getIntArray("colors");
     if (colors.length == 0) {
       colors = new int[]{-1, -1, -1, -1, -1, -1};
     }
-    palette.func_74783_a("colors", colors);
-    nbt.func_74782_a("palette", palette);
+    palette.setIntArray("colors", colors);
+    nbt.setTag("palette", palette);
 
     return colors;
   }
 
-  public boolean func_77648_a(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int par7, float _x, float _y, float _z) {
+  @Override
+  public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int par7, float _x, float _y, float _z) {
     if (w.getBlock(x, y, z) == ModMinePainter.painting.block) {
       int face = w.getBlockMetadata(x, y, z);
       PaintingEntity pe = (PaintingEntity) Utils.getTE(w, x, y, z);
       PaintingPlacement pp = PaintingPlacement.of(face);
       float[] point = pp.block2painting(_x, _y, _z);
 
-      int[] colors = getColors(is);
-      colors[0] = pe.getImg().getRGB((int) (point[0] * 16.0F), (int) (point[1] * 16.0F));
-      setColors(is, colors);
+      int[] itemColors = getColors(is);
+      itemColors[0] = pe.getImg().getRGB((int) (point[0] * 16.0F), (int) (point[1] * 16.0F));
+      setColors(is, itemColors);
       return true;
     }
     return false;
   }
 
-  public ItemStack func_77659_a(ItemStack is, World w, EntityPlayer ep) {
+  public ItemStack onItemRightClick(ItemStack is, World w, EntityPlayer ep) {
     setColors(is, shift(getColors(is)));
     return is;
   }
@@ -111,9 +116,9 @@ public class Palette
     if (nbt == null) {
       is.writeToNBT(nbt = new NBTTagCompound());
     }
-    NBTTagCompound palette = nbt.func_74775_l("palette");
-    palette.func_74783_a("colors", colors);
-    nbt.func_74782_a("palette", palette);
+    NBTTagCompound palette = nbt.getCompoundTag("palette");
+    palette.setIntArray("colors", colors);
+    nbt.setTag("palette", palette);
   }
 
   public void func_77624_a(ItemStack is, EntityPlayer ep, List list, boolean help) {

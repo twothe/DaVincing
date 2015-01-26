@@ -21,21 +21,21 @@ public class Sculpture {
   }
 
   public void write(NBTTagCompound nbt) {
-    nbt.func_74783_a("block_ids", this.block_ids);
-    nbt.func_74773_a("block_metas", this.block_metas);
+    nbt.setIntArray("block_ids", this.block_ids);
+    nbt.setByteArray("block_metas", this.block_metas);
     for (int i = 0; i < this.layers.length; i++) {
-      nbt.func_74773_a("layer" + i, this.layers[i]);
+      nbt.setByteArray("layer" + i, this.layers[i]);
     }
-    nbt.func_74773_a("rotation", this.r.r);
+    nbt.setByteArray("rotation", this.r.r);
   }
 
   public void read(NBTTagCompound nbt) {
-    this.block_ids = nbt.func_74759_k("block_ids");
-    this.block_metas = nbt.func_74770_j("block_metas");
-    this.r.r = nbt.func_74770_j("rotation");
+    this.block_ids = nbt.getIntArray("block_ids");
+    this.block_metas = nbt.getByteArray("block_metas");
+    this.r.r = nbt.getByteArray("rotation");
     this.layers = new byte[log(this.block_ids.length)][];
     for (int i = 0; i < this.layers.length; i++) {
-      this.layers[i] = nbt.func_74770_j("layer" + i);
+      this.layers[i] = nbt.getByteArray("layer" + i);
     }
     normalize();
   }
@@ -178,28 +178,20 @@ public class Sculpture {
 
   private void grow() {
     byte[][] nlayers = new byte[this.layers.length + 1][];
-    for (int i = 0; i < this.layers.length; i++) {
-      nlayers[i] = this.layers[i];
-    }
+    System.arraycopy(this.layers, 0, nlayers, 0, this.layers.length);
     nlayers[this.layers.length] = new byte[64];
     this.layers = nlayers;
 
     int[] ids = new int[this.block_ids.length * 2];
-    for (int i = 0; i < this.block_ids.length; i++) {
-      ids[i] = this.block_ids[i];
-    }
+    System.arraycopy(this.block_ids, 0, ids, 0, this.block_ids.length);
     this.block_ids = ids;
 
     byte[] metas = new byte[this.block_metas.length * 2];
-    for (int i = 0; i < this.block_metas.length; i++) {
-      metas[i] = this.block_metas[i];
-    }
+    System.arraycopy(this.block_metas, 0, metas, 0, this.block_metas.length);
     this.block_metas = metas;
 
     int[] usage = new int[this.usage_count.length * 2];
-    for (int i = 0; i < this.usage_count.length; i++) {
-      usage[i] = this.usage_count[i];
-    }
+    System.arraycopy(this.usage_count, 0, usage, 0, this.usage_count.length);
     this.usage_count = usage;
   }
 
@@ -230,9 +222,9 @@ public class Sculpture {
 
   public int getLight() {
     int light = 0;
-    int current = 0;
+    int current;
     for (int i = 0; i < this.usage_count.length; i++) {
-      current = Block.getBlockById(this.block_ids[i]).func_149750_m();
+      current = Block.getBlockById(this.block_ids[i]).getLightValue();
       if (current > light) {
         light = current;
       }

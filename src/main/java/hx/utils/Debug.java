@@ -1,14 +1,14 @@
 package hx.utils;
 
-import java.io.PrintStream;
+import cpw.mods.fml.common.FMLLog;
 
 public class Debug {
 
   public static <T> void log(T... thing) {
-    StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder("[MinePainter]");
     for (T i : thing) {
-      sb.append(i + ", ");
+      sb.append(i).append(", ");
     }
-    System.err.println(sb.toString());
+    FMLLog.severe(sb.toString());
   }
 }

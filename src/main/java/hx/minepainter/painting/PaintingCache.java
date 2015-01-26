@@ -41,7 +41,7 @@ public class PaintingCache {
     }
     if (upload) {
       try {
-        byte[] data = is.getTagCompound().func_74770_j("image_data");
+        byte[] data = is.getTagCompound().getByteArray("image_data");
         ByteArrayInputStream bais = new ByteArrayInputStream(data);
         BufferedImage img = ImageIO.read(bais);
         pi.fill(img);

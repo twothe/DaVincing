@@ -18,7 +18,7 @@ public class WrenchItem
     setMaxStackSize(1);
   }
 
-  public boolean func_77648_a(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
+  public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
     if (w.getBlock(x, y, z) != ModMinePainter.sculpture.block) {
       return false;
     }
