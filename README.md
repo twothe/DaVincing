@@ -1,7 +1,7 @@
-MinePainter
+DaVincing
 =========
 
-MinePainter: A mod with paintbrush and chisle
+DaVincing: A mod with paintbrush and chisle
 
 MIT license
 + Derived work must stay open source
