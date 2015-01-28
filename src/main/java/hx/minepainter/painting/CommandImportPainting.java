@@ -20,20 +20,20 @@ public class CommandImportPainting extends CommandBase {
   }
 
   @Override
-  public void processCommand(ICommandSender var1, String[] var2) {
-    startWorking();
+  public void processCommand(ICommandSender var1, String[] parameters) {
+//    startWorking();
     int w = 1;
     int h = 1;
-    String url = var2[0];
-    for (int i = 0; i < var2.length; i++) {
-      if ((var2[i].equals("--size")) && (var2.length - i > 2)) {
-        w = Integer.parseInt(var2[(i + 1)]);
-        h = Integer.parseInt(var2[(i + 2)]);
+    String url = parameters[0];
+    for (int i = 0; i < parameters.length; i++) {
+      if ((parameters[i].equals("--size")) && (parameters.length - i > 2)) {
+        w = Integer.parseInt(parameters[(i + 1)]);
+        h = Integer.parseInt(parameters[(i + 2)]);
       }
     }
-    // TODO: seems like decompile failed here
+    //TODO: not yet implemented
 //    try {
-//      img = ImageIO.read(new URL(url)); 
+//      img = ImageIO.read(new URL(url));
 //    } catch (MalformedURLException e) {
 //      BufferedImage img;
 //      e.printStackTrace();

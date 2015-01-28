@@ -169,9 +169,9 @@ public class Operations {
           int y = (int) (hit.yCoord * 8.0D);
           int z = (int) (hit.zCoord * 8.0D);
           if (end.xCoord > start.xCoord) {
-            updateRaytraceResult(sculpture, x, y, z, ForgeDirection.WEST.ordinal(), hit.func_vecvec_a(start).func_72433_c());
+            updateRaytraceResult(sculpture, x, y, z, ForgeDirection.WEST.ordinal(), hit.subtract(start).lengthVector());
           } else {
-            updateRaytraceResult(sculpture, x - 1, y, z, ForgeDirection.EAST.ordinal(), hit.func_vecvec_a(start).func_72433_c());
+            updateRaytraceResult(sculpture, x - 1, y, z, ForgeDirection.EAST.ordinal(), hit.subtract(start).lengthVector());
           }
         }
       }
@@ -184,9 +184,9 @@ public class Operations {
           int x = (int) (hit.xCoord * 8.0D);
           int z = (int) (hit.zCoord * 8.0D);
           if (end.yCoord > start.yCoord) {
-            updateRaytraceResult(sculpture, x, y, z, ForgeDirection.DOWN.ordinal(), hit.func_vecvec_a(start).func_72433_c());
+            updateRaytraceResult(sculpture, x, y, z, ForgeDirection.DOWN.ordinal(), hit.subtract(start).lengthVector());
           } else {
-            updateRaytraceResult(sculpture, x, y - 1, z, ForgeDirection.UP.ordinal(), hit.func_vecvec_a(start).func_72433_c());
+            updateRaytraceResult(sculpture, x, y - 1, z, ForgeDirection.UP.ordinal(), hit.subtract(start).lengthVector());
           }
         }
       }
@@ -199,9 +199,9 @@ public class Operations {
           int x = (int) (hit.xCoord * 8.0D);
           int y = (int) (hit.yCoord * 8.0D);
           if (end.zCoord > start.zCoord) {
-            updateRaytraceResult(sculpture, x, y, z, ForgeDirection.NORTH.ordinal(), hit.func_vecvec_a(start).func_72433_c());
+            updateRaytraceResult(sculpture, x, y, z, ForgeDirection.NORTH.ordinal(), hit.subtract(start).lengthVector());
           } else {
-            updateRaytraceResult(sculpture, x, y, z - 1, ForgeDirection.SOUTH.ordinal(), hit.func_vecvec_a(start).func_72433_c());
+            updateRaytraceResult(sculpture, x, y, z - 1, ForgeDirection.SOUTH.ordinal(), hit.subtract(start).lengthVector());
           }
         }
       }

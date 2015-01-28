@@ -32,7 +32,7 @@ public class SculptureRenderCompiler {
       int dy = i / 3 % 3;
       int dz = i / 9 % 3;
 
-      float ao = w.getBlock(x + dx - 1, y + dy - 1, z + dz - 1).func_149685_I();
+      float ao = w.getBlock(x + dx - 1, y + dy - 1, z + dz - 1).getAmbientOcclusionLightValue();
       if (ao != this.neighborAO[dx][dy][dz]) {
         this.changed = true;
         this.neighborAO[dx][dy][dz] = ao;
@@ -72,7 +72,7 @@ public class SculptureRenderCompiler {
 
   public void build(BlockSlice slice) {
     rb.blockAccess = slice;
-    rb.field_147837_f = false; // TODO
+    rb.enableAO = false;
     SculptureBlock sculpture = (SculptureBlock) ModMinePainter.sculpture.block;
 
     TextureManager tm = Minecraft.getMinecraft().getTextureManager();
@@ -115,7 +115,7 @@ public class SculptureRenderCompiler {
     return this.glDisplayList >= 0;
   }
 
-  // Fetches the 3 tessellator offsets xOffset, yOffset, zOffset.
+  // Fetches the 3 tessellator offsets: xOffset, yOffset, zOffset.
   // TODO: Very hacky!
   private double[] getTesOffsets() {
     double[] off = new double[3];

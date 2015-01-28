@@ -3,8 +3,6 @@ package hx.minepainter.sculpture;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import hx.minepainter.ModMinePainter;
-import hx.utils.BlockLoader;
-import hx.utils.ItemLoader;
 import hx.utils.Utils;
 import java.util.List;
 import java.util.Random;
@@ -45,7 +43,7 @@ public class SculptureBlock
     }
     this.current = that;
     this.meta = meta;
-    this.renderID = that.func_149645_b();
+    this.renderID = that.getRenderType();
   }
 
   public void setSubCoordinate(int x, int y, int z) {
@@ -107,8 +105,8 @@ public class SculptureBlock
     setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
   }
 
-  //TODO
-  public boolean func_149646_a(IBlockAccess iba, int x, int y, int z, int side) {
+  @Override
+  public boolean isBlockSolid(IBlockAccess iba, int x, int y, int z, int side) {
     if (iba.getBlock(x, y, z) == this.current) {
       return false;
     }
@@ -131,22 +129,22 @@ public class SculptureBlock
     return this.current.getIcon(side, this.meta);
   }
 
-  //TODO
   @SideOnly(Side.CLIENT)
-  public int func_149645_b() {
+  @Override
+  public int getRenderType() {
     if (this.renderID == -1) {
       return ModMinePainter.sculpture.renderID;
     }
     return this.renderID;
   }
 
-  //TODO
+  @Override
   public boolean isOpaqueCube() {
     return false;
   }
 
-  //TODO
-  public boolean func_149686_d() {
+  @Override
+  public boolean renderAsNormalBlock() {
     return false;
   }
 

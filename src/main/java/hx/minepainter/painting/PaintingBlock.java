@@ -41,7 +41,8 @@ public class PaintingBlock extends BlockContainer {
     return false;
   }
 
-  public boolean func_149686_d() {
+  @Override
+  public boolean renderAsNormalBlock() {
     return false;
   }
 
@@ -64,8 +65,8 @@ public class PaintingBlock extends BlockContainer {
     setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
   }
 
-  // TODO: What is this?
-  public int func_149645_b() {
+  @Override
+  public int getRenderType() {
     return -1;
   }
 
