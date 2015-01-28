@@ -4,7 +4,6 @@ import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import hx.minepainter.ModMinePainter;
-import hx.utils.BlockLoader;
 import java.lang.reflect.Field;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -72,8 +71,8 @@ public class SculptureRenderCompiler {
   }
 
   public void build(BlockSlice slice) {
-    rb.field_147845_a = slice;
-    rb.field_147837_f = false;
+    rb.blockAccess = slice;
+    rb.field_147837_f = false; // TODO
     SculptureBlock sculpture = (SculptureBlock) ModMinePainter.sculpture.block;
 
     TextureManager tm = Minecraft.getMinecraft().getTextureManager();
@@ -81,7 +80,7 @@ public class SculptureRenderCompiler {
 
     Tessellator tes = Tessellator.instance;
     double[] offs = getTesOffsets();
-    tes.func_78373_b(0.0D, 0.0D, 0.0D);
+    tes.setTranslation(0.0D, 0.0D, 0.0D);
     tes.startDrawingQuads();
     for (int i = 0; i < 512; i++) {
       int x = i >> 6 & 0x7;
@@ -93,17 +92,17 @@ public class SculptureRenderCompiler {
         int meta = slice.getBlockMetadata(x, y, z);
         sculpture.setCurrentBlock(b, meta);
 
-        tes.func_78373_b(-x, -y, -z);
+        tes.setTranslation(-x, -y, -z);
 
         sculpture.setBlockBounds(x / 8.0F, y / 8.0F, z / 8.0F, (x + 1) / 8.0F, (y + 1) / 8.0F, (z + 1) / 8.0F);
-        rb.func_147805_b(sculpture, x, y, z);
+        rb.renderBlockAllFaces(sculpture, x, y, z);
       }
     }
     ((SculptureBlock) ModMinePainter.sculpture.block).setCurrentBlock(null, 0);
     sculpture.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-    rb.field_147845_a = null;
+    rb.blockAccess = null;
     tes.draw();
-    tes.func_78373_b(offs[0], offs[1], offs[2]);
+    tes.setTranslation(offs[0], offs[1], offs[2]);
   }
 
   public void clear() {
@@ -116,6 +115,8 @@ public class SculptureRenderCompiler {
     return this.glDisplayList >= 0;
   }
 
+  // Fetches the 3 tessellator offsets xOffset, yOffset, zOffset.
+  // TODO: Very hacky!
   private double[] getTesOffsets() {
     double[] off = new double[3];
 
@@ -132,9 +133,9 @@ public class SculptureRenderCompiler {
         count = 0;
       }
     }
-    off[0] = ((Double) ObfuscationReflectionHelper.getPrivateValue(Tessellator.class, Tessellator.instance, xoff)).doubleValue();
-    off[1] = ((Double) ObfuscationReflectionHelper.getPrivateValue(Tessellator.class, Tessellator.instance, xoff + 1)).doubleValue();
-    off[2] = ((Double) ObfuscationReflectionHelper.getPrivateValue(Tessellator.class, Tessellator.instance, xoff + 2)).doubleValue();
+    off[0] = ObfuscationReflectionHelper.getPrivateValue(Tessellator.class, Tessellator.instance, xoff);
+    off[1] = ObfuscationReflectionHelper.getPrivateValue(Tessellator.class, Tessellator.instance, xoff + 1);
+    off[2] = ObfuscationReflectionHelper.getPrivateValue(Tessellator.class, Tessellator.instance, xoff + 2);
 
     return off;
   }

@@ -4,7 +4,6 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import hx.minepainter.ModMinePainter;
-import hx.utils.BlockLoader;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
@@ -23,25 +22,29 @@ public class SculptureRender
     chunk_z = z;
   }
 
+  @Override
   public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
   }
 
+  @Override
   public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
     if (world.getBlock(x, y, z) != ModMinePainter.sculpture.block) {
       return false;
     }
     SculptureEntity se = (SculptureEntity) world.getTileEntity(x, y, z);
 
-    se.getRender().updateLight(block.func_149677_c(world, x, y, z));
+    se.getRender().updateLight(block.getLightValue(world, x, y, z));
     se.getRender().updateAO(world, x, y, z);
 
     return false;
   }
 
+  @Override
   public boolean shouldRender3DInInventory(int modelId) {
     return false;
   }
 
+  @Override
   public int getRenderId() {
     return ModMinePainter.sculpture.renderID;
   }

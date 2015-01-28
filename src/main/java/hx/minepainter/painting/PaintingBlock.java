@@ -1,7 +1,6 @@
 package hx.minepainter.painting;
 
 import hx.minepainter.ModMinePainter;
-import hx.utils.ItemLoader;
 import hx.utils.Utils;
 import java.util.Random;
 import net.minecraft.block.Block;
@@ -16,7 +15,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class PaintingBlock extends BlockContainer {
 
@@ -29,7 +27,8 @@ public class PaintingBlock extends BlockContainer {
     setBlockName("painting");
   }
 
-  public void func_149651_a(IIconRegister register) {
+  @Override
+  public void registerBlockIcons(IIconRegister register) {
   }
 
   @Override
@@ -37,7 +36,8 @@ public class PaintingBlock extends BlockContainer {
     return new PaintingEntity();
   }
 
-  public boolean func_149662_c() {
+  @Override
+  public boolean isOpaqueCube() {
     return false;
   }
 
@@ -50,7 +50,8 @@ public class PaintingBlock extends BlockContainer {
     return null;
   }
 
-  public void func_149719_a(IBlockAccess iba, int x, int y, int z) {
+  @Override
+  public void setBlockBoundsBasedOnState(IBlockAccess iba, int x, int y, int z) {
     if (this.ignore_bounds_on_state) {
       return;
     }
@@ -58,10 +59,12 @@ public class PaintingBlock extends BlockContainer {
     placement.setBlockBounds(this);
   }
 
-  public void func_149683_g() {
+  @Override
+  public void setBlockBoundsForItemRender() {
     setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
   }
 
+  // TODO: What is this?
   public int func_149645_b() {
     return -1;
   }
@@ -77,7 +80,8 @@ public class PaintingBlock extends BlockContainer {
     return is;
   }
 
-  public void func_149695_a(World w, int x, int y, int z, Block block) {
+  @Override
+  public void onNeighborBlockChange(World w, int x, int y, int z, Block block) {
     PaintingPlacement pp = PaintingPlacement.of(w.getBlockMetadata(x, y, z));
     int tx = x - pp.normal.offsetX;
     int ty = y - pp.normal.offsetY;
@@ -85,7 +89,7 @@ public class PaintingBlock extends BlockContainer {
     if (w.getBlock(tx, ty, tz).getMaterial().isSolid()) {
       return;
     }
-    w.func_147468_f(x, y, z);
+    w.setBlockToAir(x, y, z);
   }
 
   @Override
@@ -93,19 +97,21 @@ public class PaintingBlock extends BlockContainer {
     return null;
   }
 
-  public Item func_149650_a(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
+  @Override
+  public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
     return null;
   }
 
-  public void func_149749_a(World w, int x, int y, int z, Block b, int meta) {
+  @Override
+  public void breakBlock(World w, int x, int y, int z, Block b, int meta) {
     ItemStack is = new ItemStack(ModMinePainter.canvas.item);
     NBTTagCompound nbt = new NBTTagCompound();
     PaintingEntity pe = (PaintingEntity) Utils.getTE(w, x, y, z);
 
     pe.writeImageToNBT(nbt);
     is.writeToNBT(nbt);
-    func_149642_a(w, x, y, z, is);
+    dropBlockAsItem(w, x, y, z, is);
 
-    super.func_149749_a(w, x, y, z, b, meta);
+    super.breakBlock(w, x, y, z, b, meta);
   }
 }

@@ -4,12 +4,9 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
-import net.minecraft.network.NetHandlerPlayServer;
 
-public class PaintingOperationMessage
-        implements IMessage {
+public class PaintingOperationMessage implements IMessage {
 
   PaintTool tool;
   int x;
@@ -58,8 +55,7 @@ public class PaintingOperationMessage
     buf.writeInt(this.color);
   }
 
-  public static class PaintingOperationHandler
-          implements IMessageHandler<PaintingOperationMessage, IMessage> {
+  public static class PaintingOperationHandler implements IMessageHandler<PaintingOperationMessage, IMessage> {
 
     @Override
     public IMessage onMessage(PaintingOperationMessage message, MessageContext ctx) {

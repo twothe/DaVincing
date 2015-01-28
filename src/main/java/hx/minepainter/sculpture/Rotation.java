@@ -25,12 +25,12 @@ public class Rotation {
   public void multiply(Rotation r) {
     byte[] result = new byte[9];
     for (int i = 0; i < 9; i++) {
-      int x = i / 3;
-      int y = i % 3;
+      int rotX = i / 3;
+      int rotY = i % 3;
       for (int j = 0; j < 3; j++) {
         int tmp34_33 = i;
         byte[] tmp34_32 = result;
-        tmp34_32[tmp34_33] = ((byte) (tmp34_32[tmp34_33] + r.r[(x * 3 + j)] * this.r[(j * 3 + y)]));
+        tmp34_32[tmp34_33] = ((byte) (tmp34_32[tmp34_33] + r.r[(rotX * 3 + j)] * this.r[(j * 3 + rotY)]));
       }
     }
     this.r = result;

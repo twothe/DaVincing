@@ -6,15 +6,11 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 
-public class SculptureOperationMessage
-        implements IMessage {
+public class SculptureOperationMessage implements IMessage {
 
   int[] pos = new int[4];
   int x;
@@ -37,6 +33,7 @@ public class SculptureOperationMessage
     this.flags = flags;
   }
 
+  @Override
   public void fromBytes(ByteBuf buf) {
     this.pos[0] = buf.readByte();
     this.pos[1] = buf.readByte();
@@ -50,6 +47,7 @@ public class SculptureOperationMessage
     this.flags = buf.readByte();
   }
 
+  @Override
   public void toBytes(ByteBuf buf) {
     buf.writeByte(this.pos[0]);
     buf.writeByte(this.pos[1]);
@@ -63,24 +61,24 @@ public class SculptureOperationMessage
     buf.writeByte(this.flags);
   }
 
-  public static class SculptureOperationHandler
-          implements IMessageHandler<SculptureOperationMessage, IMessage> {
+  public static class SculptureOperationHandler implements IMessageHandler<SculptureOperationMessage, IMessage> {
 
+    @Override
     public IMessage onMessage(SculptureOperationMessage message, MessageContext ctx) {
-      World w = ctx.getServerHandler().playerEntity.worldObj;
-      if (Operations.validOperation(w, message.x, message.y, message.z, message.pos, message.flags)) {
-        Operations.applyOperation(w, message.x, message.y, message.z, message.pos, message.flags, message.block, message.meta);
+      World world = ctx.getServerHandler().playerEntity.worldObj;
+      if (Operations.validOperation(world, message.x, message.y, message.z, message.pos, message.flags)) {
+        Operations.applyOperation(world, message.x, message.y, message.z, message.pos, message.flags, message.block, message.meta);
       }
-      EntityPlayer ep = ctx.getServerHandler().playerEntity;
-      ItemStack is = ep.getHeldItem();
+      EntityPlayer player = ctx.getServerHandler().playerEntity;
+      ItemStack heldItem = player.getHeldItem();
       if ((message.flags & 0x10) > 0) {
-        is.func_77972_a(1, ep);
+        heldItem.damageItem(1, player);
       } else if (((0x20 & message.flags) > 0)
-              && (!ep.capabilities.isCreativeMode)) {
-        is.stackSize -= 1;
-        if (is.stackSize <= 0) {
-          ForgeEventFactory.onPlayerDestroyItem(ep, is);
-          ep.inventory.field_70462_a[ep.inventory.field_70461_c] = null;
+              && (!player.capabilities.isCreativeMode)) {
+        heldItem.stackSize -= 1;
+        if (heldItem.stackSize <= 0) {
+          ForgeEventFactory.onPlayerDestroyItem(player, heldItem);
+          player.inventory.mainInventory[player.inventory.currentItem] = null;
         }
       }
       return null;

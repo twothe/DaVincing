@@ -55,14 +55,15 @@ public class SculptureBlock
   }
 
   public void dropScrap(World w, int x, int y, int z, ItemStack is) {
-    func_149642_a(w, x, y, z, is);
+    dropBlockAsItem(w, x, y, z, is);
   }
 
   public SculptureBlock() {
-    super(Material.field_151576_e);
+    super(Material.rock);
     setHardness(1.0F);
   }
 
+  @Override
   public MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 st, Vec3 ed) {
     SculptureEntity tile = (SculptureEntity) Utils.getTE(w, x, y, z);
     Sculpture sculpture = tile.sculpture();
@@ -89,15 +90,16 @@ public class SculptureBlock
     return new MovingObjectPosition(x, y, z, pos[3], hit);
   }
 
-  public void func_149743_a(World par1World, int par2, int par3, int par4, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity) {
+  @Override
+  public void addCollisionBoxesToList(World par1World, int par2, int par3, int par4, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity) {
     SculptureEntity tile = (SculptureEntity) Utils.getTE(par1World, par2, par3, par4);
     Sculpture sculpture = tile.sculpture();
-    for (int x = 0; x < 8; x++) {
-      for (int y = 0; y < 8; y++) {
-        for (int z = 0; z < 8; z++) {
-          if (sculpture.getBlockAt(x, y, z, null) != Blocks.air) {
-            setBlockBounds(x / 8.0F, y / 8.0F, z / 8.0F, (x + 1) / 8.0F, (y + 1) / 8.0F, (z + 1) / 8.0F);
-            super.func_149743_a(par1World, par2, par3, par4, par5AxisAlignedBB, par6List, par7Entity);
+    for (int posX = 0; posX < 8; posX++) {
+      for (int posY = 0; posY < 8; posY++) {
+        for (int posZ = 0; posZ < 8; posZ++) {
+          if (sculpture.getBlockAt(posX, posY, posZ, null) != Blocks.air) {
+            setBlockBounds(posX / 8.0F, posY / 8.0F, posZ / 8.0F, (posX + 1) / 8.0F, (posY + 1) / 8.0F, (posZ + 1) / 8.0F);
+            super.addCollisionBoxesToList(par1World, par2, par3, par4, par5AxisAlignedBB, par6List, par7Entity);
           }
         }
       }
@@ -105,26 +107,31 @@ public class SculptureBlock
     setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
   }
 
+  //TODO
   public boolean func_149646_a(IBlockAccess iba, int x, int y, int z, int side) {
     if (iba.getBlock(x, y, z) == this.current) {
       return false;
     }
-    return (iba.isAirBlock(x, y, z)) || (!iba.getBlock(x, y, z).func_149662_c());
+    return (iba.isAirBlock(x, y, z)) || (!iba.getBlock(x, y, z).isOpaqueCube());
   }
 
+  @Override
   public TileEntity createNewTileEntity(World var1, int var2) {
     return new SculptureEntity();
   }
 
   @SideOnly(Side.CLIENT)
-  public void func_149651_a(IIconRegister p_149651_1_) {
+  @Override
+  public void registerBlockIcons(IIconRegister p_149651_1_) {
   }
 
   @SideOnly(Side.CLIENT)
-  public IIcon func_149691_a(int side, int meta) {
-    return this.current.func_149691_a(side, this.meta);
+  @Override
+  public IIcon getIcon(int side, int meta) {
+    return this.current.getIcon(side, this.meta);
   }
 
+  //TODO
   @SideOnly(Side.CLIENT)
   public int func_149645_b() {
     if (this.renderID == -1) {
@@ -133,14 +140,17 @@ public class SculptureBlock
     return this.renderID;
   }
 
-  public boolean func_149662_c() {
+  //TODO
+  public boolean isOpaqueCube() {
     return false;
   }
 
+  //TODO
   public boolean func_149686_d() {
     return false;
   }
 
+  @Override
   public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
     SculptureEntity se = (SculptureEntity) Utils.getTE(world, x, y, z);
     NBTTagCompound nbt = new NBTTagCompound();
@@ -151,6 +161,7 @@ public class SculptureBlock
     return is;
   }
 
+  @Override
   public int getLightValue(IBlockAccess world, int x, int y, int z) {
     TileEntity te = world.getTileEntity(x, y, z);
     if ((te == null) || (!(te instanceof SculptureEntity))) {
@@ -160,18 +171,21 @@ public class SculptureBlock
     return se.sculpture.getLight();
   }
 
+  @Override
   protected ItemStack createStackedBlock(int p_149644_1_) {
     return null;
   }
 
-  public Item func_149650_a(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
+  @Override
+  public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
     return null;
   }
 
-  public void func_149749_a(World w, int x, int y, int z, Block b, int meta) {
+  @Override
+  public void breakBlock(World w, int x, int y, int z, Block b, int meta) {
     SculptureEntity se = (SculptureEntity) Utils.getTE(w, x, y, z);
     if ((se == null) || (se.sculpture().isEmpty())) {
-      super.func_149749_a(w, x, y, z, b, meta);
+      super.breakBlock(w, x, y, z, b, meta);
       return;
     }
     NBTTagCompound nbt = new NBTTagCompound();
@@ -179,7 +193,7 @@ public class SculptureBlock
 
     se.sculpture.write(nbt);
     is.writeToNBT(nbt);
-    func_149642_a(w, x, y, z, is);
-    super.func_149749_a(w, x, y, z, b, meta);
+    dropBlockAsItem(w, x, y, z, is);
+    super.breakBlock(w, x, y, z, b, meta);
   }
 }
