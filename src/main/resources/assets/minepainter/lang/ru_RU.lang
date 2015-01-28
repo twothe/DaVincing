@@ -1,0 +1,13 @@
+itemGroup.minepainter=Minepainter
+item.chisel.name=Каменная стамеска
+item.barcutter.name=Железная стамеска
+item.saw.name=Алмазная стамеска
+item.canvas.name=Холст
+item.palette.name=Палитра
+item.mini_brush.name=Маленькая кисточка
+item.mixer_brush.name=Кисточка
+item.eraser.name=Ластик
+item.wrench.name=Ключ
+item.paint_bucket.name=Ведро краски
+item.sculpture_piece.name=Кусочек скульптуры
+item.dropped_sculpture.name=Скульптура

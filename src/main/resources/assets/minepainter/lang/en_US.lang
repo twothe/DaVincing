@@ -1,7 +1,11 @@
 itemGroup.minepainter=Minepainter
-item.chisel.name=Stone Chisel
-item.barcutter.name=Iron Chisel
-item.saw.name=Diamond Chisel
+item.chisel.name=Chisel
+item.barcutter.name=Shaver
+item.saw.name=Saw
+item.handle.name=Handle
+item.copygun.name=Copy Gun
+item.transmuter.name=Material Alteration and Interference Device
+item.hinge.name=Hinge
 item.canvas.name=Canvas
 item.palette.name=Palette
 item.mini_brush.name=Small Brush

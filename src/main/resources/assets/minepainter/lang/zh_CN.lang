@@ -1,7 +1,11 @@
 itemGroup.minepainter=雕塑与像素画
-item.chisel.name=石雕刻刀
-item.barcutter.name=铁雕刻刀
-item.saw.name=钻石雕刻刀
+item.chisel.name=凿子
+item.barcutter.name=刨子
+item.saw.name=锯子
+item.handle.name=把手
+item.copygun.name=复制枪
+item.transmuter.name=材料干涉枪
+item.hinge.name=合页
 item.canvas.name=画布
 item.palette.name=调色板
 item.mini_brush.name=小画笔

@@ -1,0 +1,16 @@
+# et_EE (Estonian)
+# Translated by tambre
+
+itemGroup.minepainter=Minepainter
+item.chisel.name=Kivi peitel
+item.barcutter.name=Raud peitel
+item.saw.name=Teemant peitel
+item.canvas.name=Lõuend
+item.palette.name=Palett
+item.mini_brush.name=Väike pintsel
+item.mixer_brush.name=Pintsel
+item.eraser.name=Kustutaja
+item.wrench.name=Mutrivõti
+item.paint_bucket.name=Värvipott
+item.sculpture_piece.name=Skulptuuri tükk
+item.dropped_sculpture.name=Skulptuur

@@ -1,98 +1,79 @@
 package hx.minepainter.painting;
 
+import java.awt.image.BufferedImage;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.awt.image.BufferedImage;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.IIcon;
 
-public class PaintingIcon implements IIcon {
+@SideOnly(Side.CLIENT)
+public class PaintingIcon implements IIcon{
 
-  final PaintingSheet sheet;
-  int index;
-  float umax;
-  float umin;
-  float vmax;
-  float vmin;
+	final PaintingSheet sheet;
+	int index;
+	float umax,umin,vmax,vmin;
+	
+	public PaintingIcon(PaintingSheet sheet,int index){
+		this.index = index;
+		this.sheet = sheet;
+		int slots = sheet.resolution / 16;
+		int xind = index / slots;
+		int yind = index % slots;
+		float unit = 1.0f/slots;
+		
+		umin = 1.0f * xind / slots;
+		vmin = 1.0f * yind / slots;
+		umax = umin + unit;
+		vmax = vmin + unit;
+	}
+	
+	@Override @SideOnly(Side.CLIENT)public int getIconWidth() {
+		return 16;
+	}
 
-  public PaintingIcon(PaintingSheet sheet, int index) {
-    this.index = index;
-    this.sheet = sheet;
-    int slots = sheet.resolution / 16;
-    int xind = index / slots;
-    int yind = index % slots;
-    float unit = 1.0F / slots;
+	@Override @SideOnly(Side.CLIENT) public int getIconHeight() {
+		return 16;
+	}
 
-    this.umin = (1.0F * xind / slots);
-    this.vmin = (1.0F * yind / slots);
-    this.umax = (this.umin + unit);
-    this.vmax = (this.vmin + unit);
-  }
+	@Override @SideOnly(Side.CLIENT) public float getMinU() {
+		return umin;
+	}
 
-  @SideOnly(Side.CLIENT)
-  @Override
-  public int getIconWidth() {
-    return 16;
-  }
+	@Override @SideOnly(Side.CLIENT) public float getMaxU() {
+		return umax;
+	}
 
-  @SideOnly(Side.CLIENT)
-  @Override
-  public int getIconHeight() {
-    return 16;
-  }
+	@Override @SideOnly(Side.CLIENT) public float getInterpolatedU(double var1) {
+		return (float) (umin + (umax - umin)*var1/16d);
+	}
 
-  @SideOnly(Side.CLIENT)
-  @Override
-  public float getMinU() {
-    return this.umin;
-  }
+	@Override @SideOnly(Side.CLIENT) public float getMinV() {
+		return vmin;
+	}
 
-  @SideOnly(Side.CLIENT)
-  @Override
-  public float getMaxU() {
-    return this.umax;
-  }
+	@Override @SideOnly(Side.CLIENT) public float getMaxV() {
+		return vmax;
+	}
 
-  @SideOnly(Side.CLIENT)
-  @Override
-  public float getInterpolatedU(double var1) {
-    return (float) (this.umin + (this.umax - this.umin) * var1 / 16.0D);
-  }
+	@Override @SideOnly(Side.CLIENT) public float getInterpolatedV(double var1) {
+		return (float) (vmin + (vmax - vmin)*var1/16d);
+	}
 
-  @SideOnly(Side.CLIENT)
-  @Override
-  public float getMinV() {
-    return this.vmin;
-  }
+	@Override @SideOnly(Side.CLIENT) public String getIconName() {
+		return "painting";
+	}
 
-  @SideOnly(Side.CLIENT)
-  @Override
-  public float getMaxV() {
-    return this.vmax;
-  }
+	public void fill(BufferedImage img){
+		TextureUtil.uploadTextureImageSub(sheet.glTexId, img, 
+				(int)(umin*sheet.resolution) , (int)(vmin*sheet.resolution), false, false);
+	}
+	
+	public void release(){
+		this.sheet.icons.add(this);
+	}
 
-  @SideOnly(Side.CLIENT)
-  @Override
-  public float getInterpolatedV(double var1) {
-    return (float) (this.vmin + (this.vmax - this.vmin) * var1 / 16.0D);
-  }
-
-  @SideOnly(Side.CLIENT)
-  @Override
-  public String getIconName() {
-    return "painting";
-  }
-
-  public void fill(BufferedImage img) {
-    TextureUtil.uploadTextureImageSub(this.sheet.glTexId, img, (int) (this.umin * this.sheet.resolution), (int) (this.vmin * this.sheet.resolution), false, false);
-  }
-
-  public void release() {
-    this.sheet.icons.add(this);
-  }
-
-  public int glTexId() {
-    return this.sheet.glTexId;
-  }
-
+	public int glTexId() {
+		return this.sheet.glTexId;
+	}
 }

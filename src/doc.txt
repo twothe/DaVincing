@@ -1,0 +1,140 @@
+Minepainter User Document
+
+=== Features === 
+
+Sculpture
+- Break solid blocks into smaller pieces and make sculptures
+- Reuse sculpture pieces for building sculptures
+- Combine different blocks in the same sculpture
+- Use the wrench to rotate sculptures
+
+Pixel Painting
+- Draw pixel paintings with brush, eraser, palette and paint bucket
+- Color picking and mixing with the palette and the mixer brush
+- Create transparency with the eraser or the slime ball paint bucket
+
+=== Installation ===
+- Recommends Minecraft 1.7.2 with Forge 1147
+- jar in the mods folder like any other mod
+
+=== Usage === 
+
+--- Make a sculpting tool ---
+
+You need a cobblestone and a stick. 
+Place them diagonally and you get a stone chisel.
+
+Stone chisels cut off single pieces.
+To cut off an entire bar, you need an iron chisel.
+Craft an iron chisel with a a stone chisel and an iron ingot.
+
+Diamond chisels cut off a face of pieces.
+To craft a diamond chisel, upgrade an iron chisel with diamond.
+
+--- Use a sculpting tool ---
+
+Hold a chisel in your hand.
+Right click a block that you guess to be sculptable.
+See its pieces pop off.
+
+Iron and diamond chisels need to be aimed right. 
+The directions are dependent on your view angle.
+Position yourself accordingly.
+
+--- Put sculture pieces back ---
+
+You can place pieces back into a sculpture. 
+Just pick up a piece and place it somewhere.
+
+You can also craft pieces back into bigger ones.
+Craft 8 pieces of a kind to get a bigger one.
+
+--- Move a sculpture block ---
+
+You can mine a sculpture and it will drop.
+You can them carry it around and place it again.
+Note that it will retain its orientation.
+
+In creative mode you can also use the mouse mid key to pick a sculpture.
+
+--- Make a wrench --- 
+
+XX
+YX
+ X where X is iron ingot and Y is red dye.
+
+The wrench is used to rotate a block.
+
+--- Rotate a sculpture --- 
+
+Use the wrench on a face of a sculpture.
+The axis of that face will be the rotation axis.
+Tha face will see a rotation of 90 degrees clockwise.
+To rotate counter clockwise, sneak while using the wrench.
+
+--- Make a Canvas ---
+
+XXX
+XXX where X is a wool block.
+
+Use it on a block to place a Canvas. Mine it to move it around.
+
+It makes and empty canvas with 16 dye colors on the edge for convevience.
+
+--- Make a brush ---
+
+X
+ Y
+  Z makes a brush where x = wool, y = stick and z = red dye.
+
+It requires a palette to be in the inventory to function.
+Draws the color on the palette as a pixel.
+
+--- Make a mixer brush ---
+
+XX
+XY
+  Z makes a mixer brush where x = wool, y = stick and z = red dye.
+
+Does everything the small brush does, plus blending the colors of 8 pixels around it.
+
+--- Make a paint bucket ---
+
+Craft a bucket of water with a dye to make a paint bucket.
+A paint bucket fills the entire canvas with the dye's color.
+You can also craft a bucket of water with a slimeball.
+A paint bucket of slime ball makes the entire canvas transparent.
+To clean a paint bucket, right click it against water.
+
+--- Make a palette ---
+
+Carve a plank with stone chisel to make a palette.
+The palette can be used to pick color on a canvas.
+The palette can save up to 7 colors.
+Right click it without pointing to a canvas will cycle through them.
+
+--- Make an eraser --- 
+
+XX
+YY
+ZZ makes an eraser, where x=slime ball, y=paper, z=blue dye.
+The eraser makes a pixel transparent.
+The 8 pixels around it are blended half transparent.
+
+=== Planned features === 
+
+Motor : Rotate a sculpture around corner. Triggered by redstone edge.
+
+Mold : Make sculptures out of scraps/blocks.
+
+/hat sculpture blocks
+
+=== From the modder === 
+
+It's been a while since I've played any mc or updated any mod. It turns out that I am not who I was when I started this mod, and Minecraft has changed a lot.
+
+For a mod like this, you want you focus on what you can do and not on what the mod provids. I am not going to do very fast update releases on the main post. I will probably post some 'lab builds', but the main post is likely to remain on the most recent 'recommended' version.
+
+Thank you for all players who cared, I will be around to make sure what I make is available, and I hope this mod gets played more. 
+
+hypercross

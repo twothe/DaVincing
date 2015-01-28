@@ -1,0 +1,13 @@
+itemGroup.minepainter=Minepainter
+item.chisel.name=Steinmeißel
+item.barcutter.name=Eisenmeißel
+item.saw.name=Diamantmeißel
+item.canvas.name=Leinwand
+item.palette.name=Palette
+item.mini_brush.name=Kleiner Pinsel
+item.mixer_brush.name=Pinsel
+item.eraser.name=Radierer
+item.wrench.name=Schraubenschlüssel
+item.paint_bucket.name=Farbeimer
+item.sculpture_piece.name=Skulpturteil
+item.dropped_sculpture.name=Skulptur

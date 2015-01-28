@@ -1,0 +1,13 @@
+itemGroup.minepainter=Minepainter
+item.chisel.name=Taş Keski
+item.barcutter.name=Demir Keski
+item.saw.name=Elmas Keski
+item.canvas.name=Tuval
+item.palette.name=Palet
+item.mini_brush.name=Küçük Fırça
+item.mixer_brush.name=Fırça
+item.eraser.name=Silgi
+item.wrench.name=İngiliz Anahtarı
+item.paint_bucket.name=Boya Kovası
+item.sculpture_piece.name=Heykel Parçası
+item.dropped_sculpture.name=Heykel

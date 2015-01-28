@@ -1,0 +1,13 @@
+itemGroup.minepainter=Minepainter
+item.chisel.name=Scalpello di Pietra
+item.barcutter.name=Scalpello di Ferro
+item.saw.name=Scalpello di Diamante
+item.canvas.name=Tela
+item.palette.name=Tavolozza
+item.mini_brush.name=Pennello Piccolo
+item.mixer_brush.name=Penello
+item.eraser.name=Gomma per cancellare
+item.wrench.name=Chiave Inglese
+item.paint_bucket.name=Secchiello di vernice
+item.sculpture_piece.name=Pezzo di Scultura
+item.dropped_sculpture.name=Scultura

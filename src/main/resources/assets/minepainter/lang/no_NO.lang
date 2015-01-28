@@ -1,0 +1,13 @@
+itemGroup.minepainter=Minepainter
+item.chisel.name=Stein Meisel
+item.barcutter.name=Jern Meisel
+item.saw.name=Diamant Meisel
+item.canvas.name=Lerret
+item.palette.name=Palett
+item.mini_brush.name=Liten Malerkost
+item.mixer_brush.name=Malerkost
+item.eraser.name=Viskelær
+item.wrench.name=Skiftenøkkel
+item.paint_bucket.name=Malingsspann
+item.sculpture_piece.name=Skulptur stykke
+item.dropped_sculpture.name=Skulptur

@@ -1,0 +1,13 @@
+itemGroup.minepainter=Маляр
+item.chisel.name=Кам'яний різець
+item.barcutter.name=Залізний різець
+item.saw.name=Алмазний різець
+item.canvas.name=Полотно
+item.palette.name=Палітра
+item.mini_brush.name=Маленький пензель
+item.mixer_brush.name=Пензель
+item.eraser.name=Гумка
+item.wrench.name=Ключ
+item.paint_bucket.name=Заливка
+item.sculpture_piece.name=Частина скульптури
+item.dropped_sculpture.name=Скульптура
