@@ -1,4 +1,4 @@
-mapwriter
+MinePainter
 =========
 
 MinePainter: A mod with paintbrush and chisle
