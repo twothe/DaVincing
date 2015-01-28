@@ -1,13 +1,13 @@
 [
 {
-  "modid": "minepainter",
-  "name": "MinePainter",
+  "modid": "davincing",
+  "name": "DaVincing",
   "description": "sculptures and pixel art",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["hypercross"],
+  "authorList": ["hypercross", "two"],
   "credits": "hypercross",
   "logoFile": "",
   "screenshots": [],
