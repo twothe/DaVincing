@@ -50,7 +50,7 @@ import two.davincing.utils.PriorityThreadFactory;
 
 //TODO [DEFER] add a sculpture motor block thing
 //TODO [DEFER] add a sculpture printer block
-@Mod(modid = "davincing", version = "1710.1.2")
+@Mod(modid = "davincing", version = "1710.1.3")
 public class DaVincing {
 
   public static final Logger log = LogManager.getLogger(DaVincing.class.getSimpleName(), new StringFormatterMessageFactory());

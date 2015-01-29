@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 import two.davincing.DaVincing;
 
 public abstract class ExpirablePool<T, V> implements Runnable {
@@ -19,6 +18,7 @@ public abstract class ExpirablePool<T, V> implements Runnable {
 
     public MapEntry(final V value) {
       this.value = value;
+      updateExpiry();
     }
 
     public void updateExpiry() {
@@ -74,7 +74,10 @@ public abstract class ExpirablePool<T, V> implements Runnable {
     if (this.cleanupTask == null) {
       throw new IllegalStateException("ExpirablePool has not been started before first use");
     }
-    final MapEntry<V> result = items.computeIfAbsent(t, addEntry);
+    MapEntry<V> result = items.get(t);
+    if (result == null) {
+      result = items.putIfAbsent(t, new MapEntry<V>(create()));
+    }
     result.updateExpiry();
     return result.value;
   }
@@ -92,14 +95,5 @@ public abstract class ExpirablePool<T, V> implements Runnable {
       DaVincing.log.error("[ExpirablePool]: ", t);
     }
   }
-
-  protected final Function<T, MapEntry<V>> addEntry = new Function<T, MapEntry<V>>() {
-
-    @Override
-    public MapEntry<V> apply(T t) {
-      final V value = create();
-      return new MapEntry<V>(value);
-    }
-  };
 
 }
