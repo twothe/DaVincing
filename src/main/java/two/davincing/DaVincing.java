@@ -39,46 +39,49 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 
 //TODO [DEFER] add a sculpture motor block thing
 //TODO [DEFER] add a sculpture printer block
 @Mod(modid = "davincing", version = "1710.1.1")
 public class DaVincing {
 
-  public static CreativeTabs tabDaVincing = new CreativeTabs("davincing") {
+  public static final Logger log = LogManager.getLogger(DaVincing.class.getSimpleName(), new StringFormatterMessageFactory());
+
+  public static final CreativeTabs tabDaVincing = new CreativeTabs("davincing") {
 
     @Override
     public Item getTabIconItem() {
-      return DaVincing.mixerbrush.item;
+      return DaVincing.mixerbrush.getItem();
     }
 
   };
 
-  public static BlockLoader<SculptureBlock> sculpture
-          = new BlockLoader(new SculptureBlock(), SculptureEntity.class);
-  public static BlockLoader<PaintingBlock> painting
-          = new BlockLoader(new PaintingBlock(), PaintingEntity.class);
+  public static final BlockLoader<SculptureBlock> sculpture = new BlockLoader(new SculptureBlock(), SculptureEntity.class);
+  public static final BlockLoader<PaintingBlock> painting = new BlockLoader(new PaintingBlock(), PaintingEntity.class);
 
-  public static ItemLoader<Item> handle = new ItemLoader(new Item().setUnlocalizedName("handle").setTextureName("minepainter:handle"));
-  public static ItemLoader<ChiselItem> chisel = new ItemLoader(new ChiselItem());
-  public static ItemLoader<ChiselItem> barcutter = new ItemLoader(new ChiselItem.Barcutter());
-  public static ItemLoader<ChiselItem> saw = new ItemLoader(new ChiselItem.Saw());
-  public static ItemLoader<PieceItem> piece = new ItemLoader(new PieceItem());
-  public static ItemLoader<PieceItem> bar = new ItemLoader(new PieceItem.Bar());
-  public static ItemLoader<PieceItem> cover = new ItemLoader(new PieceItem.Cover());
-  public static ItemLoader<DroppedSculptureItem> droppedSculpture = new ItemLoader(new DroppedSculptureItem());
-  public static ItemLoader<WrenchItem> wrench = new ItemLoader(new WrenchItem());
-  public static ItemLoader<CopygunItem> copygun = new ItemLoader(new CopygunItem());
-  public static ItemLoader<HingeItem> hinge = new ItemLoader(new HingeItem());
-  public static ItemLoader<TransmuterItem> transmuter = new ItemLoader(new TransmuterItem());
-  public static ItemLoader<PaintTool> minibrush = new ItemLoader(new PaintTool.Mini());
-  public static ItemLoader<PaintTool> mixerbrush = new ItemLoader(new PaintTool.Mixer());
-  public static ItemLoader<PaintTool> bucket = new ItemLoader(new PaintTool.Bucket());
-  public static ItemLoader<PaintTool> eraser = new ItemLoader(new PaintTool.Eraser());
-  public static ItemLoader<Palette> palette = new ItemLoader(new Palette());
-  public static ItemLoader<CanvasItem> canvas = new ItemLoader(new CanvasItem());
+  public static final ItemLoader<Item> handle = new ItemLoader(new Item().setUnlocalizedName("handle").setTextureName("minepainter:handle"));
+  public static final ItemLoader<ChiselItem> chisel = new ItemLoader(new ChiselItem());
+  public static final ItemLoader<ChiselItem> barcutter = new ItemLoader(new ChiselItem.Barcutter());
+  public static final ItemLoader<ChiselItem> saw = new ItemLoader(new ChiselItem.Saw());
+  public static final ItemLoader<PieceItem> piece = new ItemLoader(new PieceItem());
+  public static final ItemLoader<PieceItem> bar = new ItemLoader(new PieceItem.Bar());
+  public static final ItemLoader<PieceItem> cover = new ItemLoader(new PieceItem.Cover());
+  public static final ItemLoader<DroppedSculptureItem> droppedSculpture = new ItemLoader(new DroppedSculptureItem());
+  public static final ItemLoader<WrenchItem> wrench = new ItemLoader(new WrenchItem());
+  public static final ItemLoader<CopygunItem> copygun = new ItemLoader(new CopygunItem());
+  public static final ItemLoader<HingeItem> hinge = new ItemLoader(new HingeItem());
+  public static final ItemLoader<TransmuterItem> transmuter = new ItemLoader(new TransmuterItem());
+  public static final ItemLoader<PaintTool> minibrush = new ItemLoader(new PaintTool.Mini());
+  public static final ItemLoader<PaintTool> mixerbrush = new ItemLoader(new PaintTool.Mixer());
+  public static final ItemLoader<PaintTool> bucket = new ItemLoader(new PaintTool.Bucket());
+  public static final ItemLoader<PaintTool> eraser = new ItemLoader(new PaintTool.Eraser());
+  public static final ItemLoader<Palette> palette = new ItemLoader(new Palette());
+  public static final ItemLoader<CanvasItem> canvas = new ItemLoader(new CanvasItem());
 
-  public static SimpleNetworkWrapper network;
+  public static final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel("minepainter");
 
   @EventHandler
   public void preInit(FMLPreInitializationEvent event) {
@@ -119,7 +122,6 @@ public class DaVincing {
     new Crafting().registerRecipes();
 
     MinecraftForge.EVENT_BUS.register(new two.davincing.EventHandler());
-    network = NetworkRegistry.INSTANCE.newSimpleChannel("minepainter");
     network.registerMessage(SculptureOperationMessage.SculptureOperationHandler.class,
             SculptureOperationMessage.class, 0, Side.SERVER);
     network.registerMessage(PaintingOperationMessage.PaintingOperationHandler.class,

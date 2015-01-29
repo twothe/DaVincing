@@ -12,50 +12,34 @@ import net.minecraftforge.common.util.ForgeDirection;
 @SideOnly(Side.CLIENT)
 public class BlockSlice implements IBlockAccess {
 
-  IBlockAccess iba;
-  int x;
-  int y;
-  int z;
-  Sculpture sculpture;
-  int brightness;
+  protected final IBlockAccess iba;
+  protected final int x;
+  protected final int y;
+  protected final int z;
+  protected final Sculpture sculpture;
+  protected final int brightness;
 
-  private static BlockSlice instance = new BlockSlice();
-
-  private BlockSlice() {
+  private BlockSlice(IBlockAccess iba, int x, int y, int z, Sculpture sculpture, int brightness) {
+    this.iba = iba;
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.sculpture = sculpture;
+    this.brightness = brightness;
   }
 
-  ;
-	
-	public static BlockSlice at(IBlockAccess iba, int x, int y, int z) {
-    instance.iba = iba;
-    instance.x = x;
-    instance.y = y;
-    instance.z = z;
-
-    TileEntity te = iba.getTileEntity(x, y, z);
-    if (te != null && te instanceof SculptureEntity) {
-      instance.sculpture = ((SculptureEntity) te).sculpture;
-    } else {
-      instance.sculpture = null;
-    }
-
-    return instance;
+  public static BlockSlice at(IBlockAccess iba, int x, int y, int z) {
+    final TileEntity te = iba.getTileEntity(x, y, z);
+    return new BlockSlice(iba, x, y, z, (te instanceof SculptureEntity ? ((SculptureEntity) te).sculpture() : null), -1);
   }
 
   public static BlockSlice of(Sculpture sculpture, int brightness) {
-    instance.iba = null;
-    instance.sculpture = sculpture;
-    instance.brightness = brightness;
-    return instance;
-  }
-
-  public static void clear() {
-    instance.iba = null;
+    return new BlockSlice(null, 0, 0, 0, sculpture, brightness);
   }
 
   @Override
   public Block getBlock(int x, int y, int z) {
-    if (sculpture != null && sculpture.contains(x, y, z)) {
+    if (sculpture != null && Sculpture.contains(x, y, z)) {
       return sculpture.getBlockAt(x, y, z, this);
     }
     if (iba == null) {
@@ -83,7 +67,7 @@ public class BlockSlice implements IBlockAccess {
 
   @Override
   public int getBlockMetadata(int x, int y, int z) {
-    if (sculpture != null && sculpture.contains(x, y, z)) {
+    if (sculpture != null && Sculpture.contains(x, y, z)) {
       return sculpture.getMetaAt(x, y, z, this);
     }
     if (iba == null) {
@@ -94,7 +78,7 @@ public class BlockSlice implements IBlockAccess {
 
   @Override
   public boolean isAirBlock(int x, int y, int z) {
-    if (sculpture != null && sculpture.contains(x, y, z)) {
+    if (sculpture != null && Sculpture.contains(x, y, z)) {
       return sculpture.getBlockAt(x, y, z, this) == Blocks.air;
     }
     if (iba == null) {

@@ -25,7 +25,7 @@ import org.lwjgl.opengl.GL11;
 public class DroppedSculptureRenderer implements IItemRenderer {
 
   SculptureRenderBlocks rb = new SculptureRenderBlocks();
-  RenderItem renderItem = new RenderItem();
+//  RenderItem renderItem = new RenderItem();
   ItemStack is;
 
   ExpirablePool<ItemStack, CompiledRender> renders = new ExpirablePool<ItemStack, CompiledRender>(12) {
@@ -98,13 +98,13 @@ public class DroppedSculptureRenderer implements IItemRenderer {
         glDispList = GLAllocation.generateDisplayLists(1);
       }
       if (is == null) {
-        is = new ItemStack(DaVincing.sculpture.block);
+        is = new ItemStack(DaVincing.sculpture.getBlock());
       }
 
       GL11.glNewList(glDispList, GL11.GL_COMPILE);
       TextureManager tm = Minecraft.getMinecraft().renderEngine;
       tm.bindTexture(TextureMap.locationBlocksTexture);
-      SculptureBlock sb = DaVincing.sculpture.block;
+      SculptureBlock sb = DaVincing.sculpture.getBlock();
 
       if (type == ItemRenderType.INVENTORY) {
         RenderHelper.enableGUIStandardItemLighting();

@@ -20,64 +20,64 @@ public class Crafting {
 
   public void registerRecipes() {
 
-    GameRegistry.addRecipe(new ItemStack(DaVincing.minibrush.item),
+    GameRegistry.addRecipe(new ItemStack(DaVincing.minibrush.getItem()),
             "X  ", " Y ", "  Z",
             'X', new ItemStack(Blocks.wool),
             'Y', new ItemStack(Items.stick),
             'Z', new ItemStack(Items.dye, 1, 1));
 
-    GameRegistry.addRecipe(new ItemStack(DaVincing.mixerbrush.item),
+    GameRegistry.addRecipe(new ItemStack(DaVincing.mixerbrush.getItem()),
             "XX ", "XY ", "  Z",
             'X', new ItemStack(Blocks.wool),
             'Y', new ItemStack(Items.stick),
             'Z', new ItemStack(Items.dye, 1, 1));
 
-    GameRegistry.addRecipe(new ItemStack(DaVincing.canvas.item),
+    GameRegistry.addRecipe(new ItemStack(DaVincing.canvas.getItem()),
             "XXX", "XXX",
             'X', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE));
 
-    GameRegistry.addShapelessRecipe(new ItemStack(DaVincing.handle.item),
+    GameRegistry.addShapelessRecipe(new ItemStack(DaVincing.handle.getItem()),
             Items.leather, Items.leather, Items.stick);
 
-    GameRegistry.addRecipe(new ItemStack(DaVincing.chisel.item),
+    GameRegistry.addRecipe(new ItemStack(DaVincing.chisel.getItem()),
             "X ", " Y",
             'X', new ItemStack(Items.diamond),
-            'Y', new ItemStack(DaVincing.handle.item));
+            'Y', new ItemStack(DaVincing.handle.getItem()));
 
-    GameRegistry.addRecipe(new ItemStack(DaVincing.barcutter.item),
+    GameRegistry.addRecipe(new ItemStack(DaVincing.barcutter.getItem()),
             "XYX", " Z ", " Z ",
-            'X', new ItemStack(DaVincing.handle.item),
+            'X', new ItemStack(DaVincing.handle.getItem()),
             'Y', new ItemStack(Items.diamond),
             'Z', new ItemStack(Blocks.planks, 1, OreDictionary.WILDCARD_VALUE));
 
-    GameRegistry.addRecipe(new ItemStack(DaVincing.saw.item),
+    GameRegistry.addRecipe(new ItemStack(DaVincing.saw.getItem()),
             "XXY", "ZZ ",
             'X', new ItemStack(Items.stick),
-            'Y', new ItemStack(DaVincing.handle.item),
+            'Y', new ItemStack(DaVincing.handle.getItem()),
             'Z', new ItemStack(Items.diamond));
-    GameRegistry.addRecipe(new ItemStack(DaVincing.saw.item),
+    GameRegistry.addRecipe(new ItemStack(DaVincing.saw.getItem()),
             "XZ", "XZ", "Y ",
             'X', new ItemStack(Items.stick),
-            'Y', new ItemStack(DaVincing.handle.item),
+            'Y', new ItemStack(DaVincing.handle.getItem()),
             'Z', new ItemStack(Items.diamond));
 
-    GameRegistry.addShapelessRecipe(new ItemStack(DaVincing.palette.item),
+    GameRegistry.addShapelessRecipe(new ItemStack(DaVincing.palette.getItem()),
             new ItemStack(Blocks.planks, OreDictionary.WILDCARD_VALUE),
-            new ItemStack(DaVincing.chisel.item));
+            new ItemStack(DaVincing.chisel.getItem()));
 
-    GameRegistry.addRecipe(new ItemStack(DaVincing.eraser.item),
+    GameRegistry.addRecipe(new ItemStack(DaVincing.eraser.getItem()),
             "XX ", "YY ", "ZZ ",
             'X', new ItemStack(Items.slime_ball),
             'Y', new ItemStack(Items.paper),
             'Z', new ItemStack(Items.dye, 1, 4));
 
-    GameRegistry.addRecipe(new ItemStack(DaVincing.wrench.item),
+    GameRegistry.addRecipe(new ItemStack(DaVincing.wrench.getItem()),
             "XX ", "YX ", " X ",
             'X', new ItemStack(Items.iron_ingot),
             'Y', new ItemStack(Items.dye, 1, 1));
 
     if (CRAFTABLE_COPYGUN) {
-      GameRegistry.addRecipe(new ItemStack(DaVincing.copygun.item),
+      GameRegistry.addRecipe(new ItemStack(DaVincing.copygun.getItem()),
               "XXX", "YYX", " YX",
               'X', new ItemStack(Items.iron_ingot),
               'Y', new ItemStack(Items.gold_ingot));
@@ -88,7 +88,7 @@ public class Crafting {
     GameRegistry.addRecipe(fillBucket);
   }
 
-  private IRecipe scrap = new IRecipe() {
+  static final IRecipe scrap = new IRecipe() {
 
     @Override
     public boolean matches(InventoryCrafting ic, World w) {
@@ -165,12 +165,12 @@ public class Crafting {
         return new ItemStack(block, count / 512, meta);
       }
       if (count % 64 == 0 && count / 64 <= 64) {
-        return new ItemStack(DaVincing.cover.item, count / 64, (Block.getIdFromBlock(block) << 4) + meta);
+        return new ItemStack(DaVincing.cover.getItem(), count / 64, (Block.getIdFromBlock(block) << 4) + meta);
       }
       if (count % 8 == 0 && count / 8 <= 64) {
-        return new ItemStack(DaVincing.bar.item, count / 8, (Block.getIdFromBlock(block) << 4) + meta);
+        return new ItemStack(DaVincing.bar.getItem(), count / 8, (Block.getIdFromBlock(block) << 4) + meta);
       }
-      return new ItemStack(DaVincing.piece.item, count, (Block.getIdFromBlock(block) << 4) + meta);
+      return new ItemStack(DaVincing.piece.getItem(), count, (Block.getIdFromBlock(block) << 4) + meta);
     }
 
     @Override
@@ -184,7 +184,7 @@ public class Crafting {
     }
   };
 
-  private IRecipe fillBucket = new IRecipe() {
+  static final IRecipe fillBucket = new IRecipe() {
     @Override
     public int getRecipeSize() {
       return 0;
@@ -251,7 +251,7 @@ public class Crafting {
           continue;
         }
       }
-      ItemStack newbucket = new ItemStack(DaVincing.bucket.item);
+      ItemStack newbucket = new ItemStack(DaVincing.bucket.getItem());
       newbucket.setItemDamage(dye.getItem() == Items.slime_ball ? 16 : dye.getItemDamage());
       return newbucket;
     }

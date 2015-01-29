@@ -60,9 +60,9 @@ public enum PaintingPlacement {
 
   public float[] painting2blockWithShift(float x, float y, float shift) {
     float[] point = new float[3];
-    point[0] = (1 - (xpos.offsetX + ypos.offsetX + normal.offsetX)) / 2;
-    point[1] = (1 - (xpos.offsetY + ypos.offsetY + normal.offsetY)) / 2;
-    point[2] = (1 - (xpos.offsetZ + ypos.offsetZ + normal.offsetZ)) / 2;
+    point[0] = (1f - (xpos.offsetX + ypos.offsetX + normal.offsetX)) / 2f;
+    point[1] = (1f - (xpos.offsetY + ypos.offsetY + normal.offsetY)) / 2f;
+    point[2] = (1f - (xpos.offsetZ + ypos.offsetZ + normal.offsetZ)) / 2f;
     point[0] += xpos.offsetX * x + ypos.offsetX * y + normal.offsetX * shift;
     point[1] += xpos.offsetY * x + ypos.offsetY * y + normal.offsetY * shift;
     point[2] += xpos.offsetZ * x + ypos.offsetZ * y + normal.offsetZ * shift;
@@ -75,8 +75,8 @@ public enum PaintingPlacement {
 
   public float[] block2painting(float x, float y, float z) {
     float[] point = new float[2];
-    point[0] = (1 - xpos.offsetX - xpos.offsetY - xpos.offsetZ) / 2;
-    point[1] = (1 - ypos.offsetX - ypos.offsetY - ypos.offsetZ) / 2;
+    point[0] = (1f - xpos.offsetX - xpos.offsetY - xpos.offsetZ) / 2f;
+    point[1] = (1f - ypos.offsetX - ypos.offsetY - ypos.offsetZ) / 2f;
     point[0] += xpos.offsetX * x + xpos.offsetY * y + xpos.offsetZ * z;
     point[1] += ypos.offsetX * x + ypos.offsetY * y + ypos.offsetZ * z;
     return point;

@@ -46,7 +46,6 @@ public class SculptureEntity extends TileEntity {
     if (this.worldObj.isRemote) {
       BlockSlice slice = BlockSlice.at(worldObj, xCoord, yCoord, zCoord);
       getRender().update(slice);
-      slice.clear();
     }
   }
 

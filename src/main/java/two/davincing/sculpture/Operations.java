@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -57,27 +58,32 @@ public class Operations {
           int tgt_meta = w.getBlockMetadata(tx, ty, tz);
 
           if (tgt_block == Blocks.air && block != Blocks.air) {
-            w.setBlock(tx, ty, tz, DaVincing.sculpture.block);
+            w.setBlock(tx, ty, tz, DaVincing.sculpture.getBlock());
           } else if (sculptable(tgt_block, tgt_meta)) {
             convertToFullSculpture(w, tx, ty, tz);
           }
 
-          if (w.getBlock(tx, ty, tz) != DaVincing.sculpture.block) {
+          if (w.getBlock(tx, ty, tz) != DaVincing.sculpture.getBlock()) {
             continue;
           }
 
-          SculptureEntity se = (SculptureEntity) w.getTileEntity(tx, ty, tz);
-          Block former = se.sculpture.getBlockAt(_x, _y, _z, null);
-          int metaFormer = se.sculpture.getMetaAt(_x, _y, _z, null);
-          addDrop(droplist, former, metaFormer);
-          se.sculpture.setBlockAt(_x, _y, _z, block, meta);
-          if (se.sculpture.isEmpty()) {
-            w.setBlock(tx, ty, tz, Blocks.air);
-          }
-          if (w.isRemote) {
-            se.getRender().changed = true;
+          final TileEntity tileEntity = w.getTileEntity(tx, ty, tz);
+          if (tileEntity instanceof SculptureEntity) {
+            final SculptureEntity se = (SculptureEntity) tileEntity;
+            Block former = se.sculpture.getBlockAt(_x, _y, _z, null);
+            int metaFormer = se.sculpture.getMetaAt(_x, _y, _z, null);
+            addDrop(droplist, former, metaFormer);
+            se.sculpture.setBlockAt(_x, _y, _z, block, meta);
+            if (se.sculpture.isEmpty()) {
+              w.setBlock(tx, ty, tz, Blocks.air);
+            }
+            if (w.isRemote) {
+              se.getRender().changed = true;
+            } else {
+              w.markBlockForUpdate(tx, ty, tz);
+            }
           } else {
-            w.markBlockForUpdate(tx, ty, tz);
+            DaVincing.log.error("[Operations.editSubBlock]: expected SculptureEntity at %d, %d, %d, but got %s", tx, ty, tz, (tileEntity == null ? "null" : tileEntity.getClass().getName()));
           }
           s++;
         }
@@ -116,24 +122,24 @@ public class Operations {
     amount %= 8;
 
     if (covers > 0) {
-      ItemStack is = new ItemStack(DaVincing.cover.item);
+      ItemStack is = new ItemStack(DaVincing.cover.getItem());
       is.stackSize = covers;
       is.setItemDamage((Block.getIdFromBlock(block) << 4) + meta);
-      DaVincing.sculpture.block.dropScrap(w, x, y, z, is);
+      DaVincing.sculpture.getBlock().dropScrap(w, x, y, z, is);
     }
 
     if (bars > 0) {
-      ItemStack is = new ItemStack(DaVincing.bar.item);
+      ItemStack is = new ItemStack(DaVincing.bar.getItem());
       is.stackSize = bars;
       is.setItemDamage((Block.getIdFromBlock(block) << 4) + meta);
-      DaVincing.sculpture.block.dropScrap(w, x, y, z, is);
+      DaVincing.sculpture.getBlock().dropScrap(w, x, y, z, is);
     }
 
     if (amount > 0) {
-      ItemStack is = new ItemStack(DaVincing.piece.item);
+      ItemStack is = new ItemStack(DaVincing.piece.getItem());
       is.stackSize = amount;
       is.setItemDamage((Block.getIdFromBlock(block) << 4) + meta);
-      DaVincing.sculpture.block.dropScrap(w, x, y, z, is);
+      DaVincing.sculpture.getBlock().dropScrap(w, x, y, z, is);
     }
   }
 
@@ -193,10 +199,15 @@ public class Operations {
   public static void convertToFullSculpture(World w, int x, int y, int z) {
     Block was = w.getBlock(x, y, z);
     int meta = w.getBlockMetadata(x, y, z);
-    w.setBlock(x, y, z, DaVincing.sculpture.block);
-    SculptureEntity se = (SculptureEntity) w.getTileEntity(x, y, z);
-    for (int i = 0; i < 512; i++) {
-      se.sculpture.setBlockAt((i >> 6) & 7, (i >> 3) & 7, (i >> 0) & 7, was, (byte) meta);
+    w.setBlock(x, y, z, DaVincing.sculpture.getBlock());
+    final TileEntity tileEntity = w.getTileEntity(x, y, z);
+    if (tileEntity instanceof SculptureEntity) {
+      final SculptureEntity se = (SculptureEntity) tileEntity;
+      for (int i = 0; i < 512; i++) {
+        se.sculpture.setBlockAt((i >> 6) & 7, (i >> 3) & 7, (i >> 0) & 7, was, (byte) meta);
+      }
+    } else {
+      DaVincing.log.error("[Operations.convertToFullSculpture]: expected SculptureEntity at %d, %d, %d, but got %s", x, y, z, (tileEntity == null ? "null" : tileEntity.getClass().getName()));
     }
   }
 
@@ -206,7 +217,7 @@ public class Operations {
   public static int[] raytrace(int x, int y, int z, EntityPlayer ep) {
     Block sculpture = ep.worldObj.getBlock(x, y, z);
     Sculpture the_sculpture = null;
-    if (sculpture == DaVincing.sculpture.block) {
+    if (sculpture == DaVincing.sculpture.getBlock()) {
       SculptureEntity se = Utils.getTE(ep.worldObj, x, y, z);
       the_sculpture = se.sculpture();
     }
@@ -364,9 +375,9 @@ public class Operations {
       z++;
     }
 
-    boolean allx = (type & ALLX) > 0;
-    boolean ally = (type & ALLY) > 0;
-    boolean allz = (type & ALLZ) > 0;
+    boolean allx = (type & ALLX) != 0;
+    boolean ally = (type & ALLY) != 0;
+    boolean allz = (type & ALLZ) != 0;
     block.setBlockBounds(allx ? x + 0 : x + pos[0] / 8f,
             ally ? y + 0 : y + pos[1] / 8f,
             allz ? z + 0 : z + pos[2] / 8f,
@@ -416,7 +427,7 @@ public class Operations {
       if (b == Blocks.air) {
         return true;
       }
-      if (b == DaVincing.sculpture.block) {
+      if (b == DaVincing.sculpture.getBlock()) {
         return true;
       }
       return false;
@@ -425,7 +436,7 @@ public class Operations {
       if (b == Blocks.air) {
         return false;
       }
-      if (b == DaVincing.sculpture.block) {
+      if (b == DaVincing.sculpture.getBlock()) {
         return true;
       }
       if (sculptable(b, meta)) {

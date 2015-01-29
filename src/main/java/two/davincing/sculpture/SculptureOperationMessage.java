@@ -73,9 +73,9 @@ public class SculptureOperationMessage implements IMessage {
       EntityPlayer ep = ctx.getServerHandler().playerEntity;
       ItemStack is = ep.getCurrentEquippedItem();
 
-      if ((message.flags & Operations.DAMAGE) > 0) {
+      if ((message.flags & Operations.DAMAGE) != 0) {
         is.damageItem(1, ep);
-      } else if ((Operations.CONSUME & message.flags) > 0) {
+      } else if ((Operations.CONSUME & message.flags) != 0) {
         if (!ep.capabilities.isCreativeMode) {
           is.stackSize--;
           if (is.stackSize <= 0) {

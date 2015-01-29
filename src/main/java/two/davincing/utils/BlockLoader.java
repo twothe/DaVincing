@@ -12,11 +12,9 @@ import net.minecraft.tileentity.TileEntity;
 
 public class BlockLoader<T extends Block> {
 
-  public final T block;
-  public final Class<? extends TileEntity> tileEntityClass;
-
-  @SideOnly(Side.CLIENT)
-  public int renderID;
+  protected final T block;
+  protected final Class<? extends TileEntity> tileEntityClass;
+  protected int renderID;
 
   public BlockLoader(T block, Class<? extends TileEntity> clazz) {
     this.block = block;
@@ -28,6 +26,18 @@ public class BlockLoader<T extends Block> {
     if (tileEntityClass != null) {
       GameRegistry.registerTileEntity(tileEntityClass, tileEntityClass.getSimpleName());
     }
+  }
+
+  public T getBlock() {
+    return block;
+  }
+
+  public Class<? extends TileEntity> getTileEntityClass() {
+    return tileEntityClass;
+  }
+
+  public int getRenderID() {
+    return renderID;
   }
 
   @SideOnly(Side.CLIENT)

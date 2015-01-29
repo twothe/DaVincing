@@ -147,7 +147,7 @@ public class SculptureBlock extends BlockContainer {
   @SideOnly(Side.CLIENT)
   public int getRenderType() {
     if (renderID == -1) {
-      return DaVincing.sculpture.renderID;
+      return DaVincing.sculpture.getRenderID();
     }
     return renderID;
   }
@@ -166,7 +166,7 @@ public class SculptureBlock extends BlockContainer {
   public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
     SculptureEntity se = Utils.getTE(world, x, y, z);
     NBTTagCompound nbt = new NBTTagCompound();
-    ItemStack is = new ItemStack(DaVincing.droppedSculpture.item);
+    ItemStack is = new ItemStack(DaVincing.droppedSculpture.getItem());
 
     se.sculpture.write(nbt);
     is.setTagCompound(nbt);
@@ -194,7 +194,7 @@ public class SculptureBlock extends BlockContainer {
       return false;
     }
     NBTTagCompound nbt = new NBTTagCompound();
-    ItemStack is = new ItemStack(DaVincing.droppedSculpture.item);
+    ItemStack is = new ItemStack(DaVincing.droppedSculpture.getItem());
 
     applyPlayerRotation(se.sculpture.r, ep, true);
     se.sculpture.write(nbt);
@@ -203,7 +203,7 @@ public class SculptureBlock extends BlockContainer {
     this.dropBlockAsItem(w, x, y, z, is);
 
     if (se.getHinge() != null) {
-      is = new ItemStack(DaVincing.hinge.item);
+      is = new ItemStack(DaVincing.hinge.getItem());
       this.dropBlockAsItem(w, x, y, z, is);
     }
 
@@ -277,7 +277,7 @@ public class SculptureBlock extends BlockContainer {
     Hinge hinge = se.getHinge();
 
     w.setBlockToAir(x, y, z);
-    w.setBlock(tx, ty, tz, DaVincing.sculpture.block);
+    w.setBlock(tx, ty, tz, DaVincing.sculpture.getBlock());
     se = Utils.getTE(w, tx, ty, tz);
     se.sculpture = sculpture;
     if (hinge != null) {
@@ -319,7 +319,7 @@ public class SculptureBlock extends BlockContainer {
   }
 
   private void add_connected(World w, int x, int y, int z) {
-    if (w.getBlock(x, y, z) != DaVincing.sculpture.block) {
+    if (w.getBlock(x, y, z) != DaVincing.sculpture.getBlock()) {
       return;
     }
 

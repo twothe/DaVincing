@@ -41,9 +41,9 @@ public class PieceRenderer implements IItemRenderer {
   public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
 
     if (is == null) {
-      is = new ItemStack(DaVincing.sculpture.block);
+      is = new ItemStack(DaVincing.sculpture.getBlock());
     }
-    SculptureBlock sculpture = DaVincing.sculpture.block;
+    SculptureBlock sculpture = DaVincing.sculpture.getBlock();
     PieceItem piece = Utils.getItem(item);
     sculpture.setCurrentBlock(piece.getEditBlock(item), piece.getEditMeta(item));
     setBounds(sculpture);
@@ -54,7 +54,7 @@ public class PieceRenderer implements IItemRenderer {
               Minecraft.getMinecraft().fontRenderer,
               Minecraft.getMinecraft().renderEngine, is, 0, 0);
     } else if (type == ItemRenderType.ENTITY) {
-      EntityItem eis = (EntityItem) data[1];
+//      EntityItem eis = (EntityItem) data[1];
       GL11.glScalef(.5f, .5f, .5f);
       mc.renderEngine.bindTexture(TextureMap.locationBlocksTexture);
       RenderBlocks rb = (RenderBlocks) (data[0]);

@@ -62,7 +62,7 @@ public class CommandImportPainting extends CommandBase {
                   (j + 1) * img.getHeight() / h, null);
           ByteArrayOutputStream baos = new ByteArrayOutputStream();
           ImageIO.write(slot, "png", baos);
-          ItemStack is = new ItemStack(DaVincing.canvas.item);
+          ItemStack is = new ItemStack(DaVincing.canvas.getItem());
           NBTTagCompound nbt = new NBTTagCompound();
           nbt.setByteArray("image_data", baos.toByteArray());
           is.setTagCompound(nbt);

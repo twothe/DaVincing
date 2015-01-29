@@ -51,7 +51,7 @@ public class CanvasItem extends Item {
     }
 
     PaintingPlacement pp = PaintingPlacement.of(ep.getLookVec(), face);
-    w.setBlock(_x, _y, _z, DaVincing.painting.block, pp.ordinal(), 3);
+    w.setBlock(_x, _y, _z, DaVincing.painting.getBlock(), pp.ordinal(), 3);
     PaintingEntity pe = Utils.getTE(w, _x, _y, _z);
     pe.readFromNBTToImage(is.getTagCompound());
 

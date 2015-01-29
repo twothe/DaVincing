@@ -104,7 +104,7 @@ public enum Hinge {
   }
 
   public static Hinge fromSculpture(IBlockAccess iba, int x, int y, int z) {
-    if (iba.getBlock(x, y, z) != DaVincing.sculpture.block) {
+    if (iba.getBlock(x, y, z) != DaVincing.sculpture.getBlock()) {
       return null;
     }
     SculptureEntity se = Utils.getTE(iba, x, y, z);

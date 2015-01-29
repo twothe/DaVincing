@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import two.davincing.DaVincing;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 
 @SideOnly(Side.CLIENT)
@@ -20,14 +21,19 @@ public class SculptureRender implements ISimpleBlockRenderingHandler {
   public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
           Block block, int modelId, RenderBlocks renderer) {
 
-    if (world.getBlock(x, y, z) != DaVincing.sculpture.block) {
+    if (world.getBlock(x, y, z) != DaVincing.sculpture.getBlock()) {
       return false;
     }
 
-    SculptureEntity se = (SculptureEntity) world.getTileEntity(x, y, z);
+    final TileEntity tileEntity = world.getTileEntity(x, y, z);
+    if (tileEntity instanceof SculptureEntity) {
+      final SculptureEntity se = (SculptureEntity) tileEntity;
 
-    se.getRender().updateLight(block.getMixedBrightnessForBlock(world, x, y, z));
-    se.getRender().updateAO(world, x, y, z);
+      se.getRender().updateLight(block.getMixedBrightnessForBlock(world, x, y, z));
+      se.getRender().updateAO(world, x, y, z);
+    } else {
+      DaVincing.log.error("[SculptureRender.renderWorldBlock]: expected SculptureEntity at %d, %d, %d, but got %s", x, y, z, (tileEntity == null ? "null" : tileEntity.getClass().getName()));
+    }
 
     return false;
   }
@@ -39,7 +45,7 @@ public class SculptureRender implements ISimpleBlockRenderingHandler {
 
   @Override
   public int getRenderId() {
-    return DaVincing.sculpture.renderID;
+    return DaVincing.sculpture.getRenderID();
   }
 
 }

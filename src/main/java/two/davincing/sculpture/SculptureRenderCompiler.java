@@ -19,10 +19,11 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class SculptureRenderCompiler {
 
+  protected static final double AO_MAX_DISTANCE = 0.001; // if two ambient lights differ less than this, they are considered the same
   public static boolean CULL = true;
-  public static RenderBlocks rb = new SculptureRenderBlocks();
+  public static final RenderBlocks rb = new SculptureRenderBlocks();
 
-  int[] glDisplayList;
+  final int[] glDisplayList = new int[]{-1, -1};
   int light;
   public boolean changed = true;
   boolean context = false;
@@ -35,7 +36,7 @@ public class SculptureRenderCompiler {
       int dz = (i / 9) % 3;
 
       float ao = w.getBlock(x + dx - 1, y + dy - 1, z + dz - 1).getAmbientOcclusionLightValue();
-      if (ao != neighborAO[dx][dy][dz]) {
+      if (Math.abs(ao - neighborAO[dx][dy][dz]) > AO_MAX_DISTANCE) {
         changed = true;
         neighborAO[dx][dy][dz] = ao;
       }
@@ -56,12 +57,8 @@ public class SculptureRenderCompiler {
   }
 
   public boolean update(BlockSlice slice) {
-    if (glDisplayList != null && !changed) {
+    if (!changed) {
       return false;
-    }
-
-    if (glDisplayList == null) {
-      glDisplayList = new int[]{-1, -1};
     }
     for (int pass = 0; pass < 2; pass++) {
       if (glDisplayList[pass] < 0) {
@@ -82,7 +79,7 @@ public class SculptureRenderCompiler {
 
   public void build(BlockSlice slice, int pass) {
     rb.blockAccess = slice;
-    SculptureBlock sculpture = DaVincing.sculpture.block;
+    SculptureBlock sculpture = DaVincing.sculpture.getBlock();
 
     TextureManager tm = Minecraft.getMinecraft().renderEngine;
     tm.bindTexture(TextureMap.locationBlocksTexture);
@@ -180,18 +177,21 @@ public class SculptureRenderCompiler {
   }
 
   public void clear() {
-    if (glDisplayList == null) {
-      return;
-    }
     for (int i = 0; i < glDisplayList.length; i++) {
       if (glDisplayList[i] >= 0) {
         GL11.glDeleteLists(glDisplayList[i], 1);
+        glDisplayList[i] = -1;
       }
     }
   }
 
   public boolean ready() {
-    return glDisplayList != null;
+    for (int i = 0; i < glDisplayList.length; i++) {
+      if (glDisplayList[i] < 0) {
+        return false;
+      }
+    }
+    return true;
   }
 
   private double[] getTesOffsets() {

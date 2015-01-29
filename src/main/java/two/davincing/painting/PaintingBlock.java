@@ -76,7 +76,7 @@ public class PaintingBlock extends BlockContainer {
 
   @Override
   public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
-    ItemStack is = new ItemStack(DaVincing.canvas.item);
+    ItemStack is = new ItemStack(DaVincing.canvas.getItem());
     NBTTagCompound nbt = new NBTTagCompound();
     PaintingEntity pe = Utils.getTE(world, x, y, z);
 
@@ -115,7 +115,7 @@ public class PaintingBlock extends BlockContainer {
   @Override
   public void breakBlock(World w, int x, int y, int z, Block b, int meta) {
 
-    ItemStack is = new ItemStack(DaVincing.canvas.item);
+    ItemStack is = new ItemStack(DaVincing.canvas.getItem());
     NBTTagCompound nbt = new NBTTagCompound();
     PaintingEntity pe = Utils.getTE(w, x, y, z);
 

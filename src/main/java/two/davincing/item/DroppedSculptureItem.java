@@ -62,7 +62,7 @@ public class DroppedSculptureItem extends Item {
       return false;
     }
 
-    w.setBlock(_x, _y, _z, DaVincing.sculpture.block);
+    w.setBlock(_x, _y, _z, DaVincing.sculpture.getBlock());
     SculptureEntity se = Utils.getTE(w, _x, _y, _z);
     se.sculpture().read(is.getTagCompound());
     SculptureBlock.applyPlayerRotation(se.sculpture().getRotation(), ep, false);

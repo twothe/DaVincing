@@ -7,6 +7,7 @@ import two.davincing.painting.PaintingCache;
 import two.davincing.painting.PaintingIcon;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
@@ -41,7 +42,8 @@ public class CanvasRenderer implements IItemRenderer {
   @Override
   public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
 
-    IIcon icon = DaVincing.canvas.item.getIconFromDamage(0);
+    final Item canvas = DaVincing.canvas.getItem();
+    IIcon icon = canvas.getIconFromDamage(0);
     if (item.hasTagCompound()) {
       PaintingIcon pi = PaintingCache.get(item);
       GL11.glBindTexture(GL11.GL_TEXTURE_2D, pi.glTexId());

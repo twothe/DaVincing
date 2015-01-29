@@ -9,7 +9,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 
 public class ItemLoader<T extends Item> {
 
-  public T item;
+  protected final T item;
 
   public ItemLoader(T item) {
     this.item = item;
@@ -21,6 +21,10 @@ public class ItemLoader<T extends Item> {
 
   public void load() {
     load(item.getClass().getSimpleName().replace("$", "_"));
+  }
+  
+  public T getItem() {
+    return item;
   }
 
   @SideOnly(Side.CLIENT)

@@ -64,7 +64,7 @@ public class PaintTool extends Item {
   }
 
   public boolean paintAt(World w, int x, int y, int z, float xs, float ys, float zs, int color, boolean isSneaking) {
-    if (w.getBlock(x, y, z) != DaVincing.painting.block) {
+    if (w.getBlock(x, y, z) != DaVincing.painting.getBlock()) {
       return false;
     }
     PaintingEntity pe = Utils.getTE(w, x, y, z);
@@ -81,7 +81,7 @@ public class PaintTool extends Item {
         int _y = y + place.xpos.offsetY * i + place.ypos.offsetY * j;
         int _z = z + place.xpos.offsetZ * i + place.ypos.offsetZ * j;
 
-        if (w.getBlock(_x, _y, _z) != DaVincing.painting.block) {
+        if (w.getBlock(_x, _y, _z) != DaVincing.painting.getBlock()) {
           continue;
         }
         if (w.getBlockMetadata(_x, _y, _z) != place.ordinal()) {
@@ -211,8 +211,6 @@ public class PaintTool extends Item {
         return false;
       }
 
-      int from_color = img.getRGB(x, y);
-
       for (int i = 0; i < 256; i++) {
         x = i / 16;
         y = i % 16;
@@ -296,6 +294,7 @@ public class PaintTool extends Item {
 
       int x = (int) (point[0] * 16 + 16) - 16;
       int y = (int) (point[1] * 16 + 16) - 16;
+      int mixColor;
 
       boolean changed = false;
       for (int i = -1; i <= 1; i++) {
@@ -308,11 +307,11 @@ public class PaintTool extends Item {
           }
           changed = true;
 
-          color = img.getRGB(x + i, y + j);
-          int a75 = (int) (((color >> 24) & 0xff) * 0.75f) << 24;
-          a75 += color & 0xffffff;
-          int a50 = (int) (((color >> 24) & 0xff) * 0.5f) << 24;
-          a50 += color & 0xffffff;
+          mixColor = img.getRGB(x + i, y + j);
+          int a75 = (int) (((mixColor >> 24) & 0xff) * 0.75f) << 24;
+          a75 += mixColor & 0xffffff;
+          int a50 = (int) (((mixColor >> 24) & 0xff) * 0.5f) << 24;
+          a50 += mixColor & 0xffffff;
 
           int to_blend = Math.abs(i) + Math.abs(j);
           if (to_blend == 0) {

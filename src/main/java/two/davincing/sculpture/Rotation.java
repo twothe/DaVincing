@@ -79,11 +79,11 @@ public class Rotation {
     r[8] = 1;
   }
 
-  private int normalize(int x) {
-    if (x < 0) {
-      x += (x / 8) * 8 + 8;
-    }
-    x %= 8;
-    return x;
-  }
+//  private int normalize(int x) {
+//    if (x < 0) {
+//      x += (x / 8) * 8 + 8;
+//    }
+//    x %= 8;
+//    return x;
+//  }
 }

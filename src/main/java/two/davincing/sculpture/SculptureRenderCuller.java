@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 
 public class SculptureRenderCuller {
 
-  public static SculptureRenderCuller culler = new SculptureRenderCuller();
+  public static final SculptureRenderCuller culler = new SculptureRenderCuller();
 
   // 0 = merge x, 1 = merge y,  2 = merge z, 3 = unmerged
   private static final int TYPE_X = 0x0;

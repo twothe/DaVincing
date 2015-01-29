@@ -87,10 +87,10 @@ public class EventHandler {
     if (is == null) {
       return false;
     }
-    if (is.getItem() == DaVincing.droppedSculpture.item) {
+    if (is.getItem() == DaVincing.droppedSculpture.getItem()) {
       return true;
     }
-    if (is.getItem() == DaVincing.canvas.item) {
+    if (is.getItem() == DaVincing.canvas.getItem()) {
       return true;
     }
     return false;
@@ -101,7 +101,7 @@ public class EventHandler {
     if (is == null) {
       return false;
     }
-    if (is.getItem() == DaVincing.droppedSculpture.item) {
+    if (is.getItem() == DaVincing.droppedSculpture.getItem()) {
       return true;
     }
     return false;
@@ -146,39 +146,45 @@ public class EventHandler {
 
     int x = event.target.blockX, y = event.target.blockY, z = event.target.blockZ;
     World w = event.player.worldObj;
-    if (w.getBlock(x, y, z) != DaVincing.painting.block) {
+    if (w.getBlock(x, y, z) != DaVincing.painting.getBlock()) {
       return;
     }
-    PaintingBlock painting = (PaintingBlock) w.getBlock(x, y, z);
-    PaintingPlacement pp = PaintingPlacement.of(w.getBlockMetadata(x, y, z));
 
-    Vec3 pos = event.player.getPosition(1.0f);
-    Vec3 look = event.player.getLookVec();
-    look = pos.addVector(look.xCoord * 5, look.yCoord * 5, look.zCoord * 5);
+    final Block block = w.getBlock(x, y, z);
 
-    MovingObjectPosition mop = painting.collisionRayTrace(w, x, y, z, pos, look);
-    if (mop == null) {
-      return;
+    if (block instanceof PaintingBlock) {
+      final PaintingBlock painting = (PaintingBlock) block;
+      PaintingPlacement pp = PaintingPlacement.of(w.getBlockMetadata(x, y, z));
+
+      Vec3 pos = event.player.getPosition(1.0f);
+      Vec3 look = event.player.getLookVec();
+      look = pos.addVector(look.xCoord * 5, look.yCoord * 5, look.zCoord * 5);
+
+      MovingObjectPosition mop = painting.collisionRayTrace(w, x, y, z, pos, look);
+      if (mop == null) {
+        return;
+      }
+      float[] point = pp.block2painting((float) (mop.hitVec.xCoord - mop.blockX),
+              (float) (mop.hitVec.yCoord - mop.blockY),
+              (float) (mop.hitVec.zCoord - mop.blockZ));
+
+      point[0] = (int) (point[0] * 16) / 16f;
+      point[1] = (int) (point[1] * 16) / 16f;
+
+      float[] bound1 = pp.painting2blockWithShift(point[0], point[1], 0.002f);
+      float[] bound2 = pp.painting2blockWithShift(point[0] + 1 / 16f, point[1] + 1 / 16f, 0.002f);
+
+      painting.setBlockBounds(Math.min(bound1[0], bound2[0]),
+              Math.min(bound1[1], bound2[1]),
+              Math.min(bound1[2], bound2[2]),
+              Math.max(bound1[0], bound2[0]),
+              Math.max(bound1[1], bound2[1]),
+              Math.max(bound1[2], bound2[2]));
+      painting.ignore_bounds_on_state = true;
+      event.context.drawSelectionBox(event.player, event.target, 0, event.partialTicks);
+      painting.ignore_bounds_on_state = false;
+    } else {
+      DaVincing.log.error("[DrawBlockHighlightEvent]: expected PaintingBlock at %d, %d, %d, but found: %s", x, y, z, (block == null ? "null" : block.getClass().getName()));
     }
-    float[] point = pp.block2painting((float) (mop.hitVec.xCoord - mop.blockX),
-            (float) (mop.hitVec.yCoord - mop.blockY),
-            (float) (mop.hitVec.zCoord - mop.blockZ));
-
-    point[0] = (int) (point[0] * 16) / 16f;
-    point[1] = (int) (point[1] * 16) / 16f;
-
-    float[] bound1 = pp.painting2blockWithShift(point[0], point[1], 0.002f);
-    float[] bound2 = pp.painting2blockWithShift(point[0] + 1 / 16f, point[1] + 1 / 16f, 0.002f);
-
-    painting.setBlockBounds(Math.min(bound1[0], bound2[0]),
-            Math.min(bound1[1], bound2[1]),
-            Math.min(bound1[2], bound2[2]),
-            Math.max(bound1[0], bound2[0]),
-            Math.max(bound1[1], bound2[1]),
-            Math.max(bound1[2], bound2[2]));
-    painting.ignore_bounds_on_state = true;
-    event.context.drawSelectionBox(event.player, event.target, 0, event.partialTicks);
-    painting.ignore_bounds_on_state = false;
-
   }
 }

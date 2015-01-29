@@ -32,7 +32,7 @@ public class CopygunItem extends Item {
   @Override
   public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
     Block b = w.getBlock(x, y, z);
-    if (b != DaVincing.sculpture.block) {
+    if (b != DaVincing.sculpture.getBlock()) {
       int meta = w.getBlockMetadata(x, y, z);
       if (b != Blocks.air && Operations.sculptable(b, meta)) {
         int block_sig = Block.getIdFromBlock(b) << 4;
@@ -77,7 +77,7 @@ public class CopygunItem extends Item {
       is.damageItem(1, ep);
     }
 
-    return DaVincing.sculpture.block.dropSculptureToPlayer(w, ep, x, y, z);
+    return DaVincing.sculpture.getBlock().dropSculptureToPlayer(w, ep, x, y, z);
   }
 
   public int getCharge(ItemStack is, int block_sig) {
