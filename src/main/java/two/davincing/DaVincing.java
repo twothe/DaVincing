@@ -42,7 +42,7 @@ import net.minecraftforge.common.config.Configuration;
 
 //TODO [DEFER] add a sculpture motor block thing
 //TODO [DEFER] add a sculpture printer block
-@Mod(modid = "davincing", version = "1710.1.0")
+@Mod(modid = "davincing", version = "1710.1.1")
 public class DaVincing {
 
   public static CreativeTabs tabDaVincing = new CreativeTabs("davincing") {
