@@ -88,7 +88,6 @@ public class DaVincing {
   public static final ItemLoader<CanvasItem> canvas = new ItemLoader(new CanvasItem());
 
   public static final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel("minepainter");
-  static final DroppedSculptureRenderer droppedSculptureRenderer = new DroppedSculptureRenderer();
 
   @EventHandler
   public void preInit(FMLPreInitializationEvent event) {
@@ -143,7 +142,6 @@ public class DaVincing {
   @EventHandler
   public void serverStopped(FMLServerStoppedEvent event) {
     PaintingCache.clear();
-    droppedSculptureRenderer.clear();
   }
 
   @SideOnly(Side.CLIENT)
@@ -156,7 +154,7 @@ public class DaVincing {
     piece.registerRendering(new PieceRenderer());
     bar.registerRendering(new PieceRenderer.Bar());
     cover.registerRendering(new PieceRenderer.Cover());
-    droppedSculpture.registerRendering(droppedSculptureRenderer);
+    droppedSculpture.registerRendering(new DroppedSculptureRenderer());
     canvas.registerRendering(new CanvasRenderer());
   }
 }

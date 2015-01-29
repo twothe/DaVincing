@@ -1,6 +1,5 @@
 package two.davincing.painting;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
@@ -11,7 +10,7 @@ import two.davincing.DaVincing;
 public abstract class ExpirablePool<T, V> implements Runnable {
 
   static final long DEFAULT_CHECK_INTERVAL_MS = 80;
-  static final long DEFAULT_EXPIRY_TIME_MS = DEFAULT_CHECK_INTERVAL_MS * 12;
+  static final long DEFAULT_EXPIRY_TIME_MS = 60 * 1000;
 
   protected final class MapEntry<V> implements Comparable<Long> {
 
