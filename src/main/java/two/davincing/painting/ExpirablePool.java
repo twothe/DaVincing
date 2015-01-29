@@ -18,7 +18,6 @@ public abstract class ExpirablePool<T, V> implements Runnable {
 
     public MapEntry(final V value) {
       this.value = value;
-      updateExpiry();
     }
 
     public void updateExpiry() {
@@ -76,7 +75,11 @@ public abstract class ExpirablePool<T, V> implements Runnable {
     }
     MapEntry<V> result = items.get(t);
     if (result == null) {
-      result = items.putIfAbsent(t, new MapEntry<V>(create()));
+      result = new MapEntry<V>(create());
+      final MapEntry<V> oldValue = items.putIfAbsent(t, result);
+      if (oldValue != null) {
+        result = oldValue;
+      }
     }
     result.updateExpiry();
     return result.value;
