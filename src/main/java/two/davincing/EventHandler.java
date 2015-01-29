@@ -97,20 +97,14 @@ public class EventHandler {
   }
 
   @SideOnly(Side.CLIENT)
-  private boolean needsHeadHiding(ItemStack is) {
-    if (is == null) {
-      return false;
-    }
-    if (is.getItem() == DaVincing.droppedSculpture.getItem()) {
-      return true;
-    }
-    return false;
+  private boolean needsHeadHiding(final ItemStack is) {
+    return (is != null) && (is.getItem() == DaVincing.droppedSculpture.getItem());
   }
 
   @SideOnly(Side.CLIENT)
   @SubscribeEvent
   public void onDrawBlockhightlight(DrawBlockHighlightEvent event) {
-    ItemStack is = event.player.getCurrentEquippedItem();
+    final ItemStack is = event.player.getCurrentEquippedItem();
     if (is == null || !(is.getItem() instanceof ChiselItem)) {
       return;
     }
@@ -144,23 +138,21 @@ public class EventHandler {
       return;
     }
 
-    int x = event.target.blockX, y = event.target.blockY, z = event.target.blockZ;
-    World w = event.player.worldObj;
-    if (w.getBlock(x, y, z) != DaVincing.painting.getBlock()) {
-      return;
-    }
-
-    final Block block = w.getBlock(x, y, z);
+    final int x = event.target.blockX;
+    final int y = event.target.blockY;
+    final int z = event.target.blockZ;
+    final World world = event.player.worldObj;
+    final Block block = world.getBlock(x, y, z);
 
     if (block instanceof PaintingBlock) {
       final PaintingBlock painting = (PaintingBlock) block;
-      PaintingPlacement pp = PaintingPlacement.of(w.getBlockMetadata(x, y, z));
+      PaintingPlacement pp = PaintingPlacement.of(world.getBlockMetadata(x, y, z));
 
       Vec3 pos = event.player.getPosition(1.0f);
       Vec3 look = event.player.getLookVec();
       look = pos.addVector(look.xCoord * 5, look.yCoord * 5, look.zCoord * 5);
 
-      MovingObjectPosition mop = painting.collisionRayTrace(w, x, y, z, pos, look);
+      MovingObjectPosition mop = painting.collisionRayTrace(world, x, y, z, pos, look);
       if (mop == null) {
         return;
       }
@@ -183,8 +175,6 @@ public class EventHandler {
       painting.ignore_bounds_on_state = true;
       event.context.drawSelectionBox(event.player, event.target, 0, event.partialTicks);
       painting.ignore_bounds_on_state = false;
-    } else {
-      DaVincing.log.error("[DrawBlockHighlightEvent]: expected PaintingBlock at %d, %d, %d, but found: %s", x, y, z, (block == null ? "null" : block.getClass().getName()));
     }
   }
 }

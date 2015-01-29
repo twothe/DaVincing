@@ -21,10 +21,6 @@ public class SculptureRender implements ISimpleBlockRenderingHandler {
   public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
           Block block, int modelId, RenderBlocks renderer) {
 
-    if (world.getBlock(x, y, z) != DaVincing.sculpture.getBlock()) {
-      return false;
-    }
-
     final TileEntity tileEntity = world.getTileEntity(x, y, z);
     if (tileEntity instanceof SculptureEntity) {
       final SculptureEntity se = (SculptureEntity) tileEntity;

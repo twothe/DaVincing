@@ -14,20 +14,25 @@ public class PaintingCache {
 
   public static final int res = 256;
 
-  private static LinkedList<PaintingSheet> sheets = new LinkedList<PaintingSheet>();
-  private static ExpirablePool<ItemStack, PaintingIcon> item_pool = new ExpirablePool<ItemStack, PaintingIcon>(12) {
+  private static final LinkedList<PaintingSheet> sheets = new LinkedList<PaintingSheet>();
+  private static final ExpirablePool<ItemStack, PaintingIcon> item_pool;
 
-    @Override
-    public void release(PaintingIcon v) {
-      v.release();
-    }
+  static {
+    item_pool = new ExpirablePool<ItemStack, PaintingIcon>() {
 
-    @Override
-    public PaintingIcon get() {
-      return PaintingCache.get();
-    }
+      @Override
+      protected void release(final PaintingIcon v) {
+        v.release();
+      }
 
-  };
+      @Override
+      protected PaintingIcon create() {
+        return PaintingCache.get();
+      }
+
+    };
+    item_pool.start();
+  }
 
   public static PaintingIcon get() {
     for (PaintingSheet sheet : sheets) {
@@ -41,12 +46,9 @@ public class PaintingCache {
     return sheet.get();
   }
 
-  public static PaintingIcon get(ItemStack is) {
+  public static PaintingIcon get(final ItemStack is) {
     boolean upload = !item_pool.contains(is);
     PaintingIcon pi = item_pool.get(is);
-    if (!item_pool.running) {
-      item_pool.start();
-    }
     if (upload) {
       try {
         byte[] data = is.getTagCompound().getByteArray("image_data");
@@ -57,5 +59,9 @@ public class PaintingCache {
       }
     }
     return pi;
+  }
+  
+  public static void clear() {
+    item_pool.clear();
   }
 }

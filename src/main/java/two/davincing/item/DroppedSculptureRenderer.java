@@ -2,6 +2,8 @@ package two.davincing.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import two.davincing.DaVincing;
 import two.davincing.painting.ExpirablePool;
 import two.davincing.sculpture.Sculpture;
@@ -11,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
@@ -27,20 +28,37 @@ public class DroppedSculptureRenderer implements IItemRenderer {
   SculptureRenderBlocks rb = new SculptureRenderBlocks();
 //  RenderItem renderItem = new RenderItem();
   ItemStack is;
+  ConcurrentLinkedQueue<CompiledRender> expiredRenderers = new ConcurrentLinkedQueue<CompiledRender>();
 
-  ExpirablePool<ItemStack, CompiledRender> renders = new ExpirablePool<ItemStack, CompiledRender>(12) {
+  final ExpirablePool<ItemStack, CompiledRender> renders = new ExpirablePool<ItemStack, CompiledRender>() {
 
     @Override
-    public void release(CompiledRender v) {
-      v.clear();
+    protected void release(CompiledRender v) {
+      expiredRenderers.add(v);
     }
 
     @Override
-    public CompiledRender get() {
+    protected CompiledRender create() {
       return new CompiledRender();
     }
 
   };
+
+  public DroppedSculptureRenderer() {
+    renders.start();
+  }
+
+  // Must only be called from the thread these were created!
+  protected void clearExpiredRenderers() {
+    CompiledRender expiredRenderer;
+    while ((expiredRenderer = expiredRenderers.poll()) != null) {
+      expiredRenderer.clear();
+    }
+  }
+
+  public void clear() {
+    renders.clear();
+  }
 
   @Override
   public boolean handleRenderType(ItemStack item, ItemRenderType type) {
@@ -59,6 +77,7 @@ public class DroppedSculptureRenderer implements IItemRenderer {
 
   @Override
   public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
+    clearExpiredRenderers(); // can only be done here, as we need the OpenGL Thread
     CompiledRender cr = renders.get(item);
     if (!cr.compiled(type)) {
       cr.compile(item.getTagCompound(), type, data);

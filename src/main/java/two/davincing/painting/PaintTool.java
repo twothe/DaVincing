@@ -24,6 +24,7 @@ public class PaintTool extends Item {
     this.setMaxStackSize(1);
   }
 
+  @Override
   public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
 
     if (!w.isRemote) {

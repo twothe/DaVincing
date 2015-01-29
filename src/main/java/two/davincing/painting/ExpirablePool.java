@@ -1,69 +1,106 @@
 package two.davincing.painting;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import two.davincing.DaVincing;
 
-public abstract class ExpirablePool<T, V> {
+public abstract class ExpirablePool<T, V> implements Runnable {
 
-  final int expire;
+  static final long DEFAULT_CHECK_INTERVAL_MS = 80;
+  static final long DEFAULT_EXPIRY_TIME_MS = DEFAULT_CHECK_INTERVAL_MS * 12;
 
-  public ExpirablePool(int expire) {
-    this.expire = expire;
+  protected final class MapEntry<V> implements Comparable<Long> {
+
+    final V value;
+    long expireDate = 0;
+
+    public MapEntry(final V value) {
+      this.value = value;
+    }
+
+    public void updateExpiry() {
+      this.expireDate = System.currentTimeMillis() + DEFAULT_EXPIRY_TIME_MS;
+    }
+
+    @Override
+    public int compareTo(final Long o) {
+      return Long.compare(expireDate, o);
+    }
   }
 
-  HashMap<T, Integer> timeouts = new HashMap<T, Integer>();
-  HashMap<T, V> items = new HashMap<T, V>();
+  protected final ConcurrentHashMap<T, MapEntry<V>> items = new ConcurrentHashMap<T, MapEntry<V>>();
+  protected ScheduledFuture<?> cleanupTask = null;
 
-  boolean running = false;
+  public ExpirablePool() {
+  }
+
+  protected abstract void release(V v);
+
+  protected abstract V create();
 
   public void start() {
-    running = true;
-    new Thread(new Runnable() {
-      @Override
-      public void run() {
-        while (running) {
-          for (Iterator<T> iter = timeouts.keySet().iterator(); iter.hasNext();) {
-            T t = iter.next();
-            int count = timeouts.get(t);
-            if (count <= 0) {
-              iter.remove();
-              release(items.remove(t));
-            } else {
-              timeouts.put(t, count - 1);
-            }
-          }
-
-          try {
-            Thread.sleep(80);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          if (items.isEmpty()) {
-            running = false;
-          }
-        }
-
-      }
-    }).start();
+    if (cleanupTask == null) {
+      cleanupTask = DaVincing.backgroundTasks.scheduleAtFixedRate(this, 0, DEFAULT_CHECK_INTERVAL_MS, TimeUnit.MILLISECONDS);
+    }
   }
 
-  public abstract void release(V v);
-
-  public abstract V get();
-
   public void stop() {
-    running = false;
+    if (cleanupTask != null) {
+      cleanupTask.cancel(false);
+    }
+    clear();
+  }
+
+  @Override
+  public void run() {
+    removeAllExpired(System.currentTimeMillis());
+  }
+
+  public void clear() {
+    removeAllExpired(Long.MAX_VALUE);
   }
 
   public boolean contains(T t) {
+    if (this.cleanupTask == null) {
+      throw new IllegalStateException("ExpirablePool has not been started before first use");
+    }
     return items.containsKey(t);
   }
 
   public V get(T t) {
-    if (!items.containsKey(t)) {
-      items.put(t, get());
+    if (this.cleanupTask == null) {
+      throw new IllegalStateException("ExpirablePool has not been started before first use");
     }
-    timeouts.put(t, expire);
-    return items.get(t);
+    final MapEntry<V> result = items.computeIfAbsent(t, addEntry);
+    result.updateExpiry();
+    return result.value;
   }
+
+  protected void removeAllExpired(final long expiryDate) {
+    try {
+      for (final Iterator<MapEntry<V>> it = items.values().iterator(); it.hasNext();) {
+        final MapEntry<V> entry = it.next();
+        if (expiryDate > entry.expireDate) {
+          it.remove();
+          release(entry.value);
+        }
+      }
+    } catch (Throwable t) {
+      DaVincing.log.error("[ExpirablePool]: ", t);
+    }
+  }
+
+  protected final Function<T, MapEntry<V>> addEntry = new Function<T, MapEntry<V>>() {
+
+    @Override
+    public MapEntry<V> apply(T t) {
+      final V value = create();
+      return new MapEntry<V>(value);
+    }
+  };
+
 }

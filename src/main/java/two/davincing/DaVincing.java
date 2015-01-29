@@ -5,10 +5,13 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import two.davincing.item.CanvasItem;
 import two.davincing.item.CanvasRenderer;
 import two.davincing.item.ChiselItem;
@@ -42,6 +45,8 @@ import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
+import two.davincing.painting.PaintingCache;
+import two.davincing.utils.PriorityThreadFactory;
 
 //TODO [DEFER] add a sculpture motor block thing
 //TODO [DEFER] add a sculpture printer block
@@ -49,6 +54,7 @@ import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 public class DaVincing {
 
   public static final Logger log = LogManager.getLogger(DaVincing.class.getSimpleName(), new StringFormatterMessageFactory());
+  public static ScheduledExecutorService backgroundTasks = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors(), new PriorityThreadFactory(DaVincing.class.getSimpleName() + " Worker", Thread.MIN_PRIORITY, true));
 
   public static final CreativeTabs tabDaVincing = new CreativeTabs("davincing") {
 
@@ -82,6 +88,7 @@ public class DaVincing {
   public static final ItemLoader<CanvasItem> canvas = new ItemLoader(new CanvasItem());
 
   public static final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel("minepainter");
+  static final DroppedSculptureRenderer droppedSculptureRenderer = new DroppedSculptureRenderer();
 
   @EventHandler
   public void preInit(FMLPreInitializationEvent event) {
@@ -133,6 +140,12 @@ public class DaVincing {
     event.registerServerCommand(new CommandImportPainting());
   }
 
+  @EventHandler
+  public void serverStopped(FMLServerStoppedEvent event) {
+    PaintingCache.clear();
+    droppedSculptureRenderer.clear();
+  }
+
   @SideOnly(Side.CLIENT)
   @EventHandler
   public void initClient(FMLInitializationEvent e) {
@@ -143,7 +156,7 @@ public class DaVincing {
     piece.registerRendering(new PieceRenderer());
     bar.registerRendering(new PieceRenderer.Bar());
     cover.registerRendering(new PieceRenderer.Cover());
-    droppedSculpture.registerRendering(new DroppedSculptureRenderer());
+    droppedSculpture.registerRendering(droppedSculptureRenderer);
     canvas.registerRendering(new CanvasRenderer());
   }
 }
