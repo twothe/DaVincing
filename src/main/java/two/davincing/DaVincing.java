@@ -16,7 +16,6 @@ import two.davincing.painting.CommandImportPainting;
 import two.davincing.painting.PaintingOperationMessage;
 import two.davincing.sculpture.SculptureOperationMessage;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
@@ -58,19 +57,16 @@ public class DaVincing {
 
     Crafting.instance.registerRecipes();
 
-    MinecraftForge.EVENT_BUS.register(new two.davincing.EventHandler());
-    network.registerMessage(SculptureOperationMessage.SculptureOperationHandler.class,
-            SculptureOperationMessage.class, 0, Side.SERVER);
-    network.registerMessage(PaintingOperationMessage.PaintingOperationHandler.class,
-            PaintingOperationMessage.class, 1, Side.SERVER);
+    network.registerMessage(SculptureOperationMessage.SculptureOperationHandler.class, SculptureOperationMessage.class, 0, Side.SERVER);
+    network.registerMessage(PaintingOperationMessage.PaintingOperationHandler.class, PaintingOperationMessage.class, 1, Side.SERVER);
     config.save();
   }
-  
+
   @Mod.EventHandler
   public void postInit(final FMLPostInitializationEvent event) {
     proxy.onPostInit();
   }
-  
+
   @Mod.EventHandler
   public void serverLoad(FMLServerStartingEvent event) {
     event.registerServerCommand(new CommandImportPainting());
