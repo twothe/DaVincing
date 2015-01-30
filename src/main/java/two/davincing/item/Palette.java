@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import two.davincing.ProxyBase;
 
 public class Palette extends Item {
 
@@ -84,7 +85,7 @@ public class Palette extends Item {
 
   @Override
   public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int par7, float _x, float _y, float _z) {
-    if (w.getBlock(x, y, z) == DaVincing.painting.getBlock()) {
+    if (w.getBlock(x, y, z) == ProxyBase.blockPainting.getBlock()) {
       int face = w.getBlockMetadata(x, y, z);
       PaintingEntity pe = Utils.getTE(w, x, y, z);
       PaintingPlacement pp = PaintingPlacement.of(face);

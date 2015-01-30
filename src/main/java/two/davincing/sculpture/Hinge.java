@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
+import two.davincing.ProxyBase;
 
 public enum Hinge {
 
@@ -104,7 +105,7 @@ public enum Hinge {
   }
 
   public static Hinge fromSculpture(IBlockAccess iba, int x, int y, int z) {
-    if (iba.getBlock(x, y, z) != DaVincing.sculpture.getBlock()) {
+    if (iba.getBlock(x, y, z) != ProxyBase.blockSculpture.getBlock()) {
       return null;
     }
     SculptureEntity se = Utils.getTE(iba, x, y, z);

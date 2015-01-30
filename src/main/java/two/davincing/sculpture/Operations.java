@@ -12,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import two.davincing.ProxyBase;
 
 public class Operations {
 
@@ -58,12 +59,12 @@ public class Operations {
           int tgt_meta = w.getBlockMetadata(tx, ty, tz);
 
           if (tgt_block == Blocks.air && block != Blocks.air) {
-            w.setBlock(tx, ty, tz, DaVincing.sculpture.getBlock());
+            w.setBlock(tx, ty, tz, ProxyBase.blockSculpture.getBlock());
           } else if (sculptable(tgt_block, tgt_meta)) {
             convertToFullSculpture(w, tx, ty, tz);
           }
 
-          if (w.getBlock(tx, ty, tz) != DaVincing.sculpture.getBlock()) {
+          if (w.getBlock(tx, ty, tz) != ProxyBase.blockSculpture.getBlock()) {
             continue;
           }
 
@@ -122,24 +123,24 @@ public class Operations {
     amount %= 8;
 
     if (covers > 0) {
-      ItemStack is = new ItemStack(DaVincing.cover.getItem());
+      ItemStack is = new ItemStack(ProxyBase.itemCover.getItem());
       is.stackSize = covers;
       is.setItemDamage((Block.getIdFromBlock(block) << 4) + meta);
-      DaVincing.sculpture.getBlock().dropScrap(w, x, y, z, is);
+      ProxyBase.blockSculpture.getBlock().dropScrap(w, x, y, z, is);
     }
 
     if (bars > 0) {
-      ItemStack is = new ItemStack(DaVincing.bar.getItem());
+      ItemStack is = new ItemStack(ProxyBase.itemBar.getItem());
       is.stackSize = bars;
       is.setItemDamage((Block.getIdFromBlock(block) << 4) + meta);
-      DaVincing.sculpture.getBlock().dropScrap(w, x, y, z, is);
+      ProxyBase.blockSculpture.getBlock().dropScrap(w, x, y, z, is);
     }
 
     if (amount > 0) {
-      ItemStack is = new ItemStack(DaVincing.piece.getItem());
+      ItemStack is = new ItemStack(ProxyBase.itemPiece.getItem());
       is.stackSize = amount;
       is.setItemDamage((Block.getIdFromBlock(block) << 4) + meta);
-      DaVincing.sculpture.getBlock().dropScrap(w, x, y, z, is);
+      ProxyBase.blockSculpture.getBlock().dropScrap(w, x, y, z, is);
     }
   }
 
@@ -199,7 +200,7 @@ public class Operations {
   public static void convertToFullSculpture(World w, int x, int y, int z) {
     Block was = w.getBlock(x, y, z);
     int meta = w.getBlockMetadata(x, y, z);
-    w.setBlock(x, y, z, DaVincing.sculpture.getBlock());
+    w.setBlock(x, y, z, ProxyBase.blockSculpture.getBlock());
     final TileEntity tileEntity = w.getTileEntity(x, y, z);
     if (tileEntity instanceof SculptureEntity) {
       final SculptureEntity se = (SculptureEntity) tileEntity;
@@ -217,7 +218,7 @@ public class Operations {
   public static int[] raytrace(int x, int y, int z, EntityPlayer ep) {
     Block sculpture = ep.worldObj.getBlock(x, y, z);
     Sculpture the_sculpture = null;
-    if (sculpture == DaVincing.sculpture.getBlock()) {
+    if (sculpture == ProxyBase.blockSculpture.getBlock()) {
       SculptureEntity se = Utils.getTE(ep.worldObj, x, y, z);
       the_sculpture = se.sculpture();
     }
@@ -427,7 +428,7 @@ public class Operations {
       if (b == Blocks.air) {
         return true;
       }
-      if (b == DaVincing.sculpture.getBlock()) {
+      if (b == ProxyBase.blockSculpture.getBlock()) {
         return true;
       }
       return false;
@@ -436,7 +437,7 @@ public class Operations {
       if (b == Blocks.air) {
         return false;
       }
-      if (b == DaVincing.sculpture.getBlock()) {
+      if (b == ProxyBase.blockSculpture.getBlock()) {
         return true;
       }
       if (sculptable(b, meta)) {

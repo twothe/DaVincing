@@ -13,6 +13,7 @@ import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRendererHelper;
 import org.lwjgl.opengl.GL11;
+import two.davincing.ProxyBase;
 
 @SideOnly(Side.CLIENT)
 public class CanvasRenderer implements IItemRenderer {
@@ -42,7 +43,7 @@ public class CanvasRenderer implements IItemRenderer {
   @Override
   public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
 
-    final Item canvas = DaVincing.canvas.getItem();
+    final Item canvas = ProxyBase.itemCanvas.getItem();
     IIcon icon = canvas.getIconFromDamage(0);
     if (item.hasTagCompound()) {
       PaintingIcon pi = PaintingCache.get(item);

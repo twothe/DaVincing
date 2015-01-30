@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import two.davincing.ProxyBase;
 
 public class TransmuterItem extends ChiselItem {
 
@@ -55,7 +56,7 @@ public class TransmuterItem extends ChiselItem {
   }
 
   public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
-    if (w.getBlock(x, y, z) == DaVincing.sculpture.getBlock()) {
+    if (w.getBlock(x, y, z) == ProxyBase.blockSculpture.getBlock()) {
       return super.onItemUse(is, ep, w, x, y, z, face, xs, ys, zs);
     }
 

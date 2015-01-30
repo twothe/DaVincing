@@ -26,6 +26,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import two.davincing.ProxyBase;
 
 //TODO [DEFER] add hooks for transparent blocks
 public class SculptureBlock extends BlockContainer {
@@ -147,7 +148,7 @@ public class SculptureBlock extends BlockContainer {
   @SideOnly(Side.CLIENT)
   public int getRenderType() {
     if (renderID == -1) {
-      return DaVincing.sculpture.getRenderID();
+      return ProxyBase.blockSculpture.getRenderID();
     }
     return renderID;
   }
@@ -166,7 +167,7 @@ public class SculptureBlock extends BlockContainer {
   public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
     SculptureEntity se = Utils.getTE(world, x, y, z);
     NBTTagCompound nbt = new NBTTagCompound();
-    ItemStack is = new ItemStack(DaVincing.droppedSculpture.getItem());
+    ItemStack is = new ItemStack(ProxyBase.itemDroppedSculpture.getItem());
 
     se.sculpture.write(nbt);
     is.setTagCompound(nbt);
@@ -194,7 +195,7 @@ public class SculptureBlock extends BlockContainer {
       return false;
     }
     NBTTagCompound nbt = new NBTTagCompound();
-    ItemStack is = new ItemStack(DaVincing.droppedSculpture.getItem());
+    ItemStack is = new ItemStack(ProxyBase.itemDroppedSculpture.getItem());
 
     applyPlayerRotation(se.sculpture.r, ep, true);
     se.sculpture.write(nbt);
@@ -203,7 +204,7 @@ public class SculptureBlock extends BlockContainer {
     this.dropBlockAsItem(w, x, y, z, is);
 
     if (se.getHinge() != null) {
-      is = new ItemStack(DaVincing.hinge.getItem());
+      is = new ItemStack(ProxyBase.itemHinge.getItem());
       this.dropBlockAsItem(w, x, y, z, is);
     }
 
@@ -277,7 +278,7 @@ public class SculptureBlock extends BlockContainer {
     Hinge hinge = se.getHinge();
 
     w.setBlockToAir(x, y, z);
-    w.setBlock(tx, ty, tz, DaVincing.sculpture.getBlock());
+    w.setBlock(tx, ty, tz, ProxyBase.blockSculpture.getBlock());
     se = Utils.getTE(w, tx, ty, tz);
     se.sculpture = sculpture;
     if (hinge != null) {
@@ -319,7 +320,7 @@ public class SculptureBlock extends BlockContainer {
   }
 
   private void add_connected(World w, int x, int y, int z) {
-    if (w.getBlock(x, y, z) != DaVincing.sculpture.getBlock()) {
+    if (w.getBlock(x, y, z) != ProxyBase.blockSculpture.getBlock()) {
       return;
     }
 

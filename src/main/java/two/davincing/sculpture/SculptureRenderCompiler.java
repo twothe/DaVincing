@@ -15,12 +15,12 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
+import two.davincing.ProxyBase;
 
 @SideOnly(Side.CLIENT)
 public class SculptureRenderCompiler {
 
   protected static final double AO_MAX_DISTANCE = 0.001; // if two ambient lights differ less than this, they are considered the same
-  public static boolean CULL = true;
   public static final RenderBlocks rb = new SculptureRenderBlocks();
 
   final int[] glDisplayList = new int[]{-1, -1};
@@ -79,7 +79,7 @@ public class SculptureRenderCompiler {
 
   public void build(BlockSlice slice, int pass) {
     rb.blockAccess = slice;
-    SculptureBlock sculpture = DaVincing.sculpture.getBlock();
+    SculptureBlock sculpture = ProxyBase.blockSculpture.getBlock();
 
     TextureManager tm = Minecraft.getMinecraft().renderEngine;
     tm.bindTexture(TextureMap.locationBlocksTexture);
@@ -89,7 +89,7 @@ public class SculptureRenderCompiler {
     tes.setTranslation(0, 0, 0);
     tes.startDrawingQuads();
 
-    if (!CULL) {
+    if (!DaVincing.proxy.doAmbientOcclusion) {
       for (int i = 0; i < 512; i++) {
         int x = (i >> 6) & 7;
         int y = (i >> 3) & 7;

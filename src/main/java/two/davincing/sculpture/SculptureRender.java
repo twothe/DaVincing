@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
+import two.davincing.ProxyBase;
 
 @SideOnly(Side.CLIENT)
 public class SculptureRender implements ISimpleBlockRenderingHandler {
@@ -41,7 +42,7 @@ public class SculptureRender implements ISimpleBlockRenderingHandler {
 
   @Override
   public int getRenderId() {
-    return DaVincing.sculpture.getRenderID();
+    return ProxyBase.blockSculpture.getRenderID();
   }
 
 }

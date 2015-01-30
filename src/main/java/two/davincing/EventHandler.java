@@ -87,10 +87,10 @@ public class EventHandler {
     if (is == null) {
       return false;
     }
-    if (is.getItem() == DaVincing.droppedSculpture.getItem()) {
+    if (is.getItem() == ProxyBase.itemDroppedSculpture.getItem()) {
       return true;
     }
-    if (is.getItem() == DaVincing.canvas.getItem()) {
+    if (is.getItem() == ProxyBase.itemCanvas.getItem()) {
       return true;
     }
     return false;
@@ -98,7 +98,7 @@ public class EventHandler {
 
   @SideOnly(Side.CLIENT)
   private boolean needsHeadHiding(final ItemStack is) {
-    return (is != null) && (is.getItem() == DaVincing.droppedSculpture.getItem());
+    return (is != null) && (is.getItem() == ProxyBase.itemDroppedSculpture.getItem());
   }
 
   @SideOnly(Side.CLIENT)

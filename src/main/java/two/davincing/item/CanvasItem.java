@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import two.davincing.ProxyBase;
 
 public class CanvasItem extends Item {
 
@@ -51,7 +52,7 @@ public class CanvasItem extends Item {
     }
 
     PaintingPlacement pp = PaintingPlacement.of(ep.getLookVec(), face);
-    w.setBlock(_x, _y, _z, DaVincing.painting.getBlock(), pp.ordinal(), 3);
+    w.setBlock(_x, _y, _z, ProxyBase.blockPainting.getBlock(), pp.ordinal(), 3);
     PaintingEntity pe = Utils.getTE(w, _x, _y, _z);
     pe.readFromNBTToImage(is.getTagCompound());
 

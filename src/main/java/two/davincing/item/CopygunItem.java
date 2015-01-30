@@ -13,6 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import two.davincing.ProxyBase;
 
 public class CopygunItem extends Item {
 
@@ -32,7 +33,7 @@ public class CopygunItem extends Item {
   @Override
   public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
     Block b = w.getBlock(x, y, z);
-    if (b != DaVincing.sculpture.getBlock()) {
+    if (b != ProxyBase.blockSculpture.getBlock()) {
       int meta = w.getBlockMetadata(x, y, z);
       if (b != Blocks.air && Operations.sculptable(b, meta)) {
         int block_sig = Block.getIdFromBlock(b) << 4;
@@ -77,7 +78,7 @@ public class CopygunItem extends Item {
       is.damageItem(1, ep);
     }
 
-    return DaVincing.sculpture.getBlock().dropSculptureToPlayer(w, ep, x, y, z);
+    return ProxyBase.blockSculpture.getBlock().dropSculptureToPlayer(w, ep, x, y, z);
   }
 
   public int getCharge(ItemStack is, int block_sig) {

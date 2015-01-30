@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import two.davincing.ProxyBase;
 
 public class PaintTool extends Item {
 
@@ -65,7 +66,7 @@ public class PaintTool extends Item {
   }
 
   public boolean paintAt(World w, int x, int y, int z, float xs, float ys, float zs, int color, boolean isSneaking) {
-    if (w.getBlock(x, y, z) != DaVincing.painting.getBlock()) {
+    if (w.getBlock(x, y, z) != ProxyBase.blockPainting.getBlock()) {
       return false;
     }
     PaintingEntity pe = Utils.getTE(w, x, y, z);
@@ -82,7 +83,7 @@ public class PaintTool extends Item {
         int _y = y + place.xpos.offsetY * i + place.ypos.offsetY * j;
         int _z = z + place.xpos.offsetZ * i + place.ypos.offsetZ * j;
 
-        if (w.getBlock(_x, _y, _z) != DaVincing.painting.getBlock()) {
+        if (w.getBlock(_x, _y, _z) != ProxyBase.blockPainting.getBlock()) {
           continue;
         }
         if (w.getBlockMetadata(_x, _y, _z) != place.ordinal()) {

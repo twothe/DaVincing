@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import two.davincing.ProxyBase;
 
 public class WrenchItem extends Item {
 
@@ -19,7 +20,7 @@ public class WrenchItem extends Item {
 
   @Override
   public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
-    if (w.getBlock(x, y, z) != DaVincing.sculpture.getBlock()) {
+    if (w.getBlock(x, y, z) != ProxyBase.blockSculpture.getBlock()) {
       return false;
     }
 
@@ -33,8 +34,8 @@ public class WrenchItem extends Item {
 
     if (se.getHinge() != null) {
       se.setHinge(null);
-      ItemStack nis = new ItemStack(DaVincing.hinge.getItem());
-      DaVincing.sculpture.getBlock().dropScrap(w, x, y, z, nis);
+      ItemStack nis = new ItemStack(ProxyBase.itemHinge.getItem());
+      ProxyBase.blockSculpture.getBlock().dropScrap(w, x, y, z, nis);
     }
 
     if (w.isRemote) {

@@ -21,6 +21,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import org.lwjgl.opengl.GL11;
+import two.davincing.ProxyBase;
 
 @SideOnly(Side.CLIENT)
 public class DroppedSculptureRenderer implements IItemRenderer {
@@ -117,13 +118,13 @@ public class DroppedSculptureRenderer implements IItemRenderer {
         glDispList = GLAllocation.generateDisplayLists(1);
       }
       if (is == null) {
-        is = new ItemStack(DaVincing.sculpture.getBlock());
+        is = new ItemStack(ProxyBase.blockSculpture.getBlock());
       }
 
       GL11.glNewList(glDispList, GL11.GL_COMPILE);
       TextureManager tm = Minecraft.getMinecraft().renderEngine;
       tm.bindTexture(TextureMap.locationBlocksTexture);
-      SculptureBlock sb = DaVincing.sculpture.getBlock();
+      SculptureBlock sb = ProxyBase.blockSculpture.getBlock();
 
       if (type == ItemRenderType.INVENTORY) {
         RenderHelper.enableGUIStandardItemLighting();

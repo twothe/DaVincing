@@ -15,6 +15,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
+import two.davincing.ProxyBase;
 
 @SideOnly(Side.CLIENT)
 public class PieceRenderer implements IItemRenderer {
@@ -41,9 +42,9 @@ public class PieceRenderer implements IItemRenderer {
   public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
 
     if (is == null) {
-      is = new ItemStack(DaVincing.sculpture.getBlock());
+      is = new ItemStack(ProxyBase.blockSculpture.getBlock());
     }
-    SculptureBlock sculpture = DaVincing.sculpture.getBlock();
+    SculptureBlock sculpture = ProxyBase.blockSculpture.getBlock();
     PieceItem piece = Utils.getItem(item);
     sculpture.setCurrentBlock(piece.getEditBlock(item), piece.getEditMeta(item));
     setBounds(sculpture);

@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import two.davincing.ProxyBase;
 
 public class DroppedSculptureItem extends Item {
 
@@ -62,7 +63,7 @@ public class DroppedSculptureItem extends Item {
       return false;
     }
 
-    w.setBlock(_x, _y, _z, DaVincing.sculpture.getBlock());
+    w.setBlock(_x, _y, _z, ProxyBase.blockSculpture.getBlock());
     SculptureEntity se = Utils.getTE(w, _x, _y, _z);
     se.sculpture().read(is.getTagCompound());
     SculptureBlock.applyPlayerRotation(se.sculpture().getRotation(), ep, false);
