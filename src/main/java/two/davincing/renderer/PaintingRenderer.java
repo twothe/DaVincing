@@ -1,4 +1,4 @@
-package two.davincing.painting;
+package two.davincing.renderer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -9,6 +9,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import org.lwjgl.opengl.GL11;
 import two.davincing.DaVincing;
+import two.davincing.painting.PaintingEntity;
+import two.davincing.painting.PaintingPlacement;
 
 @SideOnly(Side.CLIENT)
 public class PaintingRenderer extends TileEntitySpecialRenderer {

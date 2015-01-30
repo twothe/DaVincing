@@ -1,4 +1,4 @@
-package two.davincing.item;
+package two.davincing.renderer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 import two.davincing.ProxyBase;
+import two.davincing.item.PieceItem;
 import two.davincing.sculpture.SculptureBlock;
 import two.davincing.utils.Utils;
 

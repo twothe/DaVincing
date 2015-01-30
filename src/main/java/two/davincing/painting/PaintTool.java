@@ -1,5 +1,6 @@
 package two.davincing.painting;
 
+import two.davincing.network.PaintingOperationMessage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.awt.image.BufferedImage;

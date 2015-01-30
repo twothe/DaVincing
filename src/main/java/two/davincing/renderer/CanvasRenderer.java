@@ -1,4 +1,4 @@
-package two.davincing.item;
+package two.davincing.renderer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -11,8 +11,6 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRendererHelper;
 import org.lwjgl.opengl.GL11;
 import two.davincing.ProxyBase;
-import two.davincing.painting.PaintingCache;
-import two.davincing.painting.PaintingIcon;
 
 @SideOnly(Side.CLIENT)
 public class CanvasRenderer implements IItemRenderer {

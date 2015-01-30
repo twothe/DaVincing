@@ -1,5 +1,7 @@
-package two.davincing.painting;
+package two.davincing.renderer;
 
+import two.davincing.renderer.PaintingIcon;
+import two.davincing.renderer.PaintingSheet;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.awt.image.BufferedImage;
@@ -8,6 +10,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import net.minecraft.item.ItemStack;
+import two.davincing.utils.ExpirablePool;
 
 @SideOnly(Side.CLIENT)
 public class PaintingCache {

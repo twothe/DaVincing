@@ -7,7 +7,7 @@ import net.minecraftforge.common.MinecraftForge;
 import two.davincing.item.CanvasItem;
 import two.davincing.item.ChiselItem;
 import two.davincing.item.CopygunItem;
-import two.davincing.item.DroppedSculptureItem;
+import two.davincing.sculpture.DroppedSculptureItem;
 import two.davincing.item.HingeItem;
 import two.davincing.item.ItemHandle;
 import two.davincing.item.Palette;

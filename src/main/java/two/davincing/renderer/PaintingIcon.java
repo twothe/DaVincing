@@ -1,4 +1,4 @@
-package two.davincing.painting;
+package two.davincing.renderer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

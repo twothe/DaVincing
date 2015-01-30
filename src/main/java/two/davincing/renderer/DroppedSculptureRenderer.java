@@ -1,4 +1,4 @@
-package two.davincing.item;
+package two.davincing.renderer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -16,7 +16,7 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import org.lwjgl.opengl.GL11;
 import two.davincing.ProxyBase;
-import two.davincing.painting.ExpirablePool;
+import two.davincing.utils.ExpirablePool;
 import two.davincing.sculpture.Sculpture;
 import two.davincing.sculpture.SculptureBlock;
 import two.davincing.sculpture.SculptureRenderBlocks;

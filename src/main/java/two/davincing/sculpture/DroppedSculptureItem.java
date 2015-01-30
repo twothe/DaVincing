@@ -1,4 +1,4 @@
-package two.davincing.item;
+package two.davincing.sculpture;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -9,9 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import two.davincing.ProxyBase;
-import two.davincing.sculpture.Sculpture;
-import two.davincing.sculpture.SculptureBlock;
-import two.davincing.sculpture.SculptureEntity;
+import two.davincing.item.ItemBase;
 import two.davincing.utils.Utils;
 
 public class DroppedSculptureItem extends ItemBase {

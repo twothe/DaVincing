@@ -16,9 +16,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
+import two.davincing.network.PaintingOperationHandler;
 import two.davincing.painting.CommandImportPainting;
-import two.davincing.painting.PaintingCache;
-import two.davincing.painting.PaintingOperationMessage;
+import two.davincing.renderer.PaintingCache;
+import two.davincing.network.PaintingOperationMessage;
 import two.davincing.sculpture.SculptureOperationMessage;
 import two.davincing.utils.PriorityThreadFactory;
 
@@ -58,7 +59,7 @@ public class DaVincing {
     Crafting.instance.registerRecipes();
 
     network.registerMessage(SculptureOperationMessage.SculptureOperationHandler.class, SculptureOperationMessage.class, 0, Side.SERVER);
-    network.registerMessage(PaintingOperationMessage.PaintingOperationHandler.class, PaintingOperationMessage.class, 1, Side.SERVER);
+    network.registerMessage(PaintingOperationHandler.class, PaintingOperationMessage.class, 1, Side.SERVER);
     config.save();
   }
 
