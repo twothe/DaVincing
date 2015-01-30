@@ -2,10 +2,10 @@ package two.davincing.sculpture;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import two.davincing.utils.Debug;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import two.davincing.utils.Debug;
 
 public class Sculpture {
 

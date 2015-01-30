@@ -1,6 +1,5 @@
 package two.davincing.painting;
 
-import two.davincing.DaVincing;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -63,7 +62,7 @@ public class CommandImportPainting extends CommandBase {
                   (j + 1) * img.getHeight() / h, null);
           ByteArrayOutputStream baos = new ByteArrayOutputStream();
           ImageIO.write(slot, "png", baos);
-          ItemStack is = new ItemStack(ProxyBase.itemCanvas.getItem());
+          ItemStack is = new ItemStack(ProxyBase.itemCanvas);
           NBTTagCompound nbt = new NBTTagCompound();
           nbt.setByteArray("image_data", baos.toByteArray());
           is.setTagCompound(nbt);

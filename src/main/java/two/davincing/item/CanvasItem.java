@@ -1,22 +1,19 @@
 package two.davincing.item;
 
-import two.davincing.DaVincing;
-import two.davincing.painting.PaintingEntity;
-import two.davincing.painting.PaintingPlacement;
-import two.davincing.utils.Utils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import two.davincing.ProxyBase;
+import two.davincing.painting.PaintingEntity;
+import two.davincing.painting.PaintingPlacement;
+import two.davincing.utils.Utils;
 
-public class CanvasItem extends Item {
+public class CanvasItem extends ItemBase {
 
   public CanvasItem() {
     super();
-    this.setCreativeTab(DaVincing.tabDaVincing);
     this.setFull3D();
     this.setUnlocalizedName("canvas");
     this.setTextureName("minepainter:canvas");

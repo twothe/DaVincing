@@ -2,13 +2,7 @@ package two.davincing.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import two.davincing.DaVincing;
-import two.davincing.painting.ExpirablePool;
-import two.davincing.sculpture.Sculpture;
-import two.davincing.sculpture.SculptureBlock;
-import two.davincing.sculpture.SculptureRenderBlocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -22,6 +16,10 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import org.lwjgl.opengl.GL11;
 import two.davincing.ProxyBase;
+import two.davincing.painting.ExpirablePool;
+import two.davincing.sculpture.Sculpture;
+import two.davincing.sculpture.SculptureBlock;
+import two.davincing.sculpture.SculptureRenderBlocks;
 
 @SideOnly(Side.CLIENT)
 public class DroppedSculptureRenderer implements IItemRenderer {

@@ -16,6 +16,6 @@ public class DaVincingCreativeTab extends CreativeTabs {
 
   @Override
   public Item getTabIconItem() {
-    return ProxyBase.itemMixerbrush.getItem();
+    return ProxyBase.itemMixerbrush;
   }
 }

@@ -3,11 +3,11 @@ package two.davincing.sculpture;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import two.davincing.DaVincing;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
+import two.davincing.DaVincing;
 import two.davincing.ProxyBase;
 
 @SideOnly(Side.CLIENT)

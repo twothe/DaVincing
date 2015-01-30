@@ -3,7 +3,6 @@ package two.davincing.sculpture;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import two.davincing.DaVincing;
 import java.lang.reflect.Field;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -15,6 +14,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
+import two.davincing.DaVincing;
 import two.davincing.ProxyBase;
 
 @SideOnly(Side.CLIENT)

@@ -2,9 +2,6 @@ package two.davincing.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import two.davincing.DaVincing;
-import two.davincing.painting.PaintingCache;
-import two.davincing.painting.PaintingIcon;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.Item;
@@ -14,6 +11,8 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRendererHelper;
 import org.lwjgl.opengl.GL11;
 import two.davincing.ProxyBase;
+import two.davincing.painting.PaintingCache;
+import two.davincing.painting.PaintingIcon;
 
 @SideOnly(Side.CLIENT)
 public class CanvasRenderer implements IItemRenderer {
@@ -43,7 +42,7 @@ public class CanvasRenderer implements IItemRenderer {
   @Override
   public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
 
-    final Item canvas = ProxyBase.itemCanvas.getItem();
+    final Item canvas = ProxyBase.itemCanvas;
     IIcon icon = canvas.getIconFromDamage(0);
     if (item.hasTagCompound()) {
       PaintingIcon pi = PaintingCache.get(item);

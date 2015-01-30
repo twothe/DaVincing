@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import org.lwjgl.opengl.GL11;
@@ -38,11 +39,11 @@ public class ProxyClient extends ProxyBase {
     ProxyBase.blockSculpture.registerRendering(new SculptureRender(), new SculptureEntityRenderer());
     ProxyBase.blockPainting.registerRendering(null, new PaintingRenderer());
 
-    ProxyBase.itemPiece.registerRendering(new PieceRenderer());
-    ProxyBase.itemBar.registerRendering(new PieceRenderer.Bar());
-    ProxyBase.itemCover.registerRendering(new PieceRenderer.Cover());
-    ProxyBase.itemDroppedSculpture.registerRendering(new DroppedSculptureRenderer());
-    ProxyBase.itemCanvas.registerRendering(new CanvasRenderer());
+    MinecraftForgeClient.registerItemRenderer(ProxyBase.itemPiece, new PieceRenderer());
+    MinecraftForgeClient.registerItemRenderer(ProxyBase.itemBar, new PieceRenderer.Bar());
+    MinecraftForgeClient.registerItemRenderer(ProxyBase.itemCover, new PieceRenderer.Cover());
+    MinecraftForgeClient.registerItemRenderer(ProxyBase.itemDroppedSculpture, new DroppedSculptureRenderer());
+    MinecraftForgeClient.registerItemRenderer(ProxyBase.itemCanvas, new CanvasRenderer());
   }
 
   @SubscribeEvent
@@ -106,17 +107,17 @@ public class ProxyClient extends ProxyBase {
     if (is == null) {
       return false;
     }
-    if (is.getItem() == ProxyBase.itemDroppedSculpture.getItem()) {
+    if (is.getItem() == ProxyBase.itemDroppedSculpture) {
       return true;
     }
-    if (is.getItem() == ProxyBase.itemCanvas.getItem()) {
+    if (is.getItem() == ProxyBase.itemCanvas) {
       return true;
     }
     return false;
   }
 
   private boolean needsHeadHiding(final ItemStack is) {
-    return (is != null) && (is.getItem() == ProxyBase.itemDroppedSculpture.getItem());
+    return (is != null) && (is.getItem() == ProxyBase.itemDroppedSculpture);
   }
 
   @SubscribeEvent

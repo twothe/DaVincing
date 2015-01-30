@@ -2,8 +2,6 @@ package two.davincing.painting;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import two.davincing.DaVincing;
-import two.davincing.utils.Utils;
 import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -20,6 +18,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import two.davincing.ProxyBase;
+import two.davincing.utils.Utils;
 
 public class PaintingBlock extends BlockContainer {
 
@@ -77,7 +76,7 @@ public class PaintingBlock extends BlockContainer {
 
   @Override
   public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
-    ItemStack is = new ItemStack(ProxyBase.itemCanvas.getItem());
+    ItemStack is = new ItemStack(ProxyBase.itemCanvas);
     NBTTagCompound nbt = new NBTTagCompound();
     PaintingEntity pe = Utils.getTE(world, x, y, z);
 
@@ -99,6 +98,7 @@ public class PaintingBlock extends BlockContainer {
     w.setBlockToAir(x, y, z);
   }
 
+  @Override
   protected ItemStack createStackedBlock(int p_149644_1_) {
     return null;
   }
@@ -109,6 +109,7 @@ public class PaintingBlock extends BlockContainer {
     return Blocks.wool.getIcon(side, 0);
   }
 
+  @Override
   public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
     return null;
   }
@@ -116,7 +117,7 @@ public class PaintingBlock extends BlockContainer {
   @Override
   public void breakBlock(World w, int x, int y, int z, Block b, int meta) {
 
-    ItemStack is = new ItemStack(ProxyBase.itemCanvas.getItem());
+    ItemStack is = new ItemStack(ProxyBase.itemCanvas);
     NBTTagCompound nbt = new NBTTagCompound();
     PaintingEntity pe = Utils.getTE(w, x, y, z);
 

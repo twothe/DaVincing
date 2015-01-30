@@ -1,10 +1,10 @@
 package two.davincing.item;
 
-import two.davincing.sculpture.Operations;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import two.davincing.sculpture.Operations;
 
 public class PieceItem extends ChiselItem {
 

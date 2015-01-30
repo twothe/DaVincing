@@ -2,20 +2,18 @@ package two.davincing.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import two.davincing.DaVincing;
-import two.davincing.sculpture.SculptureBlock;
-import two.davincing.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 import two.davincing.ProxyBase;
+import two.davincing.sculpture.SculptureBlock;
+import two.davincing.utils.Utils;
 
 @SideOnly(Side.CLIENT)
 public class PieceRenderer implements IItemRenderer {

@@ -1,7 +1,5 @@
 package two.davincing.sculpture;
 
-import two.davincing.DaVincing;
-import two.davincing.utils.Utils;
 import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.block.Block;
@@ -12,7 +10,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import two.davincing.DaVincing;
 import two.davincing.ProxyBase;
+import two.davincing.utils.Utils;
 
 public class Operations {
 
@@ -123,21 +123,21 @@ public class Operations {
     amount %= 8;
 
     if (covers > 0) {
-      ItemStack is = new ItemStack(ProxyBase.itemCover.getItem());
+      ItemStack is = new ItemStack(ProxyBase.itemCover);
       is.stackSize = covers;
       is.setItemDamage((Block.getIdFromBlock(block) << 4) + meta);
       ProxyBase.blockSculpture.getBlock().dropScrap(w, x, y, z, is);
     }
 
     if (bars > 0) {
-      ItemStack is = new ItemStack(ProxyBase.itemBar.getItem());
+      ItemStack is = new ItemStack(ProxyBase.itemBar);
       is.stackSize = bars;
       is.setItemDamage((Block.getIdFromBlock(block) << 4) + meta);
       ProxyBase.blockSculpture.getBlock().dropScrap(w, x, y, z, is);
     }
 
     if (amount > 0) {
-      ItemStack is = new ItemStack(ProxyBase.itemPiece.getItem());
+      ItemStack is = new ItemStack(ProxyBase.itemPiece);
       is.stackSize = amount;
       is.setItemDamage((Block.getIdFromBlock(block) << 4) + meta);
       ProxyBase.blockSculpture.getBlock().dropScrap(w, x, y, z, is);

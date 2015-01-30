@@ -2,26 +2,25 @@ package two.davincing.painting;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import two.davincing.DaVincing;
-import two.davincing.item.Palette;
-import two.davincing.utils.Utils;
 import java.awt.image.BufferedImage;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import two.davincing.DaVincing;
 import two.davincing.ProxyBase;
+import two.davincing.item.ItemBase;
+import two.davincing.item.Palette;
+import two.davincing.utils.Utils;
 
-public class PaintTool extends Item {
+public class PaintTool extends ItemBase {
 
   public PaintTool() {
-    this.setCreativeTab(DaVincing.tabDaVincing);
     this.setMaxStackSize(1);
   }
 

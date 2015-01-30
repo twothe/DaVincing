@@ -1,7 +1,5 @@
 package two.davincing.item;
 
-import two.davincing.DaVincing;
-import two.davincing.sculpture.Operations;
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,7 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import two.davincing.DaVincing;
 import two.davincing.ProxyBase;
+import two.davincing.sculpture.Operations;
 
 public class TransmuterItem extends ChiselItem {
 

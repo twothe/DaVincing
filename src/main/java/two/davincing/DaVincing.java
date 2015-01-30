@@ -12,14 +12,14 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import two.davincing.painting.CommandImportPainting;
-import two.davincing.painting.PaintingOperationMessage;
-import two.davincing.sculpture.SculptureOperationMessage;
 import net.minecraft.creativetab.CreativeTabs;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
+import two.davincing.painting.CommandImportPainting;
 import two.davincing.painting.PaintingCache;
+import two.davincing.painting.PaintingOperationMessage;
+import two.davincing.sculpture.SculptureOperationMessage;
 import two.davincing.utils.PriorityThreadFactory;
 
 @Mod(modid = DaVincing.MOD_ID, name = DaVincing.MOD_NAME, version = DaVincing.MOD_VERSION)

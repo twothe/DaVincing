@@ -2,27 +2,24 @@ package two.davincing.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import two.davincing.DaVincing;
-import two.davincing.painting.PaintingEntity;
-import two.davincing.painting.PaintingPlacement;
-import two.davincing.utils.Utils;
 import java.util.List;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import two.davincing.ProxyBase;
+import two.davincing.painting.PaintingEntity;
+import two.davincing.painting.PaintingPlacement;
+import two.davincing.utils.Utils;
 
-public class Palette extends Item {
+public class Palette extends ItemBase {
 
   private IIcon[] colors = new IIcon[6];
 
   public Palette() {
     super();
-    setCreativeTab(DaVincing.tabDaVincing);
     this.setMaxStackSize(1);
     this.setTextureName("minepainter:palette");
     this.setUnlocalizedName("palette");

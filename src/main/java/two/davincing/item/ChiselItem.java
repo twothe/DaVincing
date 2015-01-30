@@ -1,28 +1,29 @@
 package two.davincing.item;
 
-import two.davincing.DaVincing;
-import two.davincing.sculpture.Operations;
-import two.davincing.sculpture.SculptureOperationMessage;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
+import two.davincing.DaVincing;
+import two.davincing.sculpture.Operations;
+import two.davincing.sculpture.SculptureOperationMessage;
 
-//TODO adjust craftings and lang files
-public class ChiselItem extends Item {
+public class ChiselItem extends ItemBase {
 
   public ChiselItem() {
-    super();
-    this.setCreativeTab(DaVincing.tabDaVincing);
     this.setUnlocalizedName("chisel");
     this.setTextureName("minepainter:chisel");
     this.setMaxStackSize(1);
     this.setMaxDamage(960);
-    this.setContainerItem(this);
     this.setFull3D();
+  }
+
+  @Override
+  public void initialize() {
+    super.initialize();
+    this.setContainerItem(this);
   }
 
   @Override
@@ -68,7 +69,6 @@ public class ChiselItem extends Item {
   public static class Saw extends ChiselItem {
 
     public Saw() {
-      super();
       this.setUnlocalizedName("saw");
       this.setTextureName("minepainter:saw");
     }
@@ -91,7 +91,6 @@ public class ChiselItem extends Item {
   public static class Barcutter extends ChiselItem {
 
     public Barcutter() {
-      super();
       this.setUnlocalizedName("barcutter");
       this.setTextureName("minepainter:shaver");
     }

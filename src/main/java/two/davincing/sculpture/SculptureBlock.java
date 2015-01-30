@@ -2,9 +2,6 @@ package two.davincing.sculpture;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import two.davincing.DaVincing;
-import two.davincing.utils.Debug;
-import two.davincing.utils.Utils;
 import java.util.List;
 import java.util.Random;
 import java.util.TreeSet;
@@ -27,6 +24,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import two.davincing.ProxyBase;
+import two.davincing.utils.Debug;
+import two.davincing.utils.Utils;
 
 //TODO [DEFER] add hooks for transparent blocks
 public class SculptureBlock extends BlockContainer {
@@ -104,13 +103,13 @@ public class SculptureBlock extends BlockContainer {
     SculptureEntity tile = Utils.getTE(par1World, par2, par3, par4);
     Sculpture sculpture = tile.sculpture();
 
-    for (int x = 0; x < 8; x++) {
-      for (int y = 0; y < 8; y++) {
-        for (int z = 0; z < 8; z++) {
-          if (sculpture.getBlockAt(x, y, z, null) == Blocks.air) {
+    for (int xPos = 0; xPos < 8; xPos++) {
+      for (int yPos = 0; yPos < 8; yPos++) {
+        for (int zPos = 0; zPos < 8; zPos++) {
+          if (sculpture.getBlockAt(xPos, yPos, zPos, null) == Blocks.air) {
             continue;
           }
-          this.setBlockBounds(x / 8f, y / 8f, z / 8f, (x + 1) / 8f, (y + 1) / 8f, (z + 1) / 8f);
+          this.setBlockBounds(xPos / 8f, yPos / 8f, zPos / 8f, (xPos + 1) / 8f, (yPos + 1) / 8f, (zPos + 1) / 8f);
           super.addCollisionBoxesToList(par1World, par2, par3, par4, par5AxisAlignedBB, par6List, par7Entity);
         }
       }
@@ -167,7 +166,7 @@ public class SculptureBlock extends BlockContainer {
   public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
     SculptureEntity se = Utils.getTE(world, x, y, z);
     NBTTagCompound nbt = new NBTTagCompound();
-    ItemStack is = new ItemStack(ProxyBase.itemDroppedSculpture.getItem());
+    ItemStack is = new ItemStack(ProxyBase.itemDroppedSculpture);
 
     se.sculpture.write(nbt);
     is.setTagCompound(nbt);
@@ -184,6 +183,7 @@ public class SculptureBlock extends BlockContainer {
     return se.sculpture.getLight();
   }
 
+  @Override
   protected ItemStack createStackedBlock(int p_149644_1_) {
     return null;
   }
@@ -195,7 +195,7 @@ public class SculptureBlock extends BlockContainer {
       return false;
     }
     NBTTagCompound nbt = new NBTTagCompound();
-    ItemStack is = new ItemStack(ProxyBase.itemDroppedSculpture.getItem());
+    ItemStack is = new ItemStack(ProxyBase.itemDroppedSculpture);
 
     applyPlayerRotation(se.sculpture.r, ep, true);
     se.sculpture.write(nbt);
@@ -204,16 +204,17 @@ public class SculptureBlock extends BlockContainer {
     this.dropBlockAsItem(w, x, y, z, is);
 
     if (se.getHinge() != null) {
-      is = new ItemStack(ProxyBase.itemHinge.getItem());
+      is = new ItemStack(ProxyBase.itemHinge);
       this.dropBlockAsItem(w, x, y, z, is);
     }
 
     return true;
   }
 
-  public boolean removedByPlayer(World w, EntityPlayer ep, int x, int y, int z) {
+  @Override
+  public boolean removedByPlayer(World w, EntityPlayer ep, int x, int y, int z, boolean willHarvest) {
     dropSculptureToPlayer(w, ep, x, y, z);
-    return super.removedByPlayer(w, ep, x, y, z);
+    return super.removedByPlayer(w, ep, x, y, z, willHarvest);
   }
 
   public static void applyPlayerRotation(Rotation r, EntityPlayer ep, boolean reverse) {
@@ -238,10 +239,12 @@ public class SculptureBlock extends BlockContainer {
     }
   }
 
+  @Override
   public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
     return null;
   }
 
+  @Override
   public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer ep, int face, float xs, float ys, float zs) {
 //    	if(ep.getCurrentEquippedItem() != null)
 //    		return false;

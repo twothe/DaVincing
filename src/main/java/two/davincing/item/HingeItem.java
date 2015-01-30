@@ -1,20 +1,17 @@
 package two.davincing.item;
 
-import two.davincing.DaVincing;
-import two.davincing.sculpture.Hinge;
-import two.davincing.sculpture.SculptureEntity;
-import two.davincing.utils.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import two.davincing.ProxyBase;
+import two.davincing.sculpture.Hinge;
+import two.davincing.sculpture.SculptureEntity;
+import two.davincing.utils.Utils;
 
-public class HingeItem extends Item {
+public class HingeItem extends ItemBase {
 
   public HingeItem() {
-    this.setCreativeTab(DaVincing.tabDaVincing);
     this.setUnlocalizedName("hinge");
     this.setTextureName("minepainter:hinge");
     this.setMaxStackSize(16);

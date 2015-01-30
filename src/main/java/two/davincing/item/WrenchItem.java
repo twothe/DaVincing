@@ -1,18 +1,15 @@
 package two.davincing.item;
 
-import two.davincing.DaVincing;
-import two.davincing.sculpture.SculptureEntity;
-import two.davincing.utils.Utils;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import two.davincing.ProxyBase;
+import two.davincing.sculpture.SculptureEntity;
+import two.davincing.utils.Utils;
 
-public class WrenchItem extends Item {
+public class WrenchItem extends ItemBase {
 
   public WrenchItem() {
-    this.setCreativeTab(DaVincing.tabDaVincing);
     this.setUnlocalizedName("wrench");
     this.setTextureName("minepainter:wrench");
     this.setMaxStackSize(1);
@@ -34,7 +31,7 @@ public class WrenchItem extends Item {
 
     if (se.getHinge() != null) {
       se.setHinge(null);
-      ItemStack nis = new ItemStack(ProxyBase.itemHinge.getItem());
+      ItemStack nis = new ItemStack(ProxyBase.itemHinge);
       ProxyBase.blockSculpture.getBlock().dropScrap(w, x, y, z, nis);
     }
 
