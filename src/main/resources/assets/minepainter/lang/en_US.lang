@@ -15,3 +15,7 @@ item.wrench.name=Wrench
 item.paint_bucket.name=Paint Bucket
 item.sculpture_piece.name=Sculpture Piece
 item.dropped_sculpture.name=Sculpture
+
+msg.imageDownloadFailed.txt=Download of '%s' failed: %s
+msg.imageImageTooLarge.txt=Image requested is too large.
+msg.imageDownload.usage=importImage <image url> [<w=1> <h=1>] - Imports an image as w X h painting(s).

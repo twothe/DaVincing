@@ -69,12 +69,12 @@ public class DaVincing {
   }
 
   @Mod.EventHandler
-  public void serverLoad(FMLServerStartingEvent event) {
+  public void serverLoad(final FMLServerStartingEvent event) {
     event.registerServerCommand(new CommandImportPainting());
   }
 
   @Mod.EventHandler
-  public void serverStopped(FMLServerStoppedEvent event) {
+  public void serverStopped(final FMLServerStoppedEvent event) {
     PaintingCache.clear();
   }
 }

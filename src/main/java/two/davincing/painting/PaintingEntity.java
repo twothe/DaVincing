@@ -20,10 +20,21 @@ import two.davincing.renderer.PaintingIcon;
 
 public class PaintingEntity extends TileEntity {
 
+  public static final int IMAGE_WIDTH = 16;
+  public static final int IMAGE_HEIGHT = 16;
+
+  public static BufferedImage createNewEmptyImage() {
+    return createNewEmptyImage(1, 1);
+  }
+
+  public static BufferedImage createNewEmptyImage(final int blockWidth, final int blockHeight) {
+    return new BufferedImage(blockWidth * IMAGE_WIDTH, blockHeight * IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+  }
+
   BufferedImage image;
 
   public PaintingEntity() {
-    image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+    image = createNewEmptyImage();
 
 //		 WritableRaster raster = image.getRaster();
     for (int i = 0; i < 16; i++) {
