@@ -11,26 +11,12 @@ import net.minecraft.tileentity.TileEntity;
 public class SculptureEntity extends TileEntity {
 
   Sculpture sculpture = new Sculpture();
-  Hinge hinge = null;
-  final Nail nail = new Nail();
 
   @SideOnly(Side.CLIENT)
   private SculptureRenderCompiler render;
 
   public Sculpture sculpture() {
     return sculpture;
-  }
-
-  public Hinge getHinge() {
-    return hinge;
-  }
-
-  public void setHinge(Hinge h) {
-    this.hinge = h;
-  }
-
-  public Nail getNail() {
-    return nail;
   }
 
   @SideOnly(Side.CLIENT)
@@ -72,10 +58,6 @@ public class SculptureEntity extends TileEntity {
   public void writeToNBT(NBTTagCompound nbt) {
     super.writeToNBT(nbt);
     sculpture.write(nbt);
-    if (hinge != null) {
-      hinge.toNBT(nbt);
-    }
-    nail.writeTo(nbt);
   }
 
   @Override
@@ -85,16 +67,16 @@ public class SculptureEntity extends TileEntity {
     }
     super.readFromNBT(nbt);
     sculpture.read(nbt);
-    hinge = Hinge.fromNBT(nbt);
-    nail.readFrom(nbt);
   }
 
+  @Override
   public Packet getDescriptionPacket() {
     NBTTagCompound nbttagcompound = new NBTTagCompound();
     this.writeToNBT(nbttagcompound);
     return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 17, nbttagcompound);
   }
 
+  @Override
   public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
     readFromNBT(pkt.func_148857_g());
   }

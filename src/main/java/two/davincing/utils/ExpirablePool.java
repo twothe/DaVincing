@@ -11,7 +11,7 @@ public abstract class ExpirablePool<T, V> implements Runnable {
   static final long DEFAULT_CHECK_INTERVAL_MS = 80;
   static final long DEFAULT_EXPIRY_TIME_MS = 60 * 1000;
 
-  protected final class MapEntry<V> implements Comparable<Long> {
+  protected final class MapEntry<V> {
 
     final V value;
     long expireDate = 0;
@@ -22,11 +22,6 @@ public abstract class ExpirablePool<T, V> implements Runnable {
 
     public void updateExpiry() {
       this.expireDate = System.currentTimeMillis() + DEFAULT_EXPIRY_TIME_MS;
-    }
-
-    @Override
-    public int compareTo(final Long o) {
-      return Long.compare(expireDate, o);
     }
   }
 

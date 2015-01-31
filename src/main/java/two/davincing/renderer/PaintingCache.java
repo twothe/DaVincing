@@ -1,7 +1,5 @@
 package two.davincing.renderer;
 
-import two.davincing.renderer.PaintingIcon;
-import two.davincing.renderer.PaintingSheet;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.awt.image.BufferedImage;

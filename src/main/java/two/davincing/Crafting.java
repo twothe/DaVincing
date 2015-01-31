@@ -88,14 +88,7 @@ public class Crafting {
               'Z', new ItemStack(Items.dye, 1, 4));
     }
 
-    if (DaVincing.config.isCraftingEnabled("Wrench")) {
-      GameRegistry.addRecipe(new ItemStack(ProxyBase.itemWrench),
-              "XX ", "YX ", " X ",
-              'X', new ItemStack(Items.iron_ingot),
-              'Y', new ItemStack(Items.dye, 1, 1));
-    }
-
-    if (DaVincing.config.isCraftingEnabled("Copygun")) {
+    if (DaVincing.config.isCraftingEnabled("Copygun", false)) {
       GameRegistry.addRecipe(new ItemStack(ProxyBase.itemCopygun),
               "XXX", "YYX", " YX",
               'X', new ItemStack(Items.iron_ingot),

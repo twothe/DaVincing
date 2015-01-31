@@ -1,6 +1,5 @@
 package two.davincing.painting;
 
-import two.davincing.network.PaintingOperationMessage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.awt.image.BufferedImage;
@@ -17,6 +16,7 @@ import two.davincing.DaVincing;
 import two.davincing.ProxyBase;
 import two.davincing.item.ItemBase;
 import two.davincing.item.Palette;
+import two.davincing.network.PaintingOperationMessage;
 import two.davincing.utils.Utils;
 
 public class PaintTool extends ItemBase {

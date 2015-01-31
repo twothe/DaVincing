@@ -16,10 +16,10 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import org.lwjgl.opengl.GL11;
 import two.davincing.ProxyBase;
-import two.davincing.utils.ExpirablePool;
 import two.davincing.sculpture.Sculpture;
 import two.davincing.sculpture.SculptureBlock;
 import two.davincing.sculpture.SculptureRenderBlocks;
+import two.davincing.utils.ExpirablePool;
 
 @SideOnly(Side.CLIENT)
 public class DroppedSculptureRenderer implements IItemRenderer {

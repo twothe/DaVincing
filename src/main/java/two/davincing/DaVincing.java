@@ -17,9 +17,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 import two.davincing.network.PaintingOperationHandler;
+import two.davincing.network.PaintingOperationMessage;
 import two.davincing.painting.CommandImportPainting;
 import two.davincing.renderer.PaintingCache;
-import two.davincing.network.PaintingOperationMessage;
 import two.davincing.sculpture.SculptureOperationMessage;
 import two.davincing.utils.PriorityThreadFactory;
 
@@ -29,7 +29,7 @@ public class DaVincing {
   /* Global logger that uses string format type logging */
   public static final Logger log = LogManager.getLogger(DaVincing.class.getSimpleName(), new StringFormatterMessageFactory());
   /* Task scheduler for background task. Will run at lowest thread priority to not interfere with FPS/ticks */
-  public static ScheduledExecutorService backgroundTasks = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors(), new PriorityThreadFactory(DaVincing.class.getSimpleName() + " Worker", Thread.MIN_PRIORITY, true));
+  public static final ScheduledExecutorService backgroundTasks = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors(), new PriorityThreadFactory(DaVincing.class.getSimpleName() + " Worker", Thread.MIN_PRIORITY, true));
 
   public static final String MOD_NAME = "DaVincing";
   public static final String MOD_ID = "davincing";

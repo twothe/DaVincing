@@ -4,7 +4,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
 import java.util.Random;
-import java.util.TreeSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -30,7 +29,7 @@ import two.davincing.utils.Utils;
 //TODO [DEFER] add hooks for transparent blocks
 public class SculptureBlock extends BlockContainer {
 
-  private int x, y, z, meta = 0;
+  private int meta = 0;
   private Block current = Blocks.stone;
   private int renderID = -1;
 
@@ -51,12 +50,6 @@ public class SculptureBlock extends BlockContainer {
 
   public void useStandardRendering() {
     renderID = 0;
-  }
-
-  public void setSubCoordinate(int x, int y, int z) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
   }
 
   public void dropScrap(World w, int x, int y, int z, ItemStack is) {
@@ -203,11 +196,6 @@ public class SculptureBlock extends BlockContainer {
     is.setTagCompound(nbt);
     this.dropBlockAsItem(w, x, y, z, is);
 
-    if (se.getHinge() != null) {
-      is = new ItemStack(ProxyBase.itemHinge);
-      this.dropBlockAsItem(w, x, y, z, is);
-    }
-
     return true;
   }
 
@@ -244,105 +232,4 @@ public class SculptureBlock extends BlockContainer {
     return null;
   }
 
-  @Override
-  public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer ep, int face, float xs, float ys, float zs) {
-//    	if(ep.getCurrentEquippedItem() != null)
-//    		return false;
-
-    if (ep.isSneaking()) {
-      return push(w, x, y, z, face ^ 1);
-    } else {
-      return push(w, x, y, z, face);
-    }
-  }
-
-  public boolean transpose(World w, int x, int y, int z, int dx, int dy, int dz, int rotate, ForgeDirection shift) {
-
-    int tx = x + shift.offsetX, ty = y + shift.offsetY, tz = z + shift.offsetZ;
-
-    Rotation r = new Rotation();
-    r.rotate(rotate);
-    r.applyUnbounded(dx, dy, dz);
-    tx += r.x;
-    ty += r.y;
-    tz += r.z;
-    x += dx;
-    y += dy;
-    z += dz;
-
-//    	Debug.log("from " + x + "," + y + "," + z + " to " + tx + "," + ty + "," + tz);
-    if (!w.isAirBlock(tx, ty, tz)) {
-      return false;
-    }
-
-    SculptureEntity se = Utils.getTE(w, x, y, z);
-    Sculpture sculpture = se.sculpture;
-    sculpture.r.rotate(rotate);
-    Hinge hinge = se.getHinge();
-
-    w.setBlockToAir(x, y, z);
-    w.setBlock(tx, ty, tz, ProxyBase.blockSculpture.getBlock());
-    se = Utils.getTE(w, tx, ty, tz);
-    se.sculpture = sculpture;
-    if (hinge != null) {
-      se.setHinge(HingeRotationTable.rotate(hinge, rotate));
-    }
-
-    return true;
-  }
-
-  TreeSet<Location> sculpture_set = new TreeSet<Location>();
-
-  public boolean push(World w, int x, int y, int z, int face) {
-    Hinge hinge = Hinge.fromSculpture(w, x, y, z);
-    if (hinge == null) {
-      return false;
-    }
-
-    ForgeDirection push = ForgeDirection.getOrientation(face ^ 1);
-    int rotate = hinge.getRotationFace(push);
-    ForgeDirection shift = hinge.getShift(push);
-
-    if (shift == null) {
-      return false;
-    }
-
-    sculpture_set.clear();
-    add_connected(w, x, y, z);
-    if (sculpture_set.size() > 256) {
-      return false;
-    }
-
-    boolean flag = true;
-    for (Location loc : sculpture_set) {
-      flag &= transpose(w, x, y, z, loc.x - x, loc.y - y, loc.z - z, rotate, shift);
-    }
-
-    sculpture_set.clear();
-    return flag;
-  }
-
-  private void add_connected(World w, int x, int y, int z) {
-    if (w.getBlock(x, y, z) != ProxyBase.blockSculpture.getBlock()) {
-      return;
-    }
-
-    Location loc = new Location(x, y, z);
-    if (sculpture_set.contains(loc)) {
-      return;
-    }
-
-    sculpture_set.add(loc);
-    if (sculpture_set.size() > 256) {
-      return;
-    }
-    Nail nail = Nail.fromSculpture(w, x, y, z);
-    for (int i = 0; i < 6; i++) {
-      if (!nail.isOnFace(i)) {
-        continue;
-      }
-      ForgeDirection dir = ForgeDirection.getOrientation(i);
-      add_connected(w, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
-    }
-  }
 }
