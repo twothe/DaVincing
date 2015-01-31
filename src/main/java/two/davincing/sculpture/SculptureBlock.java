@@ -26,7 +26,6 @@ import two.davincing.ProxyBase;
 import two.davincing.utils.Debug;
 import two.davincing.utils.Utils;
 
-//TODO [DEFER] add hooks for transparent blocks
 public class SculptureBlock extends BlockContainer {
 
   private int meta = 0;
@@ -57,7 +56,7 @@ public class SculptureBlock extends BlockContainer {
   }
 
   public SculptureBlock() {
-    super(Material.rock);
+    super(Blocks.stone.getMaterial());
     this.setHardness(1.0f);
     this.setBlockName("sculpture");
   }
