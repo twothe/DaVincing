@@ -18,10 +18,6 @@ public class DroppedSculptureItem extends ItemBase {
     this.setUnlocalizedName("dropped_sculpture");
   }
 
-  @Override
-  public void initialize() {
-  }
-
   public void readTo(ItemStack is, Sculpture sculpture) {
     if (is.hasTagCompound()) {
       sculpture.read(is.getTagCompound());

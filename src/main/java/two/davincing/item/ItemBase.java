@@ -16,8 +16,12 @@ public class ItemBase extends Item implements InitializableModContent {
     this.setCreativeTab(DaVincing.tabDaVincing);
   }
 
+  public String getGameRegistryName() {
+    return this.getClass().getSimpleName().replace("$", "_");
+  }
+  
   @Override
   public void initialize() {
-    GameRegistry.registerItem(this, this.getClass().getSimpleName().replace("$", "_"));
+    GameRegistry.registerItem(this, getGameRegistryName());
   }
 }
