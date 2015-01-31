@@ -33,7 +33,7 @@ public class DaVincing {
 
   public static final String MOD_NAME = "DaVincing";
   public static final String MOD_ID = "davincing";
-  public static final String MOD_VERSION = "1710.1.3"; // Make sure to keep this version in sync with the build.gradle file!
+  public static final String MOD_VERSION = "1710.1.4"; // Make sure to keep this version in sync with the build.gradle file!
 
   @Mod.Instance(MOD_ID)
   public static DaVincing instance; // this will point to the actual instance of this class once running
