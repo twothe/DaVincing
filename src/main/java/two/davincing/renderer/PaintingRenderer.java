@@ -41,6 +41,7 @@ public class PaintingRenderer extends TileEntitySpecialRenderer {
 
       GL11.glPopMatrix();
       GL11.glDisable(GL11.GL_BLEND);
+      RenderHelper.enableStandardItemLighting();
     } else {
       DaVincing.log.error("[PaintingRenderer.renderTileEntityAt]: tried to render PaintingEntity, but found %s", (entity == null ? "null" : entity.getClass().getName()));
     }
