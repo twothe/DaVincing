@@ -2,8 +2,13 @@
  */
 package two.davincing;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraftforge.common.MinecraftForge;
+import scala.actors.threadpool.Arrays;
 import two.davincing.item.CanvasItem;
 import two.davincing.item.ChiselItem;
 import two.davincing.item.CopygunItem;
@@ -49,12 +54,19 @@ public class ProxyBase {
   protected LinkedList<InitializableModContent> pendingInitialization = new LinkedList<InitializableModContent>();
   /* Global Config vars */
   public boolean doAmbientOcclusion; // whether or not to do ambient occlusion during rendering
+  public final ArrayList<Block> blockBlacklist = new ArrayList<Block>();
 
   public ProxyBase() {
   }
 
   protected void loadGlobalConfigValues() {
     doAmbientOcclusion = DaVincing.config.getMiscBoolean("Render with Ambient Occlusion", false);
+    final List<Block> defaultBlackList = Arrays.asList(new Block[]{
+      Blocks.bedrock, Blocks.cactus, Blocks.glass, Blocks.grass, Blocks.leaves, Blocks.stained_glass
+    });
+
+    blockBlacklist.clear();
+    blockBlacklist.addAll(DaVincing.config.getMiscBlocks("Chisel blacklist", defaultBlackList, "A list of blocks that cannot be chiseled. Note that all blocks with a tile entity or blocks that are not full blocks cannot be chiseled in general."));
   }
 
   protected void registerBlocks() {

@@ -3,6 +3,10 @@
 package two.davincing;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import net.minecraft.block.Block;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
@@ -14,6 +18,7 @@ public class Config {
   protected static final String CATEGORY_ALLOWED_RECIPES = "Allowed Recipes";
   protected static final String CATEGORY_VARIOUS_SETTINGS = "Settings";
   //--- Class ------------------------------------------------------------------
+  protected static final String PREFIX_TILE = "tile."; // as in block.getUnlocalizedName()
   protected Configuration configuration;
 
   protected Config() {
@@ -41,22 +46,91 @@ public class Config {
   }
 
   public int getMiscInteger(final String key, final int defaultValue) {
-    final Property property = configuration.get(CATEGORY_VARIOUS_SETTINGS, key, defaultValue);
+    return getMiscInteger(key, defaultValue, null);
+  }
+
+  public int getMiscInteger(final String key, final int defaultValue, final String comment) {
+    final Property property = configuration.get(CATEGORY_VARIOUS_SETTINGS, key, defaultValue, comment);
     return property.getInt(defaultValue);
   }
 
   public double getMiscDouble(final String key, final double defaultValue) {
-    final Property property = configuration.get(CATEGORY_VARIOUS_SETTINGS, key, defaultValue);
+    return getMiscDouble(key, defaultValue, null);
+  }
+
+  public double getMiscDouble(final String key, final double defaultValue, final String comment) {
+    final Property property = configuration.get(CATEGORY_VARIOUS_SETTINGS, key, defaultValue, comment);
     return property.getDouble(defaultValue);
   }
 
   public boolean getMiscBoolean(final String key, final boolean defaultValue) {
-    final Property property = configuration.get(CATEGORY_VARIOUS_SETTINGS, key, defaultValue);
+    return getMiscBoolean(key, defaultValue, null);
+  }
+
+  public boolean getMiscBoolean(final String key, final boolean defaultValue, final String comment) {
+    final Property property = configuration.get(CATEGORY_VARIOUS_SETTINGS, key, defaultValue, comment);
     return property.getBoolean(defaultValue);
+  }
+
+  public List<String> getMiscStrings(final String key, final List<String> defaultValue) {
+    return getMiscStrings(key, defaultValue, null);
+  }
+
+  public List<String> getMiscStrings(final String key, final List<String> defaultValue, final String comment) {
+    final Property property = configuration.get(CATEGORY_VARIOUS_SETTINGS, key, defaultValue.toArray(new String[defaultValue.size()]), comment);
+    return Arrays.asList(property.getStringList());
+  }
+
+  public List<Block> getMiscBlocks(final String key, final List<Block> defaultValue) {
+    return getMiscBlocks(key, defaultValue, null);
+  }
+
+  public List<Block> getMiscBlocks(final String key, final List<Block> defaultValue, final String comment) {
+    final String[] defaultValueStrings = blockListToBlockNames(defaultValue);
+    final Property property = configuration.get(CATEGORY_VARIOUS_SETTINGS, key, defaultValueStrings, comment);
+    return blockNamesToBlockList(property.getStringList());
   }
 
   public Configuration getConfiguration() {
     return configuration;
+  }
+
+  protected String[] blockListToBlockNames(final List<Block> blockList) {
+    if ((blockList == null) || blockList.isEmpty()) {
+      return new String[0];
+    } else {
+      final String[] result = new String[blockList.size()];
+      int index = 0;
+      for (final Block block : blockList) {
+        final String blockname = Block.blockRegistry.getNameForObject(block);
+        if (blockname != null) {
+          result[index] = blockname;
+          ++index;
+        } else {
+          DaVincing.log.warn("Ignoring invalid block configuration entry: %s", block == null ? "null" : block.getUnlocalizedName());
+        }
+      }
+      Arrays.sort(result);
+      return result;
+    }
+  }
+
+  protected List<Block> blockNamesToBlockList(final String[] blockNames) {
+    if ((blockNames == null) || (blockNames.length == 0)) {
+      return new ArrayList<Block>();
+    } else {
+      final ArrayList<Block> result = new ArrayList<Block>(blockNames.length);
+      Arrays.sort(blockNames);
+      for (final String blockName : blockNames) {
+        final Block block = Block.getBlockFromName(blockName);
+        if (block != null) {
+          result.add(block);
+        } else {
+          DaVincing.log.warn("Ignoring invalid block configuration entry: %s", blockName == null ? "null" : blockName);
+        }
+      }
+      return result;
+    }
   }
 
 }
