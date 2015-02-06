@@ -2,7 +2,6 @@ package two.davincing.painting;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.awt.image.BufferedImage;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,6 +16,7 @@ import two.davincing.ProxyBase;
 import two.davincing.item.ItemBase;
 import two.davincing.item.Palette;
 import two.davincing.network.PaintingOperationMessage;
+import two.davincing.utils.PixelData;
 import two.davincing.utils.Utils;
 
 public class PaintTool extends ItemBase {
@@ -57,7 +57,7 @@ public class PaintTool extends ItemBase {
     return 0;
   }
 
-  public boolean apply(BufferedImage img, float[] point, int color, boolean isSneaking) {
+  public boolean apply(PixelData img, float[] point, int color, boolean isSneaking) {
     return false;
   }
 
@@ -94,14 +94,12 @@ public class PaintTool extends ItemBase {
 
         point[0] -= i;
         point[1] -= j;
-        boolean _changed = apply(painting.image, point, color, isSneaking);
+        boolean _changed = apply(painting.getTexture(), point, color, isSneaking);
         point[0] += i;
         point[1] += j;
 
         if (_changed) {
-          if (w.isRemote) {
-            pe.getIcon().fill(pe.image);
-          } else {
+          if (w.isRemote == false) {
             w.markBlockForUpdate(_x, _y, _z);
           }
           changed = true;
@@ -120,7 +118,7 @@ public class PaintTool extends ItemBase {
     }
 
     @Override
-    public boolean apply(BufferedImage img, float[] point, int color, boolean isSneaking) {
+    public boolean apply(final PixelData pixelData, float[] point, int color, boolean isSneaking) {
 
       int x = (int) (point[0] * 16 + 16) - 16;
       int y = (int) (point[1] * 16 + 16) - 16;
@@ -129,7 +127,7 @@ public class PaintTool extends ItemBase {
         return false;
       }
 
-      img.setRGB(x, y, color);
+      pixelData.setRGB(x, y, color);
       return true;
     }
   }
@@ -204,22 +202,15 @@ public class PaintTool extends ItemBase {
     }
 
     @Override
-    public boolean apply(BufferedImage img, float[] point, int color, boolean isSneaking) {
+    public boolean apply(final PixelData img, float[] point, int color, boolean isSneaking) {
+      final int x = (int) (point[0] * 16 + 16) - 16;
+      final int y = (int) (point[1] * 16 + 16) - 16;
 
-      int x = (int) (point[0] * 16 + 16) - 16;
-      int y = (int) (point[1] * 16 + 16) - 16;
-
-      if (!inBounds(x, y)) {
-        return false;
+      if (inBounds(x, y)) {
+        img.fillRGB(color);
+        return true;
       }
-
-      for (int i = 0; i < 256; i++) {
-        x = i / 16;
-        y = i % 16;
-        img.setRGB(x, y, color);
-      }
-
-      return true;
+      return false;
     }
   }
 
@@ -231,7 +222,7 @@ public class PaintTool extends ItemBase {
     }
 
     @Override
-    public boolean apply(BufferedImage img, float[] point, int color, boolean isSneaking) {
+    public boolean apply(final PixelData img, float[] point, int color, boolean isSneaking) {
 
       int x = (int) (point[0] * 16 + 16) - 16;
       int y = (int) (point[1] * 16 + 16) - 16;
@@ -292,7 +283,7 @@ public class PaintTool extends ItemBase {
     }
 
     @Override
-    public boolean apply(BufferedImage img, float[] point, int color, boolean isSneaking) {
+    public boolean apply(final PixelData img, float[] point, int color, boolean isSneaking) {
 
       int x = (int) (point[0] * 16 + 16) - 16;
       int y = (int) (point[1] * 16 + 16) - 16;

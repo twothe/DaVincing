@@ -16,7 +16,7 @@ import two.davincing.utils.Utils;
 
 public class Palette extends ItemBase {
 
-  private IIcon[] colors = new IIcon[6];
+  private final IIcon[] colors = new IIcon[6];
 
   public Palette() {
     super();
@@ -54,12 +54,12 @@ public class Palette extends ItemBase {
 
   @Override
   public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
-    int[] colors = getColors(par1ItemStack);
+    final int[] itemColors = getColors(par1ItemStack);
 
     if (par2 == 0) {
       return super.getColorFromItemStack(par1ItemStack, par2);
     }
-    return colors[par2 - 1];
+    return itemColors[par2 - 1];
   }
 
   public static int[] getColors(ItemStack is) {
@@ -94,9 +94,9 @@ public class Palette extends ItemBase {
         return false;
       }
 
-      int[] colors = getColors(is);
-      colors[0] = pe.getImg().getRGB(px, py);
-      setColors(is, colors);
+      final int[] itemColors = getColors(is);
+      itemColors[0] = pe.getTexture().getRGB(px, py);
+      setColors(is, itemColors);
       return true;
     }
 

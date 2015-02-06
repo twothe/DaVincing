@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -110,6 +109,7 @@ public class SculptureBlock extends BlockContainer {
   }
 
   @Override
+  @SideOnly(Side.CLIENT)
   public boolean shouldSideBeRendered(IBlockAccess iba, int x, int y, int z, int side) {
 //		if(x>=0 && y>=0 && z>=0 && x<8 && y<8 && z<8)
 //			return iba.isAirBlock(x, y, z);
@@ -155,7 +155,7 @@ public class SculptureBlock extends BlockContainer {
   }
 
   @Override
-  public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
+  public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player) {
     SculptureEntity se = Utils.getTE(world, x, y, z);
     NBTTagCompound nbt = new NBTTagCompound();
     ItemStack is = new ItemStack(ProxyBase.itemDroppedSculpture);

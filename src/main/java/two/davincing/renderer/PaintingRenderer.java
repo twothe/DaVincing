@@ -19,12 +19,12 @@ public class PaintingRenderer extends TileEntitySpecialRenderer {
   public void renderTileEntityAt(final TileEntity entity, double x, double y, double z, float partial) {
     if (entity instanceof PaintingEntity) {
       final PaintingEntity pe = (PaintingEntity) entity;
-      Tessellator tes = Tessellator.instance;
-      PaintingIcon icon = pe.getIcon();
-      PaintingPlacement placement = PaintingPlacement.of(pe.getBlockMetadata());
+      final Tessellator tes = Tessellator.instance;
+      final PaintingTexture texture = pe.getTexture();
+      final PaintingPlacement placement = PaintingPlacement.of(pe.getBlockMetadata());
 
       GL11.glPushMatrix();
-      GL11.glBindTexture(GL11.GL_TEXTURE_2D, icon.sheet.glTexId);
+      texture.bind();
       RenderHelper.disableStandardItemLighting();
       GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
       GL11.glEnable(GL11.GL_BLEND);
@@ -33,14 +33,15 @@ public class PaintingRenderer extends TileEntitySpecialRenderer {
 
       //face
       tes.startDrawingQuads();
-      addPoint(placement, 0, 0, icon);
-      addPoint(placement, 0, 1, icon);
-      addPoint(placement, 1, 1, icon);
-      addPoint(placement, 1, 0, icon);
+      addPoint(placement, 0, 0, texture);
+      addPoint(placement, 0, 1, texture);
+      addPoint(placement, 1, 1, texture);
+      addPoint(placement, 1, 0, texture);
       tes.draw();
 
       GL11.glPopMatrix();
       GL11.glDisable(GL11.GL_BLEND);
+      texture.unbind();
       RenderHelper.enableStandardItemLighting();
     } else {
       DaVincing.log.error("[PaintingRenderer.renderTileEntityAt]: tried to render PaintingEntity, but found %s", (entity == null ? "null" : entity.getClass().getName()));

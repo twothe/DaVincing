@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.StatCollector;
 import two.davincing.ProxyBase;
+import two.davincing.renderer.PaintingTexture;
 
 public class CommandImportPainting extends CommandBase {
 
@@ -44,16 +45,16 @@ public class CommandImportPainting extends CommandBase {
       if ((w > 9 * 4) || (h > 9 * 4) || (w * h > 9 * 4)) {
         sender.addChatMessage(new ChatComponentTranslation("msg.imageImageTooLarge.txt"));
       } else {
-        final BufferedImage centeredImage = PaintingEntity.createNewEmptyImage(w, h);
+        final BufferedImage centeredImage = new BufferedImage(PaintingTexture.IMAGE_WIDTH * w, PaintingTexture.IMAGE_WIDTH * h, BufferedImage.TYPE_INT_ARGB);
         final Image scaledImage = getScaledImage(readFromLocation(locationStr), centeredImage.getWidth(), centeredImage.getHeight());
         final int x = Math.max(0, (centeredImage.getWidth() - scaledImage.getWidth(null)) / 2);
         final int y = Math.max(0, (centeredImage.getHeight() - scaledImage.getHeight(null)) / 2);
         centeredImage.getGraphics()
                 .drawImage(scaledImage, x, y, scaledImage.getWidth(null), scaledImage.getHeight(null), null);
 
-        for (h = 0; h < centeredImage.getHeight(); h += PaintingEntity.IMAGE_HEIGHT) {
-          for (w = 0; w < centeredImage.getWidth(); w += PaintingEntity.IMAGE_WIDTH) {
-            final BufferedImage slot = centeredImage.getSubimage(w, h, PaintingEntity.IMAGE_WIDTH, PaintingEntity.IMAGE_HEIGHT);
+        for (h = 0; h < centeredImage.getHeight(); h += PaintingTexture.IMAGE_HEIGHT) {
+          for (w = 0; w < centeredImage.getWidth(); w += PaintingTexture.IMAGE_WIDTH) {
+            final BufferedImage slot = centeredImage.getSubimage(w, h, PaintingTexture.IMAGE_WIDTH, PaintingTexture.IMAGE_HEIGHT);
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(slot, "png", baos);
             final ItemStack is = new ItemStack(ProxyBase.itemCanvas);

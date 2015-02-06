@@ -6,7 +6,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import two.davincing.DaVincing;
 
-public abstract class ExpirablePool<T, V> implements Runnable {
+public abstract class ExpirablePool<K, V> implements Runnable {
 
   static final long DEFAULT_CHECK_INTERVAL_MS = 80;
   static final long DEFAULT_EXPIRY_TIME_MS = 60 * 1000;
@@ -25,15 +25,15 @@ public abstract class ExpirablePool<T, V> implements Runnable {
     }
   }
 
-  protected final ConcurrentHashMap<T, MapEntry<V>> items = new ConcurrentHashMap<T, MapEntry<V>>();
+  protected final ConcurrentHashMap<K, MapEntry<V>> items = new ConcurrentHashMap<K, MapEntry<V>>();
   protected ScheduledFuture<?> cleanupTask = null;
 
   public ExpirablePool() {
   }
 
-  protected abstract void release(V v);
+  protected abstract void release(final V value);
 
-  protected abstract V create();
+  protected abstract V create(final K key);
 
   public void start() {
     if (cleanupTask == null) {
@@ -57,21 +57,21 @@ public abstract class ExpirablePool<T, V> implements Runnable {
     removeAllExpired(Long.MAX_VALUE);
   }
 
-  public boolean contains(T t) {
+  public boolean contains(K key) {
     if (this.cleanupTask == null) {
       throw new IllegalStateException("ExpirablePool has not been started before first use");
     }
-    return items.containsKey(t);
+    return items.containsKey(key);
   }
 
-  public V get(T t) {
+  public V get(K key) {
     if (this.cleanupTask == null) {
       throw new IllegalStateException("ExpirablePool has not been started before first use");
     }
-    MapEntry<V> result = items.get(t);
+    MapEntry<V> result = items.get(key);
     if (result == null) {
-      result = new MapEntry<V>(create());
-      final MapEntry<V> oldValue = items.putIfAbsent(t, result);
+      result = new MapEntry<V>(create(key));
+      final MapEntry<V> oldValue = items.putIfAbsent(key, result);
       if (oldValue != null) {
         result = oldValue;
       }

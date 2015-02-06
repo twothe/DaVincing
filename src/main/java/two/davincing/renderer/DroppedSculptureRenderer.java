@@ -32,12 +32,12 @@ public class DroppedSculptureRenderer implements IItemRenderer {
   final ExpirablePool<ItemStack, CompiledRender> renders = new ExpirablePool<ItemStack, CompiledRender>() {
 
     @Override
-    protected void release(CompiledRender v) {
-      expiredRenderers.add(v);
+    protected void release(final CompiledRender value) {
+      expiredRenderers.add(value);
     }
 
     @Override
-    protected CompiledRender create() {
+    protected CompiledRender create(final ItemStack key) {
       return new CompiledRender();
     }
 

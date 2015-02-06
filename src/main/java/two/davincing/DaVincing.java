@@ -19,7 +19,6 @@ import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 import two.davincing.network.PaintingOperationHandler;
 import two.davincing.network.PaintingOperationMessage;
 import two.davincing.painting.CommandImportPainting;
-import two.davincing.renderer.PaintingCache;
 import two.davincing.sculpture.SculptureOperationMessage;
 import two.davincing.utils.PriorityThreadFactory;
 
@@ -75,6 +74,5 @@ public class DaVincing {
 
   @Mod.EventHandler
   public void serverStopped(final FMLServerStoppedEvent event) {
-    PaintingCache.clear();
   }
 }

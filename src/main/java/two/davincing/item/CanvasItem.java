@@ -1,10 +1,13 @@
 package two.davincing.item;
 
+import java.awt.image.BufferedImage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import two.davincing.DaVincing;
 import two.davincing.ProxyBase;
 import two.davincing.painting.PaintingEntity;
 import two.davincing.painting.PaintingPlacement;
@@ -50,11 +53,15 @@ public class CanvasItem extends ItemBase {
 
     PaintingPlacement pp = PaintingPlacement.of(ep.getLookVec(), face);
     w.setBlock(_x, _y, _z, ProxyBase.blockPainting.getBlock(), pp.ordinal(), 3);
-    PaintingEntity pe = Utils.getTE(w, _x, _y, _z);
-    pe.readFromNBTToImage(is.getTagCompound());
-
-    if (!ep.capabilities.isCreativeMode) {
-      is.stackSize--;
+    final BufferedImage image = PaintingEntity.getPaintingFromItem(is);
+    final TileEntity tileEntity = Utils.getTE(w, _x, _y, _z);
+    if (tileEntity instanceof PaintingEntity) {
+      ((PaintingEntity) tileEntity).setImage(image);
+      if (!ep.capabilities.isCreativeMode) {
+        is.stackSize--;
+      }
+    } else {
+      DaVincing.log.warn("Failed to place item as TileEntity was invalid. Expected PaintingEntity but found %s", tileEntity == null ? "null" : tileEntity.getClass().getName());
     }
 
     return true;

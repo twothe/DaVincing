@@ -7,17 +7,16 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import two.davincing.ProxyBase;
 import two.davincing.utils.Utils;
 
 public class PaintingBlock extends BlockContainer {
@@ -75,14 +74,12 @@ public class PaintingBlock extends BlockContainer {
   }
 
   @Override
-  public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
-    ItemStack is = new ItemStack(ProxyBase.itemCanvas);
-    NBTTagCompound nbt = new NBTTagCompound();
-    PaintingEntity pe = Utils.getTE(world, x, y, z);
-
-    pe.writeImageToNBT(nbt);
-    is.setTagCompound(nbt);
-    return is;
+  public ItemStack getPickBlock(final MovingObjectPosition target, final World world, final int x, final int y, final int z, final EntityPlayer player) {
+    final TileEntity tileEntity = Utils.getTE(world, target.blockX, target.blockY, target.blockZ);
+    if (tileEntity instanceof PaintingEntity) {
+      return ((PaintingEntity) tileEntity).getPaintingAsItem();
+    }
+    return null;
   }
 
   @Override
@@ -115,16 +112,13 @@ public class PaintingBlock extends BlockContainer {
   }
 
   @Override
-  public void breakBlock(World w, int x, int y, int z, Block b, int meta) {
+  public void breakBlock(final World world, final int x, final int y, final int z, final Block block, final int meta) {
+    final TileEntity tileEntity = Utils.getTE(world, x, y, z);
+    if (tileEntity instanceof PaintingEntity) {
+      final ItemStack itemStack = ((PaintingEntity) tileEntity).getPaintingAsItem();
+      this.dropBlockAsItem(world, x, y, z, itemStack);
+    }
 
-    ItemStack is = new ItemStack(ProxyBase.itemCanvas);
-    NBTTagCompound nbt = new NBTTagCompound();
-    PaintingEntity pe = Utils.getTE(w, x, y, z);
-
-    pe.writeImageToNBT(nbt);
-    is.setTagCompound(nbt);
-    this.dropBlockAsItem(w, x, y, z, is);
-
-    super.breakBlock(w, x, y, z, b, meta);
+    super.breakBlock(world, x, y, z, block, meta);
   }
 }

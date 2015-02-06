@@ -1,133 +1,110 @@
 package two.davincing.painting;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import javax.imageio.ImageIO;
-import net.minecraft.item.ItemDye;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import two.davincing.renderer.PaintingCache;
-import two.davincing.renderer.PaintingIcon;
+import two.davincing.DaVincing;
+import two.davincing.ProxyBase;
+import two.davincing.renderer.PaintingTexture;
 
 public class PaintingEntity extends TileEntity {
 
-  public static final int IMAGE_WIDTH = 16;
-  public static final int IMAGE_HEIGHT = 16;
-
-  public static BufferedImage createNewEmptyImage() {
-    return createNewEmptyImage(1, 1);
+  protected static BufferedImage imageFromNBT(final NBTTagCompound nbt) {
+    try {
+      byte[] data = nbt.getByteArray("image_data");
+      return ImageIO.read(new ByteArrayInputStream(data));
+    } catch (Exception e) {
+      DaVincing.log.warn("Unable to read image from NBT data. Image might be lost.", e);
+      return new PaintingTexture().asImage();
+    }
   }
 
-  public static BufferedImage createNewEmptyImage(final int blockWidth, final int blockHeight) {
-    return new BufferedImage(blockWidth * IMAGE_WIDTH, blockHeight * IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+  protected static void imageToNBT(final BufferedImage image, final NBTTagCompound nbt) {
+    try {
+      final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      ImageIO.write(image, "png", baos);
+      nbt.setByteArray("image_data", baos.toByteArray());
+    } catch (Exception e) {
+      DaVincing.log.warn("Unable to write image to NBT data. Image might be lost.", e);
+      nbt.setByteArray("image_data", new byte[0]);
+    }
   }
 
-  BufferedImage image;
+  public static BufferedImage getPaintingFromItem(final ItemStack itemStack) {
+    final NBTTagCompound nbt = itemStack.getTagCompound();
+    return imageFromNBT(nbt);
+  }
+
+  protected final PaintingTexture paintingTexture;
 
   public PaintingEntity() {
-    image = createNewEmptyImage();
+    this.paintingTexture = new PaintingTexture();
+  }
 
-//		 WritableRaster raster = image.getRaster();
-    for (int i = 0; i < 16; i++) {
-      image.setRGB(i, 0, getColorForDye(i) | 0xff000000);
-//			 raster.setSample(i/16, i%16, 0, i%2 == 0 ? 0xffffffff : 0xff000000);
+  protected void releaseTexture() {
+    if (this.worldObj.isRemote && (paintingTexture != null)) {
+      paintingTexture.dispose();
     }
-    Graphics g = image.getGraphics();
-    g.setColor(Color.white);
-    g.fillRect(0, 1, 16, 15);
   }
 
-  public int getColorForDye(int dye_index) {
-    return ItemDye.field_150922_c[dye_index];
-  }
-
-  public BufferedImage getImg() {
-    return image;
-  }
-
-  @SideOnly(Side.CLIENT)
-  private PaintingIcon icon;
-
-  @SideOnly(Side.CLIENT)
-  public PaintingIcon getIcon() {
-    if (icon == null) {
-      icon = PaintingCache.get();
+  public PaintingTexture getTexture() {
+    if (this.worldObj.isRemote) {
+      paintingTexture.initializeGL();
     }
-    return icon;
+    return paintingTexture;
   }
 
   @Override
   public void invalidate() {
     super.invalidate();
-    if (this.worldObj.isRemote) {
-      getIcon().release();
-      icon = null;
-    }
+    releaseTexture();
   }
 
   @Override
   public void onChunkUnload() {
     super.onChunkUnload();
-    if (this.worldObj.isRemote) {
-      getIcon().release();
-      icon = null;
-    }
+    releaseTexture();
   }
 
   @Override
   public void writeToNBT(NBTTagCompound nbt) {
     super.writeToNBT(nbt);
-    writeImageToNBT(nbt);
+    imageToNBT(this.paintingTexture.asImage(), nbt);
   }
 
-  public void writeImageToNBT(NBTTagCompound nbt) {
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    try {
-      ImageIO.write(image, "png", baos);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    nbt.setByteArray("image_data", baos.toByteArray());
+  public void setImage(final BufferedImage image) {
+    this.paintingTexture.setRGB(image);
   }
 
   @Override
-  public void readFromNBT(NBTTagCompound nbt) {
-    readFromNBTToImage(nbt);
+  public void readFromNBT(final NBTTagCompound nbt) {
+    this.setImage(imageFromNBT(nbt));
     super.readFromNBT(nbt);
   }
 
-  public void readFromNBTToImage(NBTTagCompound nbt) {
-    if (nbt == null) {
-      return;
-    }
-    byte[] data = nbt.getByteArray("image_data");
-    ByteArrayInputStream bais = new ByteArrayInputStream(data);
-    try {
-      BufferedImage img = ImageIO.read(bais);
-      this.image = img;
-      if (worldObj != null && worldObj.isRemote) {
-        this.getIcon().fill(img);
-      }
-    } catch (IOException e) {
-      this.getIcon().fill(this.image);
-    }
+  public ItemStack getPaintingAsItem() {
+    final ItemStack result = new ItemStack(ProxyBase.itemCanvas);
+    final NBTTagCompound nbt = new NBTTagCompound();
+    PaintingEntity.imageToNBT(paintingTexture.asImage(), nbt);
+    result.setTagCompound(nbt);
+    return result;
   }
 
+  @Override
   public Packet getDescriptionPacket() {
     NBTTagCompound nbttagcompound = new NBTTagCompound();
     this.writeToNBT(nbttagcompound);
     return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 17, nbttagcompound);
   }
 
+  @Override
   public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
     readFromNBT(pkt.func_148857_g());
   }

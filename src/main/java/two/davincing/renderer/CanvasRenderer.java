@@ -2,18 +2,37 @@ package two.davincing.renderer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.awt.image.BufferedImage;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRendererHelper;
 import org.lwjgl.opengl.GL11;
 import two.davincing.ProxyBase;
+import two.davincing.painting.PaintingEntity;
+import two.davincing.utils.ExpirablePool;
 
 @SideOnly(Side.CLIENT)
 public class CanvasRenderer implements IItemRenderer {
+
+  protected ExpirablePool<ItemStack, PaintingTexture> itemIconCache = new ExpirablePool<ItemStack, PaintingTexture>() {
+
+    @Override
+    protected void release(final PaintingTexture paintingIcon) {
+      paintingIcon.dispose();
+    }
+
+    @Override
+    protected PaintingTexture create(final ItemStack key) {
+      final BufferedImage image = PaintingEntity.getPaintingFromItem(key);
+      final PaintingTexture result = new PaintingTexture();
+      result.setRGB(image);
+      return result;
+    }
+
+  };
 
   public static boolean overrideUseRenderHelper = false;
 
@@ -39,13 +58,13 @@ public class CanvasRenderer implements IItemRenderer {
 
   @Override
   public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-
-    final Item canvas = ProxyBase.itemCanvas;
-    IIcon icon = canvas.getIconFromDamage(0);
+    IIcon icon;
     if (item.hasTagCompound()) {
-      PaintingIcon pi = PaintingCache.get(item);
-      GL11.glBindTexture(GL11.GL_TEXTURE_2D, pi.glTexId());
-      icon = pi;
+      final PaintingTexture paintingTexture = itemIconCache.get(item);
+      paintingTexture.bind();
+      icon = paintingTexture;
+    } else {
+      icon = ProxyBase.itemCanvas.getIconFromDamage(0);
     }
     if (type == ItemRenderType.INVENTORY) {
       renderInventory(icon);
