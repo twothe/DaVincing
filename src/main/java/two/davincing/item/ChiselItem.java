@@ -31,7 +31,7 @@ public class ChiselItem extends ItemBase {
     if (!w.isRemote) {
       return false;
     }
-    int[] pos = Operations.raytrace(x, y, z, ep);
+    final int[] pos = Operations.raytrace(x, y, z, ep);
 
     int flags = this.getChiselFlags(ep);
     Block editBlock = this.getEditBlock(is);

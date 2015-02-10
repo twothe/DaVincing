@@ -16,21 +16,17 @@ public class SculptureRenderCuller {
   private static final int BIT_ZLEN = 0x1 << 8;
   private static final int BIT_INDEX = 0x1 << 11;
 
-  private int[][][] mergeMap = new int[8][8][8];
 
-  public static boolean isMergeable(Block b) {
-    if (b.getLightOpacity() < 255) {
-      return false;
-    }
-    return true;
+  public static boolean isMergeable(final Block block) {
+    return (block.getLightOpacity() >= 255);
   }
 
   private static boolean isMergeable(int id) {
     return isMergeable(Block.getBlockById(id));
   }
 
-  public int[][][] getMergeMap(Sculpture sculpture) {
-
+  public int[][][] getMergeMap(final Sculpture sculpture) {
+    final int[][][] result = new int[8][8][8];
     // cull z direction
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
@@ -39,11 +35,11 @@ public class SculptureRenderCuller {
         for (int k = 0; k < 8; k++) {
           int now = sculpture.getIndex(i, j, k);
           if (now == prev && isMergeable(sculpture.block_ids[now])) {
-            mergeMap[i][j][k] = TYPE_Z;
-            mergeMap[i][j][source] += BIT_ZLEN;
+            result[i][j][k] = TYPE_Z;
+            result[i][j][source] += BIT_ZLEN;
           } else {
             source = k;
-            mergeMap[i][j][source] = TYPE_S | (now * BIT_INDEX);
+            result[i][j][source] = TYPE_S | (now * BIT_INDEX);
           }
           prev = now;
         }
@@ -57,16 +53,16 @@ public class SculptureRenderCuller {
         int source = -1;
         for (int j = 0; j < 8; j++) {
 
-          if ((mergeMap[i][j][k] & 3) != TYPE_S) {
+          if ((result[i][j][k] & 3) != TYPE_S) {
             prev = -1;
             source = -1;
             continue;
           }
 
-          int now = mergeMap[i][j][k];
+          int now = result[i][j][k];
           if (now == prev && isMergeable(sculpture.block_ids[now / BIT_INDEX])) {
-            mergeMap[i][j][k] = TYPE_Y;
-            mergeMap[i][source][k] += BIT_YLEN;
+            result[i][j][k] = TYPE_Y;
+            result[i][source][k] += BIT_YLEN;
           } else {
             source = j;
           }
@@ -81,16 +77,16 @@ public class SculptureRenderCuller {
         int source = -1;
         for (int i = 0; i < 8; i++) {
 
-          if ((mergeMap[i][j][k] & 3) != TYPE_S) {
+          if ((result[i][j][k] & 3) != TYPE_S) {
             prev = -1;
             source = -1;
             continue;
           }
 
-          int now = mergeMap[i][j][k];
+          int now = result[i][j][k];
           if (now == prev && isMergeable(sculpture.block_ids[now / BIT_INDEX])) {
-            mergeMap[i][j][k] = TYPE_X;
-            mergeMap[source][j][k] += BIT_XLEN;
+            result[i][j][k] = TYPE_X;
+            result[source][j][k] += BIT_XLEN;
           } else {
             source = i;
           }
@@ -100,6 +96,6 @@ public class SculptureRenderCuller {
       }
     }
 
-    return mergeMap;
+    return result;
   }
 }

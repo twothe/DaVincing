@@ -3,6 +3,7 @@ package two.davincing.utils;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Two
@@ -11,6 +12,7 @@ public class PriorityThreadFactory implements ThreadFactory, ForkJoinPool.ForkJo
 
   protected final ThreadGroup allThreads;
   protected final int priority;
+  protected final AtomicInteger threadCount = new AtomicInteger(0);
 
   public PriorityThreadFactory(final String name, final int priority, final boolean daemon) {
     this.priority = priority;
@@ -29,13 +31,16 @@ public class PriorityThreadFactory implements ThreadFactory, ForkJoinPool.ForkJo
 
   @Override
   public Thread newThread(final Runnable r) {
-    return new Thread(this.allThreads, r);
+    final Thread result = new Thread(this.allThreads, r);
+    result.setName(this.allThreads.getName() + " #" + threadCount.incrementAndGet());
+    return result;
   }
 
   @Override
   public ForkJoinWorkerThread newThread(final ForkJoinPool pool) {
     final ForkJoinWorkerThread result = ForkJoinPool.defaultForkJoinWorkerThreadFactory.newThread(pool);
     result.setPriority(priority);
+    result.setName(this.allThreads.getName() + " #" + threadCount.incrementAndGet());
     return result;
   }
 }

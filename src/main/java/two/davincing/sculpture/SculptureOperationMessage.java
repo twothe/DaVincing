@@ -4,6 +4,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import java.util.Arrays;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -21,8 +22,11 @@ public class SculptureOperationMessage implements IMessage {
   public SculptureOperationMessage() {
   }
 
-  public SculptureOperationMessage(int[] pos, int x, int y, int z, Block block, int meta, int flags) {
-    this.pos = pos;
+  public SculptureOperationMessage(final int[] pos, int x, int y, int z, Block block, int meta, int flags) {
+    if ((pos == null) || (this.pos.length != pos.length)) {
+      throw new IllegalStateException(Arrays.toString(pos) + " is not a valid position array");
+    }
+    System.arraycopy(pos, 0, this.pos, 0, this.pos.length);
     this.x = x;
     this.y = y;
     this.z = z;
@@ -32,31 +36,31 @@ public class SculptureOperationMessage implements IMessage {
   }
 
   @Override
-  public void fromBytes(ByteBuf buf) {
-    pos[0] = buf.readByte();
-    pos[1] = buf.readByte();
-    pos[2] = buf.readByte();
-    pos[3] = buf.readByte();
+  public void fromBytes(final ByteBuf buf) {
+    pos[0] = buf.readByte() & 0xFF;
+    pos[1] = buf.readByte() & 0xFF;
+    pos[2] = buf.readByte() & 0xFF;
+    pos[3] = buf.readByte() & 0xFF;
     x = buf.readInt();
     y = buf.readInt();
     z = buf.readInt();
     block = Block.getBlockById(buf.readInt());
-    meta = buf.readByte();
-    flags = buf.readByte();
+    meta = buf.readByte() & 0xFF;
+    flags = buf.readByte() & 0xFF;
   }
 
   @Override
   public void toBytes(ByteBuf buf) {
-    buf.writeByte(pos[0]);
-    buf.writeByte(pos[1]);
-    buf.writeByte(pos[2]);
-    buf.writeByte(pos[3]);
+    buf.writeByte(pos[0] & 0xFF);
+    buf.writeByte(pos[1] & 0xFF);
+    buf.writeByte(pos[2] & 0xFF);
+    buf.writeByte(pos[3] & 0xFF);
     buf.writeInt(x);
     buf.writeInt(y);
     buf.writeInt(z);
     buf.writeInt(Block.getIdFromBlock(block));
-    buf.writeByte(meta);
-    buf.writeByte(flags);
+    buf.writeByte(meta & 0xFF);
+    buf.writeByte(flags & 0xFF);
   }
 
   public static class SculptureOperationHandler implements IMessageHandler<SculptureOperationMessage, IMessage> {

@@ -65,29 +65,29 @@ public class SculptureBlock extends BlockContainer {
   }
 
   @Override
-  public MovingObjectPosition collisionRayTrace(final World world, int x, int y, int z, Vec3 st, Vec3 ed) {
+  public MovingObjectPosition collisionRayTrace(final World world, int x, int y, int z, final Vec3 start, final Vec3 end) {
     final TileEntity tileEntity = world.getTileEntity(x, y, z);
     if (tileEntity instanceof SculptureEntity) {
       SculptureEntity tile = (SculptureEntity) tileEntity;
       Sculpture sculpture = tile.sculpture();
 
-      int[] pos = Operations.raytrace(sculpture, st.addVector(-x, -y, -z), ed.addVector(-x, -y, -z));
+      final int[] pos = Operations.raytrace(sculpture, start.addVector(-x, -y, -z), end.addVector(-x, -y, -z));
       if (pos[0] == -1) {
         return null;
       }
 
-      ForgeDirection dir = ForgeDirection.getOrientation(pos[3]);
+      final ForgeDirection dir = ForgeDirection.getOrientation(pos[3]);
       Vec3 hit = null;
       if (dir.offsetX != 0) {
-        hit = st.getIntermediateWithXValue(ed, x + pos[0] / 8f + (dir.offsetX + 1) / 16f);
+        hit = start.getIntermediateWithXValue(end, x + pos[0] / 8f + (dir.offsetX + 1) / 16f);
       } else if (dir.offsetY != 0) {
-        hit = st.getIntermediateWithYValue(ed, y + pos[1] / 8f + (dir.offsetY + 1) / 16f);
+        hit = start.getIntermediateWithYValue(end, y + pos[1] / 8f + (dir.offsetY + 1) / 16f);
       } else if (dir.offsetZ != 0) {
-        hit = st.getIntermediateWithZValue(ed, z + pos[2] / 8f + (dir.offsetZ + 1) / 16f);
+        hit = start.getIntermediateWithZValue(end, z + pos[2] / 8f + (dir.offsetZ + 1) / 16f);
       }
       if (hit == null) {
         if (sculpture.isEmpty()) {
-          return super.collisionRayTrace(world, x, y, z, st, ed);
+          return super.collisionRayTrace(world, x, y, z, start, end);
         }
         return null;
       }

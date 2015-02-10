@@ -47,7 +47,7 @@ public class CanvasItem extends ItemBase {
         final TileEntity tileEntity = world.getTileEntity(inFrontX, inFrontY, inFrontZ);
         if (tileEntity instanceof PaintingEntity) {
           ((PaintingEntity) tileEntity).getTexture().setRGB(paintingImage);
-          if ((player.capabilities.isCreativeMode == false) || (player.capabilities.isCreativeMode && player.isSneaking())) {
+          if ((player.capabilities.isCreativeMode == false) || player.isSneaking()) {
             --itemStack.stackSize;
           }
         } else {

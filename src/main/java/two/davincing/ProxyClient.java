@@ -132,7 +132,7 @@ public class ProxyClient extends ProxyBase {
       return;
     }
     final Item item = is.getItem();
-    if ((item == null) || !(is.getItem() instanceof ChiselItem)) {
+    if ((item == null) || !(item instanceof ChiselItem)) {
       return;
     }
     final ChiselItem ci = (ChiselItem) item;
