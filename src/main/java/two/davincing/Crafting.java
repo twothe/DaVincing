@@ -13,7 +13,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import two.davincing.item.PieceItem;
 import two.davincing.painting.PaintTool;
-import two.davincing.utils.Utils;
 
 public class Crafting {
 

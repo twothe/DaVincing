@@ -2,7 +2,6 @@ package two.davincing.renderer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.awt.image.BufferedImage;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
@@ -11,8 +10,6 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRendererHelper;
 import org.lwjgl.opengl.GL11;
 import two.davincing.ProxyBase;
-import two.davincing.painting.PaintingEntity;
-import two.davincing.utils.ExpirablePool;
 
 @SideOnly(Side.CLIENT)
 public class CanvasRenderer implements IItemRenderer {

@@ -23,7 +23,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import two.davincing.DaVincing;
 import two.davincing.ProxyBase;
-import two.davincing.utils.Debug;
 import two.davincing.utils.Utils;
 
 public class SculptureBlock extends BlockContainer {

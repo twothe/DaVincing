@@ -6,7 +6,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import net.minecraft.util.IIcon;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import two.davincing.DaVincing;
