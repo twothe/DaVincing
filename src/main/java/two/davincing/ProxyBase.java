@@ -3,12 +3,12 @@
 package two.davincing;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.MinecraftForge;
-import scala.actors.threadpool.Arrays;
 import two.davincing.item.CanvasItem;
 import two.davincing.item.ChiselItem;
 import two.davincing.item.CopygunItem;
