@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -65,48 +66,55 @@ public class PaintTool extends ItemBase {
     return x >= 0 && x < 16 && y >= 0 && y < 16;
   }
 
-  public boolean paintAt(World w, int x, int y, int z, float xs, float ys, float zs, int color, boolean isSneaking) {
-    if (w.getBlock(x, y, z) != ProxyBase.blockPainting.getBlock()) {
+  public boolean paintAt(final World world, int x, int y, int z, float xs, float ys, float zs, int color, boolean isSneaking) {
+    if (world.getBlock(x, y, z) != ProxyBase.blockPainting.getBlock()) {
       return false;
     }
-    PaintingEntity pe = Utils.getTE(w, x, y, z);
-    if (pe == null) {
-      return false;
-    }
-    PaintingPlacement place = PaintingPlacement.of(w.getBlockMetadata(x, y, z));
-    float[] point = place.block2painting(xs, ys, zs);
+    final TileEntity tileEntity = world.getTileEntity(x, y, z);
+    if (tileEntity instanceof PaintingEntity) {
+      final PaintingPlacement place = PaintingPlacement.of(world.getBlockMetadata(x, y, z));
+      final float[] point = place.block2painting(xs, ys, zs);
 
-    boolean changed = false;
-    for (int i = -1; i <= 1; i++) {
-      for (int j = -1; j <= 1; j++) {
-        int _x = x + place.xpos.offsetX * i + place.ypos.offsetX * j;
-        int _y = y + place.xpos.offsetY * i + place.ypos.offsetY * j;
-        int _z = z + place.xpos.offsetZ * i + place.ypos.offsetZ * j;
+      boolean changed = false;
+      for (int rotX = -1; rotX <= 1; rotX++) {
+        for (int rotY = -1; rotY <= 1; rotY++) {
+          final int _x = x + place.xpos.offsetX * rotX + place.ypos.offsetX * rotY;
+          final int _y = y + place.xpos.offsetY * rotX + place.ypos.offsetY * rotY;
+          final int _z = z + place.xpos.offsetZ * rotX + place.ypos.offsetZ * rotY;
 
-        if (w.getBlock(_x, _y, _z) != ProxyBase.blockPainting.getBlock()) {
-          continue;
-        }
-        if (w.getBlockMetadata(_x, _y, _z) != place.ordinal()) {
-          continue;
-        }
-
-        PaintingEntity painting = Utils.getTE(w, _x, _y, _z);
-
-        point[0] -= i;
-        point[1] -= j;
-        boolean _changed = apply(painting.getTexture(), point, color, isSneaking);
-        point[0] += i;
-        point[1] += j;
-
-        if (_changed) {
-          if (w.isRemote == false) {
-            w.markBlockForUpdate(_x, _y, _z);
+          if (world.getBlock(_x, _y, _z) != ProxyBase.blockPainting.getBlock()) {
+            continue;
           }
-          changed = true;
+          if (world.getBlockMetadata(_x, _y, _z) != place.ordinal()) {
+            continue;
+          }
+
+          final TileEntity _tileEntity = world.getTileEntity(_x, _y, _z);
+          if (_tileEntity instanceof PaintingEntity) {
+            final PaintingEntity painting = (PaintingEntity) _tileEntity;
+
+            point[0] -= rotX;
+            point[1] -= rotY;
+            boolean _changed = apply(painting.getTexture(), point, color, isSneaking);
+            point[0] += rotX;
+            point[1] += rotY;
+
+            if (_changed) {
+              if (world.isRemote == false) {
+                world.markBlockForUpdate(_x, _y, _z);
+              }
+              changed = true;
+            }
+          } else {
+            DaVincing.log.warn("[PaintTool.paintAt subpixel] failed: expected PaintingEntity at %d, %d, %d, but got %s", _x, _y, _z, Utils.getClassName(tileEntity));
+          }
         }
       }
+      return changed;
+    } else {
+      DaVincing.log.warn("[PaintTool.paintAt] failed: expected PaintingEntity at %d, %d, %d, but got %s", x, y, z, Utils.getClassName(tileEntity));
+      return false;
     }
-    return changed;
   }
 
   public static class Mini extends PaintTool {

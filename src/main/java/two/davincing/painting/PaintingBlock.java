@@ -17,7 +17,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import two.davincing.utils.Utils;
 
 public class PaintingBlock extends BlockContainer {
 
@@ -75,7 +74,7 @@ public class PaintingBlock extends BlockContainer {
 
   @Override
   public ItemStack getPickBlock(final MovingObjectPosition target, final World world, final int x, final int y, final int z, final EntityPlayer player) {
-    final TileEntity tileEntity = Utils.getTE(world, target.blockX, target.blockY, target.blockZ);
+    final TileEntity tileEntity = world.getTileEntity(x, y, z);
     if (tileEntity instanceof PaintingEntity) {
       return ((PaintingEntity) tileEntity).getPaintingAsItem();
     }
@@ -113,7 +112,7 @@ public class PaintingBlock extends BlockContainer {
 
   @Override
   public void breakBlock(final World world, final int x, final int y, final int z, final Block block, final int meta) {
-    final TileEntity tileEntity = Utils.getTE(world, x, y, z);
+    final TileEntity tileEntity = world.getTileEntity(x, y, z);
     if (tileEntity instanceof PaintingEntity) {
       final ItemStack itemStack = ((PaintingEntity) tileEntity).getPaintingAsItem();
       this.dropBlockAsItem(world, x, y, z, itemStack);

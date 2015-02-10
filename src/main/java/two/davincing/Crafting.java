@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -114,8 +115,9 @@ public class Crafting {
         if (is == null) {
           continue;
         }
-        if (is.getItem() instanceof PieceItem) {
-          PieceItem pi = Utils.getItem(is);
+        final Item item = is.getItem();
+        if (item instanceof PieceItem) {
+          final PieceItem pi = (PieceItem) item;
           if (block == null) {
             block = pi.getEditBlock(is);
             meta = pi.getEditMeta(is);
@@ -162,8 +164,9 @@ public class Crafting {
         if (is == null) {
           continue;
         }
-        if (is.getItem() instanceof PieceItem) {
-          PieceItem pi = Utils.getItem(is);
+        final Item item = is.getItem();
+        if (item instanceof PieceItem) {
+          final PieceItem pi = (PieceItem) item;
           if (block == null) {
             block = pi.getEditBlock(is);
             meta = pi.getEditMeta(is);

@@ -161,24 +161,29 @@ public class Operations {
         se.sculpture.setBlockAt((i >> 6) & 7, (i >> 3) & 7, (i >> 0) & 7, was, (byte) meta);
       }
     } else {
-      DaVincing.log.error("[Operations.convertToFullSculpture]: expected SculptureEntity at %d, %d, %d, but got %s", x, y, z, (tileEntity == null ? "null" : tileEntity.getClass().getName()));
+      DaVincing.log.warn("[Operations.convertToFullSculpture] failed: expected SculptureEntity at %d, %d, %d, but got %s", x, y, z, Utils.getClassName(tileEntity));
     }
   }
 
   static double length;
   static int[] xyzf = new int[]{-1, -1, -1, -1};
 
-  public static int[] raytrace(int x, int y, int z, EntityPlayer ep) {
-    Block sculpture = ep.worldObj.getBlock(x, y, z);
+  public static int[] raytrace(int x, int y, int z, final EntityPlayer player) {
+    final Block sculpture = player.worldObj.getBlock(x, y, z);
     Sculpture the_sculpture = null;
     if (sculpture == ProxyBase.blockSculpture.getBlock()) {
-      SculptureEntity se = Utils.getTE(ep.worldObj, x, y, z);
-      the_sculpture = se.sculpture();
+      final TileEntity tileEntity = player.worldObj.getTileEntity(x, y, z);
+      if (tileEntity instanceof SculptureEntity) {
+        the_sculpture = ((SculptureEntity) tileEntity).sculpture();
+      } else {
+        DaVincing.log.warn("[Operations.raytrace] failed: expected SculptureEntity at %d, %d, %d, but got %s", x, y, z, Utils.getClassName(tileEntity));
+        return new int[]{-1, -1, -1, -1};
+      }
     }
 
-    Vec3 from = ep.getPosition(1.0f);
+    Vec3 from = player.getPosition(1.0f);
     from = from.addVector(-x, -y, -z);
-    Vec3 look = ep.getLookVec();
+    Vec3 look = player.getLookVec();
 
     return raytrace(the_sculpture, from, from.addVector(look.xCoord * 5, look.yCoord * 5, look.zCoord * 5));
   }
@@ -404,25 +409,31 @@ public class Operations {
     return (flags & mask) > 0;
   }
 
-  public static boolean applyOperation(World w, int x, int y, int z,
+  public static boolean applyOperation(final World world, int x, int y, int z,
           int[] pos, int flags, Block editBlock, int editMeta) {
 
     if (hasFlag(flags, TRANSMUTE)) {
-      SculptureEntity se = Utils.getTE(w, x, y, z);
-      int index = se.sculpture.getIndex(pos[0], pos[1], pos[2]);
-      se.sculpture.block_ids[index] = Block.getIdFromBlock(editBlock);
-      se.sculpture.block_metas[index] = (byte) editMeta;
+      final TileEntity tileEntity = world.getTileEntity(x, y, z);
+      if (tileEntity instanceof SculptureEntity) {
+        final SculptureEntity se = (SculptureEntity) tileEntity;
 
-      if (se.sculpture.isEmpty()) {
-        w.setBlock(x, y, z, Blocks.air);
-      }
-      if (w.isRemote) {
-        se.getRender().changed = true;
+        final int index = se.sculpture.getIndex(pos[0], pos[1], pos[2]);
+        se.sculpture.block_ids[index] = Block.getIdFromBlock(editBlock);
+        se.sculpture.block_metas[index] = (byte) editMeta;
+
+        if (se.sculpture.isEmpty()) {
+          world.setBlock(x, y, z, Blocks.air);
+        }
+        if (world.isRemote) {
+          se.getRender().changed = true;
+        } else {
+          world.markBlockForUpdate(x, y, z);
+        }
+        return true;
       } else {
-        w.markBlockForUpdate(x, y, z);
+        DaVincing.log.warn("[Operations.applyOperation] failed: expected SculptureEntity at %d, %d, %d, but got %s", x, y, z, Utils.getClassName(tileEntity));
+        return false;
       }
-
-      return true;
     }
 
     pos = pos.clone();
@@ -469,7 +480,7 @@ public class Operations {
     minmax[4] = ally ? 8 : (pos[1] + 1);
     minmax[5] = allz ? 8 : (pos[2] + 1);
 
-    int blocks = editSubBlock(w, minmax, x, y, z, editBlock, (byte) editMeta);
+    int blocks = editSubBlock(world, minmax, x, y, z, editBlock, (byte) editMeta);
 
     return blocks > 0;
   }

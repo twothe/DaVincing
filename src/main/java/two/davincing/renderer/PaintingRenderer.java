@@ -49,7 +49,7 @@ public class PaintingRenderer extends TileEntitySpecialRenderer {
   }
 
   private void addPoint(PaintingPlacement pp, int x, int y, IIcon icon) {
-    float[] pos = pp.painting2blockWithShift(x, y, 0.003f);
+    float[] pos = pp.painting2block(x, y, 0.003f);
     Tessellator.instance.addVertexWithUV(pos[0], pos[1], pos[2],
             x == 0 ? icon.getMinU() : icon.getMaxU(),
             y == 0 ? icon.getMinV() : icon.getMaxV());

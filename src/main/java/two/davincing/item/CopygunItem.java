@@ -6,7 +6,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import two.davincing.DaVincing;
 import two.davincing.ProxyBase;
 import two.davincing.sculpture.Operations;
 import two.davincing.sculpture.Sculpture;
@@ -28,54 +30,60 @@ public class CopygunItem extends ItemBase {
   }
 
   @Override
-  public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
-    Block b = w.getBlock(x, y, z);
-    if (b != ProxyBase.blockSculpture.getBlock()) {
-      int meta = w.getBlockMetadata(x, y, z);
-      if (b != Blocks.air && Operations.sculptable(b, meta)) {
-        int block_sig = Block.getIdFromBlock(b) << 4;
+  public boolean onItemUse(final ItemStack heldItem, final EntityPlayer player, final World world, int x, int y, int z, int face, float xs, float ys, float zs) {
+    final Block targetBlock = world.getBlock(x, y, z);
+    if (targetBlock != ProxyBase.blockSculpture.getBlock()) {
+      int meta = world.getBlockMetadata(x, y, z);
+      if (targetBlock != Blocks.air && Operations.sculptable(targetBlock, meta)) {
+        int block_sig = Block.getIdFromBlock(targetBlock) << 4;
         block_sig += meta;
 
-        int prev = getCharge(is, block_sig);
+        int prev = getCharge(heldItem, block_sig);
         if (prev + 512 > Short.MAX_VALUE) {
           return false;
         }
 
-        setCharge(is, block_sig, prev + 512);
-        return w.setBlockToAir(x, y, z);
+        setCharge(heldItem, block_sig, prev + 512);
+        return world.setBlockToAir(x, y, z);
       }
       return false;
     }
 
-    SculptureEntity se = Utils.getTE(w, x, y, z);
-    Sculpture sculpture = se.sculpture();
+    final TileEntity tileEntity = world.getTileEntity(x, y, z);
+    if (tileEntity instanceof SculptureEntity) {
+      final SculptureEntity se = (SculptureEntity) tileEntity;
+      final Sculpture sculpture = se.sculpture();
 
-    if (sculpture.isEmpty()) {
-      return false;
-    }
-    int[][] sigs = sculpture.getBlockSigs();
-    for (int i = 0; i < sigs[0].length; i++) {
-      if (sigs[0][i] == 0) {
-        break;
-      }
-      if (getCharge(is, sigs[0][i]) < sigs[1][i]) {
+      if (sculpture.isEmpty()) {
         return false;
       }
-    }
-    for (int i = 0; i < sigs[0].length; i++) {
-      if (sigs[0][i] == 0) {
-        break;
+      int[][] sigs = sculpture.getBlockSigs();
+      for (int i = 0; i < sigs[0].length; i++) {
+        if (sigs[0][i] == 0) {
+          break;
+        }
+        if (getCharge(heldItem, sigs[0][i]) < sigs[1][i]) {
+          return false;
+        }
       }
-      int sig = sigs[0][i];
-      int count = sigs[1][i];
-      setCharge(is, sig, getCharge(is, sig) - count);
-    }
+      for (int i = 0; i < sigs[0].length; i++) {
+        if (sigs[0][i] == 0) {
+          break;
+        }
+        int sig = sigs[0][i];
+        int count = sigs[1][i];
+        setCharge(heldItem, sig, getCharge(heldItem, sig) - count);
+      }
 
-    if (!ep.capabilities.isCreativeMode) {
-      is.damageItem(1, ep);
-    }
+      if (!player.capabilities.isCreativeMode) {
+        heldItem.damageItem(1, player);
+      }
 
-    return ProxyBase.blockSculpture.getBlock().dropSculptureToPlayer(w, ep, x, y, z);
+      return ProxyBase.blockSculpture.getBlock().dropSculptureToPlayer(world, player, x, y, z);
+    } else {
+      DaVincing.log.warn("[CopygunItem.onItemUse] failed: expected SculptureEntity at %d, %d, %d, but got %s", x, y, z, Utils.getClassName(tileEntity));
+      return false;
+    }
   }
 
   public int getCharge(ItemStack is, int block_sig) {

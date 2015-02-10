@@ -33,38 +33,33 @@ public class CanvasItem extends ItemBase {
   }
 
   @Override
-  public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
+  public boolean onItemUse(final ItemStack itemStack, final EntityPlayer player, final World world, int x, int y, int z, int face, float xs, float ys, float zs) {
+    if (world.getBlock(x, y, z).getMaterial().isSolid()) {
+      final ForgeDirection dirFacing = ForgeDirection.getOrientation(face); // the direction the player is looking
+      int inFrontX = x + dirFacing.offsetX;
+      int inFrontY = y + dirFacing.offsetY;
+      int inFrontZ = z + dirFacing.offsetZ;
 
-    if (!w.getBlock(x, y, z).getMaterial().isSolid()) {
-      return false;
-    }
-
-    ForgeDirection dir = ForgeDirection.getOrientation(face);
-    int _x = x + dir.offsetX;
-    int _y = y + dir.offsetY;
-    int _z = z + dir.offsetZ;
-
-    if (!w.isAirBlock(_x, _y, _z)) {
-      return false;
-    }
-    if (!ep.canPlayerEdit(x, y, z, face, is)) {
-      return false;
-    }
-
-    PaintingPlacement pp = PaintingPlacement.of(ep.getLookVec(), face);
-    w.setBlock(_x, _y, _z, ProxyBase.blockPainting.getBlock(), pp.ordinal(), 3);
-    final BufferedImage image = PaintingEntity.getPaintingFromItem(is);
-    final TileEntity tileEntity = Utils.getTE(w, _x, _y, _z);
-    if (tileEntity instanceof PaintingEntity) {
-      ((PaintingEntity) tileEntity).setImage(image);
-      if (!ep.capabilities.isCreativeMode) {
-        is.stackSize--;
+      if (world.isAirBlock(inFrontX, inFrontY, inFrontZ) && player.canPlayerEdit(x, y, z, face, itemStack)) {
+        final PaintingPlacement pp = PaintingPlacement.of(player.getLookVec(), face);
+        world.setBlock(inFrontX, inFrontY, inFrontZ, ProxyBase.blockPainting.getBlock(), pp.ordinal(), 3);
+        final BufferedImage paintingImage = PaintingEntity.getPaintingFromItem(itemStack);
+        final TileEntity tileEntity = world.getTileEntity(inFrontX, inFrontY, inFrontZ);
+        if (tileEntity instanceof PaintingEntity) {
+          ((PaintingEntity) tileEntity).getTexture().setRGB(paintingImage);
+          if ((player.capabilities.isCreativeMode == false) || (player.capabilities.isCreativeMode && player.isSneaking())) {
+            --itemStack.stackSize;
+          }
+        } else {
+          DaVincing.log.warn("[CanvasItem.onItemUse] failed: expected PaintingEntity at %d, %d, %d, but got %s", x, y, z, Utils.getClassName(tileEntity));
+        }
+        return true;
+      } else {
+        return false;
       }
     } else {
-      DaVincing.log.warn("Failed to place item as TileEntity was invalid. Expected PaintingEntity but found %s", tileEntity == null ? "null" : tileEntity.getClass().getName());
+      return false; // canvas cannot be placed on non-solid blocks
     }
-
-    return true;
   }
 
 }

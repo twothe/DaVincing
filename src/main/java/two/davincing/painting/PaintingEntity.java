@@ -49,7 +49,7 @@ public class PaintingEntity extends TileEntity {
   }
 
   protected void releaseTexture() {
-    if (this.worldObj.isRemote && (paintingTexture != null)) {
+    if (this.worldObj.isRemote) {
       paintingTexture.dispose();
     }
   }
@@ -79,13 +79,9 @@ public class PaintingEntity extends TileEntity {
     imageToNBT(this.paintingTexture.asImage(), nbt);
   }
 
-  public void setImage(final BufferedImage image) {
-    this.paintingTexture.setRGB(image);
-  }
-
   @Override
   public void readFromNBT(final NBTTagCompound nbt) {
-    this.setImage(imageFromNBT(nbt));
+    this.paintingTexture.setRGB(imageFromNBT(nbt));
     super.readFromNBT(nbt);
   }
 

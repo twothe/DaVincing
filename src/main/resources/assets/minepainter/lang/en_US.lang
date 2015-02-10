@@ -1,4 +1,4 @@
-itemGroup.davincing=DaVincing
+itemGroup.DaVincing=DaVincing
 item.chisel.name=Chisel
 item.barcutter.name=Shaver
 item.saw.name=Saw
@@ -17,5 +17,6 @@ item.sculpture_piece.name=Sculpture Piece
 item.dropped_sculpture.name=Sculpture
 
 msg.imageDownloadFailed.txt=Download of '%s' failed: %s
+msg.imageDownloadFailedNoImage.txt=Download of '%s' failed: no image found
 msg.imageImageTooLarge.txt=Image requested is too large.
 msg.imageDownload.usage=importImage <image url> [<w=1> <h=1>] - Imports an image as w X h painting(s).

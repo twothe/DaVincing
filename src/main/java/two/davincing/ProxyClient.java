@@ -5,6 +5,7 @@ package two.davincing;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -12,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.RenderWorldEvent;
 import org.lwjgl.opengl.GL11;
 import two.davincing.item.ChiselItem;
 import two.davincing.painting.PaintTool;
@@ -24,7 +26,6 @@ import two.davincing.renderer.PieceRenderer;
 import two.davincing.sculpture.Operations;
 import two.davincing.sculpture.SculptureEntityRenderer;
 import two.davincing.sculpture.SculptureRender;
-import two.davincing.utils.Utils;
 
 /**
  * This class will only be loaded if this is running in client mode.
@@ -44,6 +45,18 @@ public class ProxyClient extends ProxyBase {
     MinecraftForgeClient.registerItemRenderer(ProxyBase.itemCover, new PieceRenderer.Cover());
     MinecraftForgeClient.registerItemRenderer(ProxyBase.itemDroppedSculpture, new DroppedSculptureRenderer());
     MinecraftForgeClient.registerItemRenderer(ProxyBase.itemCanvas, new CanvasRenderer());
+  }
+
+  @SubscribeEvent
+  public void onClientRender(RenderWorldEvent.Pre event) {
+    Runnable r;
+    while ((r = DaVincing.glTasks.poll()) != null) {
+      try {
+        r.run();
+      } catch (Throwable t) {
+        DaVincing.log.error("[ProxyClient.onClientRender] failed", t);
+      }
+    }
   }
 
   @SubscribeEvent
@@ -104,16 +117,8 @@ public class ProxyClient extends ProxyBase {
   }
 
   private boolean needsHelmetRenderHook(ItemStack is) {
-    if (is == null) {
-      return false;
-    }
-    if (is.getItem() == ProxyBase.itemDroppedSculpture) {
-      return true;
-    }
-    if (is.getItem() == ProxyBase.itemCanvas) {
-      return true;
-    }
-    return false;
+    return ((is != null)
+            && ((is.getItem() == ProxyBase.itemDroppedSculpture) || (is.getItem() == ProxyBase.itemCanvas)));
   }
 
   private boolean needsHeadHiding(final ItemStack is) {
@@ -123,19 +128,25 @@ public class ProxyClient extends ProxyBase {
   @SubscribeEvent
   public void onDrawBlockhightlight(DrawBlockHighlightEvent event) {
     final ItemStack is = event.player.getCurrentEquippedItem();
-    if (is == null || !(is.getItem() instanceof ChiselItem)) {
+    if (is == null) {
       return;
     }
+    final Item item = is.getItem();
+    if ((item == null) || !(is.getItem() instanceof ChiselItem)) {
+      return;
+    }
+    final ChiselItem ci = (ChiselItem) item;
 
-    int x = event.target.blockX, y = event.target.blockY, z = event.target.blockZ;
-    Block sculpture = event.player.worldObj.getBlock(x, y, z);
+    final int x = event.target.blockX;
+    final int y = event.target.blockY;
+    final int z = event.target.blockZ;
+    final Block sculpture = event.player.worldObj.getBlock(x, y, z);
 
-    int[] pos = Operations.raytrace(x, y, z, event.player);
+    final int[] pos = Operations.raytrace(x, y, z, event.player);
     if (pos[0] == -1) {
       return;
     }
 
-    ChiselItem ci = Utils.getItem(is);
     int flags = ci.getChiselFlags(event.player);
     if (!Operations.validOperation(event.player.worldObj, x, y, z, pos, flags)) {
       return;
@@ -180,8 +191,8 @@ public class ProxyClient extends ProxyBase {
       point[0] = (int) (point[0] * 16) / 16f;
       point[1] = (int) (point[1] * 16) / 16f;
 
-      float[] bound1 = pp.painting2blockWithShift(point[0], point[1], 0.002f);
-      float[] bound2 = pp.painting2blockWithShift(point[0] + 1 / 16f, point[1] + 1 / 16f, 0.002f);
+      float[] bound1 = pp.painting2block(point[0], point[1], 0.002f);
+      float[] bound2 = pp.painting2block(point[0] + 1 / 16f, point[1] + 1 / 16f, 0.002f);
 
       painting.setBlockBounds(Math.min(bound1[0], bound2[0]),
               Math.min(bound1[1], bound2[1]),

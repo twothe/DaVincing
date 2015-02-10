@@ -24,8 +24,7 @@ public enum PaintingPlacement {
   }
 
   public static PaintingPlacement of(Vec3 vec, int face) {
-
-    ForgeDirection dir = ForgeDirection.getOrientation(face);
+    final ForgeDirection dir = ForgeDirection.getOrientation(face);
     switch (dir) {
       case SOUTH:
         return ZPOS;
@@ -58,7 +57,7 @@ public enum PaintingPlacement {
     this.xpos = normal.getRotation(ypos);
   }
 
-  public float[] painting2blockWithShift(float x, float y, float shift) {
+  public float[] painting2block(float x, float y, float shift) {
     float[] point = new float[3];
     point[0] = (1f - (xpos.offsetX + ypos.offsetX + normal.offsetX)) / 2f;
     point[1] = (1f - (xpos.offsetY + ypos.offsetY + normal.offsetY)) / 2f;
@@ -70,7 +69,7 @@ public enum PaintingPlacement {
   }
 
   public float[] painting2block(float x, float y) {
-    return painting2blockWithShift(x, y, 1 / 16f);
+    return painting2block(x, y, 1 / 16f);
   }
 
   public float[] block2painting(float x, float y, float z) {

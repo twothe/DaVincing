@@ -7,8 +7,10 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import two.davincing.DaVincing;
 import two.davincing.ProxyBase;
 import two.davincing.painting.PaintingEntity;
 import two.davincing.painting.PaintingPlacement;
@@ -81,23 +83,28 @@ public class Palette extends ItemBase {
   }
 
   @Override
-  public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int par7, float _x, float _y, float _z) {
-    if (w.getBlock(x, y, z) == ProxyBase.blockPainting.getBlock()) {
-      int face = w.getBlockMetadata(x, y, z);
-      PaintingEntity pe = Utils.getTE(w, x, y, z);
-      PaintingPlacement pp = PaintingPlacement.of(face);
-      float[] point = pp.block2painting(_x, _y, _z);
+  public boolean onItemUse(final ItemStack heldItem, final EntityPlayer player, final World world, int x, int y, int z, int par7, float _x, float _y, float _z) {
+    if (world.getBlock(x, y, z) == ProxyBase.blockPainting.getBlock()) {
+      int face = world.getBlockMetadata(x, y, z);
+      final TileEntity tileEntity = world.getTileEntity(x, y, z);
+      if (tileEntity instanceof PaintingEntity) {
+        final PaintingEntity paintingEntity = (PaintingEntity) tileEntity;
+        final PaintingPlacement pp = PaintingPlacement.of(face);
+        float[] point = pp.block2painting(_x, _y, _z);
 
-      int px = (int) (point[0] * 16 + 16) - 16;
-      int py = (int) (point[1] * 16 + 16) - 16;
-      if (px > 15 || px < 0 || py > 15 || py < 0) {
-        return false;
+        int px = (int) (point[0] * 16 + 16) - 16;
+        int py = (int) (point[1] * 16 + 16) - 16;
+        if (px > 15 || px < 0 || py > 15 || py < 0) {
+          return false;
+        }
+
+        final int[] itemColors = getColors(heldItem);
+        itemColors[0] = paintingEntity.getTexture().getRGB(px, py);
+        setColors(heldItem, itemColors);
+        return true;
+      } else {
+        DaVincing.log.warn("[Palette.onItemUse] failed: expected PaintingEntity at %d, %d, %d, but got %s", x, y, z, Utils.getClassName(tileEntity));
       }
-
-      final int[] itemColors = getColors(is);
-      itemColors[0] = pe.getTexture().getRGB(px, py);
-      setColors(is, itemColors);
-      return true;
     }
 
     return false;

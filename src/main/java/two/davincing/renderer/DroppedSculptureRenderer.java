@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import org.lwjgl.opengl.GL11;
+import two.davincing.DaVincing;
 import two.davincing.ProxyBase;
 import two.davincing.sculpture.Sculpture;
 import two.davincing.sculpture.SculptureBlock;
@@ -27,13 +28,18 @@ public class DroppedSculptureRenderer implements IItemRenderer {
   SculptureRenderBlocks rb = new SculptureRenderBlocks();
 //  RenderItem renderItem = new RenderItem();
   ItemStack is;
-  ConcurrentLinkedQueue<CompiledRender> expiredRenderers = new ConcurrentLinkedQueue<CompiledRender>();
 
   final ExpirablePool<ItemStack, CompiledRender> renders = new ExpirablePool<ItemStack, CompiledRender>() {
 
     @Override
     protected void release(final CompiledRender value) {
-      expiredRenderers.add(value);
+      DaVincing.glTasks.add(new Runnable() {
+
+        @Override
+        public void run() {
+          value.clear();
+        }
+      });
     }
 
     @Override
@@ -45,14 +51,6 @@ public class DroppedSculptureRenderer implements IItemRenderer {
 
   public DroppedSculptureRenderer() {
     renders.start();
-  }
-
-  // Must only be called from the thread these were created!
-  protected void clearExpiredRenderers() {
-    CompiledRender expiredRenderer;
-    while ((expiredRenderer = expiredRenderers.poll()) != null) {
-      expiredRenderer.clear();
-    }
   }
 
   public void clear() {
@@ -76,7 +74,6 @@ public class DroppedSculptureRenderer implements IItemRenderer {
 
   @Override
   public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-    clearExpiredRenderers(); // can only be done here, as we need the OpenGL Thread
     CompiledRender cr = renders.get(item);
     if (!cr.compiled(type)) {
       cr.compile(item.getTagCompound(), type, data);

@@ -10,6 +10,7 @@ import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import net.minecraft.creativetab.CreativeTabs;
@@ -29,7 +30,8 @@ public class DaVincing {
   public static final Logger log = LogManager.getLogger(DaVincing.class.getSimpleName(), new StringFormatterMessageFactory());
   /* Task scheduler for background task. Will run at lowest thread priority to not interfere with FPS/ticks */
   public static final ScheduledExecutorService backgroundTasks = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors(), new PriorityThreadFactory(DaVincing.class.getSimpleName() + " Worker", Thread.MIN_PRIORITY, true));
-
+  public static final ConcurrentLinkedQueue<Runnable> glTasks = new ConcurrentLinkedQueue<Runnable>();
+  
   public static final String MOD_NAME = "DaVincing";
   public static final String MOD_ID = "davincing";
   public static final String MOD_VERSION = "1710.1.6"; // Make sure to keep this version in sync with the build.gradle file!

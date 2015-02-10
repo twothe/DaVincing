@@ -21,91 +21,107 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import two.davincing.DaVincing;
 import two.davincing.ProxyBase;
 import two.davincing.utils.Debug;
 import two.davincing.utils.Utils;
 
 public class SculptureBlock extends BlockContainer {
 
-  private int meta = 0;
-  private Block current = Blocks.stone;
-  private int renderID = -1;
+  protected Block currentBlock;
+  protected int meta;
+  protected int renderID;
 
-  public void setCurrentBlock(Block that, int meta) {
+  public SculptureBlock() {
+    super(Blocks.stone.getMaterial());
+    this.setHardness(1.0f);
+    this.setBlockName("sculpture");
+
+    this.meta = 0;
+    this.renderID = -1;
+    this.currentBlock = Blocks.stone;
+  }
+
+  public void setCurrentBlock(final Block that, final int meta) {
     if (that == null) {
-      meta = 0;
-      renderID = -1;
-      current = Blocks.stone;
-      return;
-    }
-    current = that;
-    this.meta = meta;
-    renderID = that.getRenderType();
-    if (!SculptureRenderCuller.isMergeable(that)) {
-      renderID = 0;
+      this.meta = 0;
+      this.renderID = -1;
+      this.currentBlock = Blocks.stone;
+    } else {
+      this.currentBlock = that;
+      this.meta = meta;
+      this.renderID = that.getRenderType();
+      if (!SculptureRenderCuller.isMergeable(that)) {
+        this.renderID = 0;
+      }
     }
   }
 
   public void useStandardRendering() {
-    renderID = 0;
+    this.renderID = 0;
   }
 
   public void dropScrap(World w, int x, int y, int z, ItemStack is) {
     this.dropBlockAsItem(w, x, y, z, is);
   }
 
-  public SculptureBlock() {
-    super(Blocks.stone.getMaterial());
-    this.setHardness(1.0f);
-    this.setBlockName("sculpture");
-  }
-
   @Override
-  public MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 st, Vec3 ed) {
-    SculptureEntity tile = Utils.getTE(w, x, y, z);
-    Sculpture sculpture = tile.sculpture();
+  public MovingObjectPosition collisionRayTrace(final World world, int x, int y, int z, Vec3 st, Vec3 ed) {
+    final TileEntity tileEntity = world.getTileEntity(x, y, z);
+    if (tileEntity instanceof SculptureEntity) {
+      SculptureEntity tile = (SculptureEntity) tileEntity;
+      Sculpture sculpture = tile.sculpture();
 
-    int[] pos = Operations.raytrace(sculpture, st.addVector(-x, -y, -z), ed.addVector(-x, -y, -z));
-    if (pos[0] == -1) {
-      return null;
-    }
-
-    ForgeDirection dir = ForgeDirection.getOrientation(pos[3]);
-    Vec3 hit = null;
-    if (dir.offsetX != 0) {
-      hit = st.getIntermediateWithXValue(ed, x + pos[0] / 8f + (dir.offsetX + 1) / 16f);
-    } else if (dir.offsetY != 0) {
-      hit = st.getIntermediateWithYValue(ed, y + pos[1] / 8f + (dir.offsetY + 1) / 16f);
-    } else if (dir.offsetZ != 0) {
-      hit = st.getIntermediateWithZValue(ed, z + pos[2] / 8f + (dir.offsetZ + 1) / 16f);
-    }
-    if (hit == null) {
-      if (sculpture.isEmpty()) {
-        return super.collisionRayTrace(w, x, y, z, st, ed);
+      int[] pos = Operations.raytrace(sculpture, st.addVector(-x, -y, -z), ed.addVector(-x, -y, -z));
+      if (pos[0] == -1) {
+        return null;
       }
+
+      ForgeDirection dir = ForgeDirection.getOrientation(pos[3]);
+      Vec3 hit = null;
+      if (dir.offsetX != 0) {
+        hit = st.getIntermediateWithXValue(ed, x + pos[0] / 8f + (dir.offsetX + 1) / 16f);
+      } else if (dir.offsetY != 0) {
+        hit = st.getIntermediateWithYValue(ed, y + pos[1] / 8f + (dir.offsetY + 1) / 16f);
+      } else if (dir.offsetZ != 0) {
+        hit = st.getIntermediateWithZValue(ed, z + pos[2] / 8f + (dir.offsetZ + 1) / 16f);
+      }
+      if (hit == null) {
+        if (sculpture.isEmpty()) {
+          return super.collisionRayTrace(world, x, y, z, st, ed);
+        }
+        return null;
+      }
+
+      return new MovingObjectPosition(x, y, z, pos[3], hit);
+    } else {
+      DaVincing.log.warn("[SculptureBlock.collisionRayTrace] failed: expected SculptureEntity, but got %s", Utils.getClassName(tileEntity));
       return null;
     }
-
-    return new MovingObjectPosition(x, y, z, pos[3], hit);
   }
 
   @Override
-  public void addCollisionBoxesToList(World par1World, int par2, int par3, int par4, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity) {
-    SculptureEntity tile = Utils.getTE(par1World, par2, par3, par4);
-    Sculpture sculpture = tile.sculpture();
+  public void addCollisionBoxesToList(final World world, int x, int y, int z, final AxisAlignedBB par5AxisAlignedBB, final List list, Entity par7Entity) {
+    final TileEntity tileEntity = world.getTileEntity(x, y, z);
+    if (tileEntity instanceof SculptureEntity) {
+      final SculptureEntity tile = (SculptureEntity) tileEntity;
+      final Sculpture sculpture = tile.sculpture();
 
-    for (int xPos = 0; xPos < 8; xPos++) {
-      for (int yPos = 0; yPos < 8; yPos++) {
-        for (int zPos = 0; zPos < 8; zPos++) {
-          if (sculpture.getBlockAt(xPos, yPos, zPos, null) == Blocks.air) {
-            continue;
+      for (int xPos = 0; xPos < 8; xPos++) {
+        for (int yPos = 0; yPos < 8; yPos++) {
+          for (int zPos = 0; zPos < 8; zPos++) {
+            if (sculpture.getBlockAt(xPos, yPos, zPos, null) == Blocks.air) {
+              continue;
+            }
+            this.setBlockBounds(xPos / 8f, yPos / 8f, zPos / 8f, (xPos + 1) / 8f, (yPos + 1) / 8f, (zPos + 1) / 8f);
+            super.addCollisionBoxesToList(world, x, y, z, par5AxisAlignedBB, list, par7Entity);
           }
-          this.setBlockBounds(xPos / 8f, yPos / 8f, zPos / 8f, (xPos + 1) / 8f, (yPos + 1) / 8f, (zPos + 1) / 8f);
-          super.addCollisionBoxesToList(par1World, par2, par3, par4, par5AxisAlignedBB, par6List, par7Entity);
         }
       }
+      this.setBlockBounds(0, 0, 0, 1, 1, 1);
+    } else {
+      DaVincing.log.warn("[SculptureBlock.addCollisionBoxesToList] failed: expected SculptureEntity, but got %s", Utils.getClassName(tileEntity));
     }
-    this.setBlockBounds(0, 0, 0, 1, 1, 1);
   }
 
   @Override
@@ -113,7 +129,7 @@ public class SculptureBlock extends BlockContainer {
   public boolean shouldSideBeRendered(IBlockAccess iba, int x, int y, int z, int side) {
 //		if(x>=0 && y>=0 && z>=0 && x<8 && y<8 && z<8)
 //			return iba.isAirBlock(x, y, z);
-    if (iba.getBlock(x, y, z) == this.current) {
+    if (iba.getBlock(x, y, z) == this.currentBlock) {
       return false;
     }
     return iba.isAirBlock(x, y, z) || !iba.getBlock(x, y, z).isOpaqueCube();
@@ -132,7 +148,7 @@ public class SculptureBlock extends BlockContainer {
   @Override
   @SideOnly(Side.CLIENT)
   public IIcon getIcon(int side, int meta) {
-    return current.getIcon(side, this.meta);
+    return currentBlock.getIcon(side, this.meta);
   }
 
   @Override
@@ -156,13 +172,19 @@ public class SculptureBlock extends BlockContainer {
 
   @Override
   public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player) {
-    SculptureEntity se = Utils.getTE(world, x, y, z);
-    NBTTagCompound nbt = new NBTTagCompound();
-    ItemStack is = new ItemStack(ProxyBase.itemDroppedSculpture);
+    final TileEntity tileEntity = world.getTileEntity(x, y, z);
+    if (tileEntity instanceof SculptureEntity) {
+      final SculptureEntity sculptureEntity = (SculptureEntity) tileEntity;
+      final NBTTagCompound nbt = new NBTTagCompound();
+      final ItemStack itemStack = new ItemStack(ProxyBase.itemDroppedSculpture);
 
-    se.sculpture.write(nbt);
-    is.setTagCompound(nbt);
-    return is;
+      sculptureEntity.sculpture.write(nbt);
+      itemStack.setTagCompound(nbt);
+      return itemStack;
+    } else {
+      DaVincing.log.warn("[SculptureBlock.getPickBlock] failed: expected SculptureEntity, but got %s", Utils.getClassName(tileEntity));
+      return null;
+    }
   }
 
   @Override
@@ -181,21 +203,27 @@ public class SculptureBlock extends BlockContainer {
   }
 
   public boolean dropSculptureToPlayer(World w, EntityPlayer ep, int x, int y, int z) {
-    SculptureEntity se = Utils.getTE(w, x, y, z);
-    if (se == null || se.sculpture().isEmpty()) {
-      Debug.log("hey this is null!");
-      return false;
+    final TileEntity tileEntity = w.getTileEntity(x, y, z);
+    if (tileEntity instanceof SculptureEntity) {
+      final SculptureEntity se = (SculptureEntity) tileEntity;
+      if (se.sculpture().isEmpty() == false) {
+        final NBTTagCompound nbt = new NBTTagCompound();
+        final ItemStack is = new ItemStack(ProxyBase.itemDroppedSculpture);
+
+        applyPlayerRotation(se.sculpture.r, ep, true);
+        se.sculpture.write(nbt);
+        applyPlayerRotation(se.sculpture.r, ep, false);
+        is.setTagCompound(nbt);
+        this.dropBlockAsItem(w, x, y, z, is);
+
+        return true;
+      } else {
+        DaVincing.log.warn("[SculptureBlock.dropSculptureToPlayer] failed: sculpture was empty");
+      }
+    } else {
+      DaVincing.log.warn("[SculptureBlock.dropSculptureToPlayer] failed: expected SculptureEntity, but got %s", Utils.getClassName(tileEntity));
     }
-    NBTTagCompound nbt = new NBTTagCompound();
-    ItemStack is = new ItemStack(ProxyBase.itemDroppedSculpture);
-
-    applyPlayerRotation(se.sculpture.r, ep, true);
-    se.sculpture.write(nbt);
-    applyPlayerRotation(se.sculpture.r, ep, false);
-    is.setTagCompound(nbt);
-    this.dropBlockAsItem(w, x, y, z, is);
-
-    return true;
+    return false;
   }
 
   @Override
@@ -209,7 +237,7 @@ public class SculptureBlock extends BlockContainer {
     double dx = Math.abs(look.xCoord);
     double dz = Math.abs(look.zCoord);
 
-    int rotation = 0;
+    int rotation;
     if (dx > dz) {
       rotation = look.xCoord > 0 ? 3 : 1;
     } else {
@@ -219,7 +247,6 @@ public class SculptureBlock extends BlockContainer {
     if (reverse) {
       rotation = (4 - rotation) % 4;
     }
-//    	Debug.log("rotation : " + rotation);
 
     for (int i = 0; i < rotation; i++) {
       r.rotate(1);

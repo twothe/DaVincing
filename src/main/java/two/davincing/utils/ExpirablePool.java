@@ -44,6 +44,7 @@ public abstract class ExpirablePool<K, V> implements Runnable {
   public void stop() {
     if (cleanupTask != null) {
       cleanupTask.cancel(false);
+      cleanupTask = null;
     }
     clear();
   }

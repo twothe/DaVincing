@@ -2,6 +2,7 @@
  */
 package two.davincing;
 
+import cpw.mods.fml.common.registry.GameData;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +10,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import two.davincing.utils.Utils;
 
 /**
  * @author Two
@@ -102,12 +104,12 @@ public class Config {
       final String[] result = new String[blockList.size()];
       int index = 0;
       for (final Block block : blockList) {
-        final String blockname = Block.blockRegistry.getNameForObject(block);
+        final String blockname = GameData.getBlockRegistry().getNameForObject(block);
         if (blockname != null) {
           result[index] = blockname;
           ++index;
         } else {
-          DaVincing.log.warn("Ignoring invalid block configuration entry: %s", block == null ? "null" : block.getUnlocalizedName());
+          DaVincing.log.warn("Ignoring invalid block configuration entry: %s", Utils.blockToString(block));
         }
       }
       Arrays.sort(result);
@@ -126,7 +128,7 @@ public class Config {
         if (block != null) {
           result.add(block);
         } else {
-          DaVincing.log.warn("Ignoring invalid block configuration entry: %s", blockName == null ? "null" : blockName);
+          DaVincing.log.warn("Ignoring invalid block configuration entry: %s", String.valueOf(blockName));
         }
       }
       return result;

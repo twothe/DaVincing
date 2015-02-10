@@ -6,8 +6,10 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import two.davincing.DaVincing;
 import two.davincing.ProxyBase;
 import two.davincing.item.ItemBase;
 import two.davincing.utils.Utils;
@@ -40,34 +42,30 @@ public class DroppedSculptureItem extends ItemBase {
   }
 
   @Override
-  public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int face, float xs, float ys, float zs) {
+  public boolean onItemUse(final ItemStack heldItem, final EntityPlayer player, final World world, int x, int y, int z, int face, float xs, float ys, float zs) {
+    if (world.getBlock(x, y, z).getMaterial().isSolid()) {
+      ForgeDirection dir = ForgeDirection.getOrientation(face);
+      int inFrontX = x + dir.offsetX;
+      int inFrontY = y + dir.offsetY;
+      int inFrontZ = z + dir.offsetZ;
 
-    if (!w.getBlock(x, y, z).getMaterial().isSolid()) {
-      return false;
+      if (world.isAirBlock(inFrontX, inFrontY, inFrontZ) && player.canPlayerEdit(x, y, z, face, heldItem)) {
+        world.setBlock(inFrontX, inFrontY, inFrontZ, ProxyBase.blockSculpture.getBlock());
+        final TileEntity tileEntity = world.getTileEntity(inFrontX, inFrontY, inFrontZ);
+        if (tileEntity instanceof SculptureEntity) {
+          final SculptureEntity se = (SculptureEntity) tileEntity;
+          se.sculpture().read(heldItem.getTagCompound());
+          SculptureBlock.applyPlayerRotation(se.sculpture().getRotation(), player, false);
+
+          if (!player.capabilities.isCreativeMode) {
+            heldItem.stackSize--;
+          }
+          return true;
+        } else {
+          DaVincing.log.warn("[PieceRenderer.renderItem] failed: expected SculptureEntity, but got %s", Utils.getClassName(tileEntity));
+        }
+      }
     }
-
-    ForgeDirection dir = ForgeDirection.getOrientation(face);
-    int _x = x + dir.offsetX;
-    int _y = y + dir.offsetY;
-    int _z = z + dir.offsetZ;
-
-    if (!w.isAirBlock(_x, _y, _z)) {
-      return false;
-    }
-    if (!ep.canPlayerEdit(x, y, z, face, is)) {
-      return false;
-    }
-
-    w.setBlock(_x, _y, _z, ProxyBase.blockSculpture.getBlock());
-    SculptureEntity se = Utils.getTE(w, _x, _y, _z);
-    se.sculpture().read(is.getTagCompound());
-    SculptureBlock.applyPlayerRotation(se.sculpture().getRotation(), ep, false);
-
-    if (!ep.capabilities.isCreativeMode) {
-      is.stackSize--;
-    }
-
-    return true;
+    return false;
   }
-
 }

@@ -17,23 +17,6 @@ import two.davincing.utils.ExpirablePool;
 @SideOnly(Side.CLIENT)
 public class CanvasRenderer implements IItemRenderer {
 
-  protected ExpirablePool<ItemStack, PaintingTexture> itemIconCache = new ExpirablePool<ItemStack, PaintingTexture>() {
-
-    @Override
-    protected void release(final PaintingTexture paintingIcon) {
-      paintingIcon.dispose();
-    }
-
-    @Override
-    protected PaintingTexture create(final ItemStack key) {
-      final BufferedImage image = PaintingEntity.getPaintingFromItem(key);
-      final PaintingTexture result = new PaintingTexture();
-      result.setRGB(image);
-      return result;
-    }
-
-  };
-
   public static boolean overrideUseRenderHelper = false;
 
   @Override
@@ -60,7 +43,7 @@ public class CanvasRenderer implements IItemRenderer {
   public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
     IIcon icon;
     if (item.hasTagCompound()) {
-      final PaintingTexture paintingTexture = itemIconCache.get(item);
+      final PaintingTexture paintingTexture = ItemTextureCache.instance.get(item);
       paintingTexture.bind();
       icon = paintingTexture;
     } else {
