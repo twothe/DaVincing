@@ -1,5 +1,6 @@
 package two.davincing.sculpture;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.block.Block;
@@ -145,7 +146,9 @@ public class Operations {
   }
 
   public static boolean sculptable(final Block block, final int blockMeta) {
-    return (block != null) && (block.hasTileEntity(blockMeta) == false) && block.renderAsNormalBlock()
+    return (block != null)
+            && (block.getRenderType() == 0) && block.renderAsNormalBlock() // this prevents crashing issues with other mod renderers
+            && (block.hasTileEntity(blockMeta) == false)
             && (DaVincing.proxy.blockBlacklist.contains(block) == false)
             && (block.getBlockBoundsMaxX() == 1.0f) && (block.getBlockBoundsMaxY() == 1.0f) && (block.getBlockBoundsMaxZ() == 1.0f) && (block.getBlockBoundsMinX() == 0.0f) && (block.getBlockBoundsMinY() == 0.0f) && (block.getBlockBoundsMinZ() == 0.0f);
   }
