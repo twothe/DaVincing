@@ -17,12 +17,12 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1710.1.7"
+version = "1710.1.8"
 group= "com.two.davincing" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "DaVincing"
 
 minecraft {
-  version = "1.7.10-10.13.2.1277"
+  version = "1.7.10-10.13.4.1558-1.7.10"
   runDir = "run"
 }
 
