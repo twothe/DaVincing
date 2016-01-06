@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.RecipeSorter;
 import two.davincing.item.PieceItem;
 import two.davincing.painting.PaintTool;
 
@@ -94,109 +95,10 @@ public class Crafting {
               'X', new ItemStack(Items.iron_ingot),
               'Y', new ItemStack(Items.gold_ingot));
     }
-
-    GameRegistry.addRecipe(scrap);
-
+    
+    RecipeSorter.register(fillBucket.getClass().getName(), fillBucket.getClass(), RecipeSorter.Category.SHAPELESS, "");
     GameRegistry.addRecipe(fillBucket);
   }
-
-  static final IRecipe scrap = new IRecipe() {
-
-    @Override
-    public boolean matches(InventoryCrafting ic, World w) {
-      Block block = null;
-      int meta = 0;
-      int count = 0;
-
-      int size = ic.getSizeInventory();
-      for (int i = 0; i < size; i++) {
-        ItemStack is = ic.getStackInSlot(i);
-        if (is == null) {
-          continue;
-        }
-        final Item item = is.getItem();
-        if (item instanceof PieceItem) {
-          final PieceItem pi = (PieceItem) item;
-          if (block == null) {
-            block = pi.getEditBlock(is);
-            meta = pi.getEditMeta(is);
-          }
-          if (block != pi.getEditBlock(is)) {
-            return false;
-          }
-          if (meta != pi.getEditMeta(is)) {
-            return false;
-          }
-
-          count += pi.getWorthPiece();
-        }
-      }
-
-      if (count == 0) {
-        return false;
-      }
-      if (count % 512 == 0 && count / 512 <= 64) {
-        return true;
-      }
-      if (count % 64 == 0 && count / 64 <= 64) {
-        return true;
-      }
-      if (count % 8 == 0 && count / 8 <= 64) {
-        return true;
-      }
-      if (count <= 64) {
-        return true;
-      }
-
-      return false;
-    }
-
-    @Override
-    public ItemStack getCraftingResult(InventoryCrafting ic) {
-      Block block = null;
-      int meta = 0;
-      int count = 0;
-
-      int size = ic.getSizeInventory();
-      for (int i = 0; i < size; i++) {
-        ItemStack is = ic.getStackInSlot(i);
-        if (is == null) {
-          continue;
-        }
-        final Item item = is.getItem();
-        if (item instanceof PieceItem) {
-          final PieceItem pi = (PieceItem) item;
-          if (block == null) {
-            block = pi.getEditBlock(is);
-            meta = pi.getEditMeta(is);
-          }
-
-          count += pi.getWorthPiece();
-        }
-      }
-
-      if (count % 512 == 0 && count / 512 <= 64) {
-        return new ItemStack(block, count / 512, meta);
-      }
-      if (count % 64 == 0 && count / 64 <= 64) {
-        return new ItemStack(ProxyBase.itemCover, count / 64, (Block.getIdFromBlock(block) << 4) + meta);
-      }
-      if (count % 8 == 0 && count / 8 <= 64) {
-        return new ItemStack(ProxyBase.itemBar, count / 8, (Block.getIdFromBlock(block) << 4) + meta);
-      }
-      return new ItemStack(ProxyBase.itemPiece, count, (Block.getIdFromBlock(block) << 4) + meta);
-    }
-
-    @Override
-    public int getRecipeSize() {
-      return 0;
-    }
-
-    @Override
-    public ItemStack getRecipeOutput() {
-      return null;
-    }
-  };
 
   static final IRecipe fillBucket = new IRecipe() {
     @Override
